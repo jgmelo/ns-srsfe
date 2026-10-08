@@ -4,9 +4,10 @@ import sys
 
 
 def main() -> int:
-    # The Textual app arrives in M8; until then there is nothing to launch.
-    print("srsfe: TUI not implemented yet (milestone M8).", file=sys.stderr)
-    return 1
+    from srsfe.tui.app import SrsfeApp
+
+    SrsfeApp().run()
+    return 0
 
 
 if __name__ == "__main__":

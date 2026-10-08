@@ -266,6 +266,7 @@ with `field` replaced, collects the requested outputs (per-power outputs expand 
 - One active profile at a time; app opens last-used profile, fallback `default.json`
   (created from defaults if missing). Last-used name stored in a small settings file.
 - Dirty flag: header shows `profile: <name>*` with unsaved changes; switching/quitting prompts.
+- The active profile cannot be deleted (load another one first).
 
 ---
 
