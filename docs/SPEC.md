@@ -300,8 +300,9 @@ to `./plots/<profile>_<plot>.png`.
 ### 8.2 Plots
 
 Pure functions in `plots/figures.py`: `Result -> Figure`. Displayed by spawning
-`python -m srsfe.plots.runner <result.json> <plot_name>` so matplotlib's GUI loop never
-blocks Textual. Plots:
+`python -m srsfe.plots.runner <result.json> <plot_name>...` so matplotlib's GUI loop never
+blocks Textual; with `--save DIR [--prefix <profile>_]` it writes `<prefix><plot>.png` instead of
+showing. Two quantities with different units get stacked panels, never a second y-axis. Plots:
 - **Bode**: |Z_f| (dB re 1 Ω) and phase vs log f, 1 MHz … f_max; mark f₀ and fₙ.
 - **Spectrum**: stems of Iₙ and Vₙ vs f, signal line at f₀; both powers.
 - **Budget**: stacked bar of ΣVₙ, V_sig, k_crest·V_rms at P_min and P_max with V_swing
