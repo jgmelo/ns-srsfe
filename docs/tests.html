@@ -109,10 +109,12 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 }
 </style></head><body><div class='layout'>
 <nav><h1>SRS-FE test catalog</h1>
-<div class='meta'>aa35ad1 · 2026-10-08 14:32</div>
+<div class='meta'>7e2e241 · 2026-10-08 14:49</div>
 <ul><li><a href='#overview'>Overview</a></li>
-<li><a href='#spec'>SPEC coverage <span class='count'>62/148</span></a></li>
+<li><a href='#spec'>SPEC coverage <span class='count'>87/148</span></a></li>
 <li><a href='#topics'>Topics</a></li>
+<li class='sub'><a href='#topic-moku'>moku<span class='count'>9</span></a></li>
+<li class='sub'><a href='#topic-noise'>noise<span class='count'>45</span></a></li>
 <li class='sub'><a href='#topic-params'>params<span class='count'>36</span></a></li>
 <li class='sub'><a href='#topic-profiles'>profiles<span class='count'>38</span></a></li>
 <li class='sub'><a href='#topic-scaffold'>scaffold<span class='count'>2</span></a></li>
@@ -135,10 +137,10 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <section id='overview'><h2>Overview</h2>
 <p class='lead'>Generated from pytest collection. A <em>function</em> is one <code>def test_…</code>; parametrized functions expand into several <em>cases</em>.</p>
 <div class='tiles'>
-<div class='tile'><div class='v'>72</div><div class='l'>test functions</div></div>
-<div class='tile'><div class='v'>199</div><div class='l'>test cases</div></div>
-<div class='tile'><div class='v'>6</div><div class='l'>topics (files)</div></div>
-<div class='tile'><div class='v'>62/148</div><div class='l'>SPEC items covered</div></div>
+<div class='tile'><div class='v'>92</div><div class='l'>test functions</div></div>
+<div class='tile'><div class='v'>253</div><div class='l'>test cases</div></div>
+<div class='tile'><div class='v'>8</div><div class='l'>topics (files)</div></div>
+<div class='tile'><div class='v'>87/148</div><div class='l'>SPEC items covered</div></div>
 <div class='tile'><div class='v'>0</div><div class='l'>failed cases (last run)</div></div>
 </div>
 <h3>Cases by topic and kind</h3><p class='lead'>Cell: cases (functions). Empty columns show kinds no test exercises yet.</p>
@@ -153,6 +155,28 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <th title='A W01–W09 condition fires or does not fire'>warning</th>
 <th title='Imports, screens or plots build/run without crashing'>smoke</th>
 <th>Total</th></tr></thead><tbody>
+<tr><td><a href='#topic-moku'>moku</a></td>
+<td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
+<td style="background: rgba(var(--heat), 0.13)">2<span class='fn'>2 fn</span></td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.19)">6<span class='fn'>1 fn</span></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td><b>9</b><span class='fn'>4 fn</span></td></tr>
+<tr><td><a href='#topic-noise'>noise</a></td>
+<td style="background: rgba(var(--heat), 0.35)">17<span class='fn'>5 fn</span></td>
+<td style="background: rgba(var(--heat), 0.26)">11<span class='fn'>8 fn</span></td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.33)">16<span class='fn'>2 fn</span></td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td><b>45</b><span class='fn'>16 fn</span></td></tr>
 <tr><td><a href='#topic-params'>params</a></td>
 <td class='empty'>·</td>
 <td class='empty'>·</td>
@@ -220,16 +244,16 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <td class='empty'>·</td>
 <td><b>52</b><span class='fn'>5 fn</span></td></tr>
 </tbody><tfoot><tr><td>Total</td>
-<td>11<span class=fn>8 fn</span></td>
-<td>33<span class=fn>16 fn</span></td>
+<td>29<span class=fn>14 fn</span></td>
+<td>46<span class=fn>26 fn</span></td>
 <td>6<span class=fn>6 fn</span></td>
-<td>90<span class=fn>12 fn</span></td>
+<td>112<span class=fn>15 fn</span></td>
 <td>11<span class=fn>4 fn</span></td>
-<td>30<span class=fn>18 fn</span></td>
+<td>31<span class=fn>19 fn</span></td>
 <td>16<span class=fn>6 fn</span></td>
 <td>·</td>
 <td>2<span class=fn>2 fn</span></td>
-<td>199<span class='fn'>72 fn</span></td></tr></tfoot></table></div>
+<td>253<span class='fn'>92 fn</span></td></tr></tfoot></table></div>
 </section>
 <section id='spec'><h2>SPEC coverage</h2>
 <p class='lead'>Items listed in <code>tests/spec_items.py</code> against the <code>@pytest.mark.spec(…)</code> markers. ✗ = no test yet.</p><div class='sections'>
@@ -250,7 +274,7 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>Field types (number / integer / text)</span><span class='tests'><a href='#t-params-test_selected_metadata'>test_selected_metadata</a>, <a href='#t-params-test_coerce_ok'>test_coerce_ok</a>, <a href='#t-params-test_coerce_wrong_type'>test_coerce_wrong_type</a></span></li>
 <li><span class='yes'>✓</span><span>Numeric inputs &gt; 0</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a></span></li>
 <li><span class='yes'>✓</span><span>m ≥ 0</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
-<li><span class='yes'>✓</span><span>n_lia ∈ {1,2,3,4}</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
+<li><span class='yes'>✓</span><span>n_lia ∈ {1,2,3,4}</span><span class='tests'><a href='#t-noise-test_enbw_rejects_bad_order'>test_enbw_rejects_bad_order</a>, <a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
 <li><span class='yes'>✓</span><span>v_range ∈ {1, 10}</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
 <li><span class='yes'>✓</span><span>n_bits integer</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
 <li><span class='yes'>✓</span><span>q_mode ∈ {&quot;settling&quot;, &quot;bandwidth&quot;}</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
@@ -281,29 +305,29 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>I_sig, V_sig</span><span class='tests'><a href='#t-spectrum-test_golden_signal'>test_golden_signal</a>, <a href='#t-spectrum-test_signal_zero_modulation'>test_signal_zero_modulation</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§4.4'><header><h3>§4.4 Noise densities</h3><span class='frac'>0/6</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
-<li class='gap'><span class='no'>✗</span><span>i_sh</span></li>
-<li class='gap'><span class='no'>✗</span><span>i_R</span></li>
-<li class='gap'><span class='no'>✗</span><span>i_en</span></li>
-<li class='gap'><span class='no'>✗</span><span>i_NEP</span></li>
-<li class='gap'><span class='no'>✗</span><span>i_tot and i_elec</span></li>
-<li class='gap'><span class='no'>✗</span><span>v_dens and V_rms</span></li>
+<div class='card' id='spec-§4.4'><header><h3>§4.4 Noise densities</h3><span class='frac'>6/6</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>i_sh</span><span class='tests'><a href='#t-noise-test_golden_power_dependent_noise'>test_golden_power_dependent_noise</a>, <a href='#t-noise-test_density_scaling'>test_density_scaling</a></span></li>
+<li><span class='yes'>✓</span><span>i_R</span><span class='tests'><a href='#t-noise-test_golden_power_independent_densities'>test_golden_power_independent_densities</a>, <a href='#t-noise-test_density_scaling'>test_density_scaling</a></span></li>
+<li><span class='yes'>✓</span><span>i_en</span><span class='tests'><a href='#t-noise-test_golden_power_independent_densities'>test_golden_power_independent_densities</a>, <a href='#t-noise-test_opamp_noise_limits'>test_opamp_noise_limits</a></span></li>
+<li><span class='yes'>✓</span><span>i_NEP</span><span class='tests'><a href='#t-noise-test_golden_power_independent_densities'>test_golden_power_independent_densities</a>, <a href='#t-noise-test_density_scaling'>test_density_scaling</a></span></li>
+<li><span class='yes'>✓</span><span>i_tot and i_elec</span><span class='tests'><a href='#t-noise-test_golden_power_independent_densities'>test_golden_power_independent_densities</a>, <a href='#t-noise-test_golden_power_dependent_noise'>test_golden_power_dependent_noise</a>, <a href='#t-noise-test_densities_add_in_quadrature'>test_densities_add_in_quadrature</a></span></li>
+<li><span class='yes'>✓</span><span>v_dens and V_rms</span><span class='tests'><a href='#t-noise-test_golden_power_dependent_noise'>test_golden_power_dependent_noise</a>, <a href='#t-noise-test_densities_add_in_quadrature'>test_densities_add_in_quadrature</a>, <a href='#t-noise-test_v_rms_scales_with_sqrt_bandwidth'>test_v_rms_scales_with_sqrt_bandwidth</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§4.5'><header><h3>§4.5 Lock-in</h3><span class='frac'>0/2</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
-<li class='gap'><span class='no'>✗</span><span>ENBW for n = 1…4</span></li>
-<li class='gap'><span class='no'>✗</span><span>V_rms,LIA</span></li>
+<div class='card' id='spec-§4.5'><header><h3>§4.5 Lock-in</h3><span class='frac'>2/2</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>ENBW for n = 1…4</span><span class='tests'><a href='#t-noise-test_golden_enbw'>test_golden_enbw</a>, <a href='#t-noise-test_enbw_matches_rc_cascade'>test_enbw_matches_rc_cascade</a></span></li>
+<li><span class='yes'>✓</span><span>V_rms,LIA</span><span class='tests'><a href='#t-noise-test_golden_snr_lia'>test_golden_snr_lia</a>, <a href='#t-noise-test_lock_in_gain_is_bandwidth_ratio'>test_lock_in_gain_is_bandwidth_ratio</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§4.6'><header><h3>§4.6 Budget and SNR</h3><span class='frac'>0/4</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<div class='card' id='spec-§4.6'><header><h3>§4.6 Budget and SNR</h3><span class='frac'>2/4</span></header><div class='bar'><span style='width:50%'></span></div><ul class='items'>
 <li class='gap'><span class='no'>✗</span><span>V_coh</span></li>
 <li class='gap'><span class='no'>✗</span><span>occ_swing, occ_moku</span></li>
-<li class='gap'><span class='no'>✗</span><span>SNR and SNR_LIA</span></li>
-<li class='gap'><span class='no'>✗</span><span>shot_clear</span></li>
+<li><span class='yes'>✓</span><span>SNR and SNR_LIA</span><span class='tests'><a href='#t-noise-test_golden_snr_and_shot_clear'>test_golden_snr_and_shot_clear</a>, <a href='#t-noise-test_golden_snr_lia'>test_golden_snr_lia</a>, <a href='#t-noise-test_snr_definition'>test_snr_definition</a>, <a href='#t-noise-test_lock_in_gain_is_bandwidth_ratio'>test_lock_in_gain_is_bandwidth_ratio</a></span></li>
+<li><span class='yes'>✓</span><span>shot_clear</span><span class='tests'><a href='#t-noise-test_golden_snr_and_shot_clear'>test_golden_snr_and_shot_clear</a>, <a href='#t-noise-test_shot_clear_rises_10db_per_decade_of_power'>test_shot_clear_rises_10db_per_decade_of_power</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§4.7'><header><h3>§4.7 Moku</h3><span class='frac'>0/1</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
-<li class='gap'><span class='no'>✗</span><span>LSB and V_q</span></li>
+<div class='card' id='spec-§4.7'><header><h3>§4.7 Moku</h3><span class='frac'>1/1</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>LSB and V_q</span><span class='tests'><a href='#t-moku-test_golden_lsb'>test_golden_lsb</a>, <a href='#t-moku-test_lsb_scaling'>test_lsb_scaling</a>, <a href='#t-moku-test_v_q_is_rms_of_uniform_error'>test_v_q_is_rms_of_uniform_error</a></span></li>
 </ul>
 </div>
 <div class='card' id='spec-§5'><header><h3>§5 Warnings</h3><span class='frac'>0/19</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
@@ -403,7 +427,7 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>profiles/golden.json loads and is valid</span><span class='tests'><a href='#t-params-test_golden_params_load_and_are_valid'>test_golden_params_load_and_are_valid</a>, <a href='#t-profiles-test_golden_file_loads'>test_golden_file_loads</a>, <a href='#t-scaffold-test_golden_profile_loads'>test_golden_profile_loads</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§9.1'><header><h3>§9.1 Golden scalar values</h3><span class='frac'>9/16</span></header><div class='bar'><span style='width:56%'></span></div><ul class='items'>
+<div class='card' id='spec-§9.1'><header><h3>§9.1 Golden scalar values</h3><span class='frac'>16/16</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
 <li><span class='yes'>✓</span><span>q</span><span class='tests'><a href='#t-tank-test_golden_sizing'>test_golden_sizing</a></span></li>
 <li><span class='yes'>✓</span><span>l_f</span><span class='tests'><a href='#t-tank-test_golden_sizing'>test_golden_sizing</a></span></li>
 <li><span class='yes'>✓</span><span>c_f</span><span class='tests'><a href='#t-tank-test_golden_sizing'>test_golden_sizing</a></span></li>
@@ -413,16 +437,16 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>f_n</span><span class='tests'><a href='#t-spectrum-test_golden_harmonics_table'>test_golden_harmonics_table</a></span></li>
 <li><span class='yes'>✓</span><span>z_n</span><span class='tests'><a href='#t-spectrum-test_golden_harmonics_table'>test_golden_harmonics_table</a>, <a href='#t-tank-test_golden_z_at_harmonics'>test_golden_z_at_harmonics</a></span></li>
 <li><span class='yes'>✓</span><span>att_n</span><span class='tests'><a href='#t-spectrum-test_golden_harmonics_table'>test_golden_harmonics_table</a></span></li>
-<li class='gap'><span class='no'>✗</span><span>enbw_lia</span></li>
-<li class='gap'><span class='no'>✗</span><span>i_r</span></li>
-<li class='gap'><span class='no'>✗</span><span>i_en</span></li>
-<li class='gap'><span class='no'>✗</span><span>i_nep</span></li>
-<li class='gap'><span class='no'>✗</span><span>i_elec</span></li>
-<li class='gap'><span class='no'>✗</span><span>lsb</span></li>
-<li class='gap'><span class='no'>✗</span><span>v_q</span></li>
+<li><span class='yes'>✓</span><span>enbw_lia</span><span class='tests'><a href='#t-noise-test_golden_enbw'>test_golden_enbw</a></span></li>
+<li><span class='yes'>✓</span><span>i_r</span><span class='tests'><a href='#t-noise-test_golden_power_independent_densities'>test_golden_power_independent_densities</a></span></li>
+<li><span class='yes'>✓</span><span>i_en</span><span class='tests'><a href='#t-noise-test_golden_power_independent_densities'>test_golden_power_independent_densities</a></span></li>
+<li><span class='yes'>✓</span><span>i_nep</span><span class='tests'><a href='#t-noise-test_golden_power_independent_densities'>test_golden_power_independent_densities</a></span></li>
+<li><span class='yes'>✓</span><span>i_elec</span><span class='tests'><a href='#t-noise-test_golden_power_independent_densities'>test_golden_power_independent_densities</a></span></li>
+<li><span class='yes'>✓</span><span>lsb</span><span class='tests'><a href='#t-moku-test_golden_lsb'>test_golden_lsb</a></span></li>
+<li><span class='yes'>✓</span><span>v_q</span><span class='tests'><a href='#t-moku-test_golden_lsb'>test_golden_lsb</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§9.2'><header><h3>§9.2 Golden per-power values</h3><span class='frac'>8/18</span></header><div class='bar'><span style='width:44%'></span></div><ul class='items'>
+<div class='card' id='spec-§9.2'><header><h3>§9.2 Golden per-power values</h3><span class='frac'>15/18</span></header><div class='bar'><span style='width:83%'></span></div><ul class='items'>
 <li><span class='yes'>✓</span><span>i_0</span><span class='tests'><a href='#t-spectrum-test_golden_photocurrent'>test_golden_photocurrent</a></span></li>
 <li><span class='yes'>✓</span><span>q_p</span><span class='tests'><a href='#t-spectrum-test_golden_photocurrent'>test_golden_photocurrent</a></span></li>
 <li><span class='yes'>✓</span><span>i_pk</span><span class='tests'><a href='#t-spectrum-test_golden_photocurrent'>test_golden_photocurrent</a></span></li>
@@ -431,16 +455,16 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>v_n_rss</span><span class='tests'><a href='#t-spectrum-test_golden_harmonic_voltages'>test_golden_harmonic_voltages</a></span></li>
 <li><span class='yes'>✓</span><span>i_sig</span><span class='tests'><a href='#t-spectrum-test_golden_signal'>test_golden_signal</a></span></li>
 <li><span class='yes'>✓</span><span>v_sig</span><span class='tests'><a href='#t-spectrum-test_golden_signal'>test_golden_signal</a></span></li>
-<li class='gap'><span class='no'>✗</span><span>i_sh</span></li>
-<li class='gap'><span class='no'>✗</span><span>i_tot</span></li>
-<li class='gap'><span class='no'>✗</span><span>v_dens</span></li>
-<li class='gap'><span class='no'>✗</span><span>v_rms</span></li>
+<li><span class='yes'>✓</span><span>i_sh</span><span class='tests'><a href='#t-noise-test_golden_power_dependent_noise'>test_golden_power_dependent_noise</a></span></li>
+<li><span class='yes'>✓</span><span>i_tot</span><span class='tests'><a href='#t-noise-test_golden_power_dependent_noise'>test_golden_power_dependent_noise</a></span></li>
+<li><span class='yes'>✓</span><span>v_dens</span><span class='tests'><a href='#t-noise-test_golden_power_dependent_noise'>test_golden_power_dependent_noise</a></span></li>
+<li><span class='yes'>✓</span><span>v_rms</span><span class='tests'><a href='#t-noise-test_golden_power_dependent_noise'>test_golden_power_dependent_noise</a></span></li>
 <li class='gap'><span class='no'>✗</span><span>v_coh</span></li>
 <li class='gap'><span class='no'>✗</span><span>occ_swing</span></li>
 <li class='gap'><span class='no'>✗</span><span>occ_moku</span></li>
-<li class='gap'><span class='no'>✗</span><span>snr</span></li>
-<li class='gap'><span class='no'>✗</span><span>snr_lia</span></li>
-<li class='gap'><span class='no'>✗</span><span>shot_clear</span></li>
+<li><span class='yes'>✓</span><span>snr</span><span class='tests'><a href='#t-noise-test_golden_snr_and_shot_clear'>test_golden_snr_and_shot_clear</a></span></li>
+<li><span class='yes'>✓</span><span>snr_lia</span><span class='tests'><a href='#t-noise-test_golden_snr_lia'>test_golden_snr_lia</a></span></li>
+<li><span class='yes'>✓</span><span>shot_clear</span><span class='tests'><a href='#t-noise-test_golden_snr_and_shot_clear'>test_golden_snr_and_shot_clear</a></span></li>
 </ul>
 </div>
 <div class='card' id='spec-§9.3'><header><h3>§9.3 Golden expected warnings</h3><span class='frac'>0/4</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
@@ -458,6 +482,34 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 </div>
 </div></section>
 <section id='topics'><h2>Topics</h2><p class='lead'>One section per test file.</p></section>
+<section class='topic' id='topic-moku'><h2>moku</h2>
+<p class='lead'><code>tests/test_moku.py</code> · 4 functions · 9 cases — M4: Moku ADC LSB and quantization noise (SPEC §4.7).</p>
+<div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
+<tr data-row data-kind='golden' data-text='test_golden_lsb 1 v range, 12 bits: lsb and v_q match spec §9.1. golden §4.7 lsb §9.1 lsb, v_q' id='t-moku-test_golden_lsb'><td><span class='dot passed' title='passed'></span><code>test_golden_lsb</code><span class='where'>tests/test_moku.py:13</span></td><td>1 V range, 12 bits: LSB and V_q match SPEC §9.1.</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§4.7'>§4.7 lsb</a><br><a href='#spec-§9.1'>§9.1 lsb, v_q</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_lsb_scaling lsb scales with range and halves per extra bit. formula §4.7 lsb' id='t-moku-test_lsb_scaling'><td><span class='dot passed' title='passed'></span><code>test_lsb_scaling</code><span class='where'>tests/test_moku.py:23</span></td><td>LSB scales with range and halves per extra bit.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.7'>§4.7 lsb</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_v_q_is_rms_of_uniform_error lsb/√12 equals the rms of an error spread uniformly over one lsb (numerical check). formula §4.7 lsb' id='t-moku-test_v_q_is_rms_of_uniform_error'><td><span class='dot passed' title='passed'></span><code>test_v_q_is_rms_of_uniform_error</code><span class='where'>tests/test_moku.py:31</span></td><td>LSB/√12 equals the rms of an error spread uniformly over one LSB (numerical check).</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.7'>§4.7 lsb</a></td><td>1</td></tr>
+<tr data-row data-kind='validation' data-text='test_rejects_bad_input non-positive range, non-integer or &lt; 1 bits and non-positive lsb raise valueerror. validation lsb-args0 lsb-args1 lsb-args2 lsb-args3 quantization_noise-args4 quantization_noise-args5' id='t-moku-test_rejects_bad_input'><td><span class='dot passed' title='passed'></span><code>test_rejects_bad_input</code><span class='where'>tests/test_moku.py:41</span></td><td>Non-positive range, non-integer or &lt; 1 bits and non-positive LSB raise ValueError.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><span class='where'>—</span></td><td><details><summary>6 cases</summary><ul><li class='mono'>lsb-args0</li><li class='mono'>lsb-args1</li><li class='mono'>lsb-args2</li><li class='mono'>lsb-args3</li><li class='mono'>quantization_noise-args4</li><li class='mono'>quantization_noise-args5</li></ul></details></td></tr>
+</tbody></table></div></section>
+<section class='topic' id='topic-noise'><h2>noise</h2>
+<p class='lead'><code>tests/test_noise.py</code> · 16 functions · 45 cases — M4: noise densities, rms noise, SNR, shot clearance and lock-in ENBW (SPEC §4.4–§4.6).</p>
+<div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
+<tr data-row data-kind='golden' data-text='test_golden_power_independent_densities i_r, i_en, i_nep and i_elec match spec §9.1 (identical at both powers). golden §4.4 i-r, i-en, i-nep, i-tot §9.1 i_r, i_en, i_nep, i_elec' id='t-noise-test_golden_power_independent_densities'><td><span class='dot passed' title='passed'></span><code>test_golden_power_independent_densities</code><span class='where'>tests/test_noise.py:45</span></td><td>i_R, i_en, i_NEP and i_elec match SPEC §9.1 (identical at both powers).</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§4.4'>§4.4 i-r, i-en, i-nep, i-tot</a><br><a href='#spec-§9.1'>§9.1 i_r, i_en, i_nep, i_elec</a></td><td>1</td></tr>
+<tr data-row data-kind='golden' data-text='test_golden_power_dependent_noise i_sh, i_tot, v_dens and v_rms over b_eq match spec §9.2. golden §4.4 i-sh, i-tot, v-rms §9.2 i_sh, i_tot, v_dens, v_rms p_min p_max' id='t-noise-test_golden_power_dependent_noise'><td><span class='dot passed' title='passed'></span><code>test_golden_power_dependent_noise</code><span class='where'>tests/test_noise.py:58</span></td><td>i_sh, i_tot, v_dens and V_rms over B_eq match SPEC §9.2.</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§4.4'>§4.4 i-sh, i-tot, v-rms</a><br><a href='#spec-§9.2'>§9.2 i_sh, i_tot, v_dens, v_rms</a></td><td><details><summary>2 cases</summary><ul><li class='mono'>p_min</li><li class='mono'>p_max</li></ul></details></td></tr>
+<tr data-row data-kind='golden' data-text='test_golden_snr_and_shot_clear snr over b_eq and shot_clear match spec §9.2 (±0.01 db). golden §4.6 snr, shot-clear §9.2 snr, shot_clear p_min p_max' id='t-noise-test_golden_snr_and_shot_clear'><td><span class='dot passed' title='passed'></span><code>test_golden_snr_and_shot_clear</code><span class='where'>tests/test_noise.py:73</span></td><td>SNR over B_eq and shot_clear match SPEC §9.2 (±0.01 dB).</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§4.6'>§4.6 snr, shot-clear</a><br><a href='#spec-§9.2'>§9.2 snr, shot_clear</a></td><td><details><summary>2 cases</summary><ul><li class='mono'>p_min</li><li class='mono'>p_max</li></ul></details></td></tr>
+<tr data-row data-kind='golden' data-text='test_golden_enbw lock-in enbw for τ_lia = 200 ns, orders 1–4, matches spec §9.1. golden §4.5 enbw §9.1 enbw_lia 1 2 3 4' id='t-noise-test_golden_enbw'><td><span class='dot passed' title='passed'></span><code>test_golden_enbw</code><span class='where'>tests/test_noise.py:88</span></td><td>Lock-in ENBW for τ_LIA = 200 ns, orders 1–4, matches SPEC §9.1.</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§4.5'>§4.5 enbw</a><br><a href='#spec-§9.1'>§9.1 enbw_lia</a></td><td><details><summary>4 cases</summary><ul><li class='mono'>1</li><li class='mono'>2</li><li class='mono'>3</li><li class='mono'>4</li></ul></details></td></tr>
+<tr data-row data-kind='golden' data-text='test_golden_snr_lia lock-in snr (v_rms over enbw) for orders 1–4 at both powers matches spec §9.2. golden §4.6 snr §4.5 v-rms-lia §9.2 snr_lia p_min-1 p_min-2 p_min-3 p_min-4 p_max-1 p_max-2 p_max-3 p_max-4' id='t-noise-test_golden_snr_lia'><td><span class='dot passed' title='passed'></span><code>test_golden_snr_lia</code><span class='where'>tests/test_noise.py:98</span></td><td>Lock-in SNR (V_rms over ENBW) for orders 1–4 at both powers matches SPEC §9.2.</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§4.6'>§4.6 snr</a><br><a href='#spec-§4.5'>§4.5 v-rms-lia</a><br><a href='#spec-§9.2'>§9.2 snr_lia</a></td><td><details><summary>8 cases</summary><ul><li class='mono'>p_min-1</li><li class='mono'>p_min-2</li><li class='mono'>p_min-3</li><li class='mono'>p_min-4</li><li class='mono'>p_max-1</li><li class='mono'>p_max-2</li><li class='mono'>p_max-3</li><li class='mono'>p_max-4</li></ul></details></td></tr>
+<tr data-row data-kind='formula' data-text='test_opamp_noise_limits i_en → e_n/r with no pd capacitance; → e_n·ω₀·c_d when c_d dominates. formula §4.4 i-en' id='t-noise-test_opamp_noise_limits'><td><span class='dot passed' title='passed'></span><code>test_opamp_noise_limits</code><span class='where'>tests/test_noise.py:115</span></td><td>i_en → e_n/R with no PD capacitance; → e_n·ω₀·C_d when C_d dominates.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.4'>§4.4 i-en</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_density_scaling i_sh ∝ √i₀, i_r ∝ √(t/r), i_nep ∝ nep·ℜ. formula §4.4 i-sh, i-r, i-nep' id='t-noise-test_density_scaling'><td><span class='dot passed' title='passed'></span><code>test_density_scaling</code><span class='where'>tests/test_noise.py:124</span></td><td>i_sh ∝ √I₀, i_R ∝ √(T/R), i_NEP ∝ NEP·ℜ.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.4'>§4.4 i-sh, i-r, i-nep</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_densities_add_in_quadrature i_tot² = i_sh² + i_elec², i_elec² = i_r² + i_en² + i_nep², v_dens = r·i_tot. formula §4.4 i-tot, v-rms' id='t-noise-test_densities_add_in_quadrature'><td><span class='dot passed' title='passed'></span><code>test_densities_add_in_quadrature</code><span class='where'>tests/test_noise.py:135</span></td><td>i_tot² = i_sh² + i_elec², i_elec² = i_R² + i_en² + i_NEP², v_dens = R·i_tot.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.4'>§4.4 i-tot, v-rms</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_v_rms_scales_with_sqrt_bandwidth v_rms = v_dens·√b: 4× the bandwidth doubles the rms noise. formula §4.4 v-rms' id='t-noise-test_v_rms_scales_with_sqrt_bandwidth'><td><span class='dot passed' title='passed'></span><code>test_v_rms_scales_with_sqrt_bandwidth</code><span class='where'>tests/test_noise.py:145</span></td><td>V_rms = v_dens·√B: 4× the bandwidth doubles the rms noise.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.4'>§4.4 v-rms</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_enbw_matches_rc_cascade spec enbw factors equal the n-pole rc result γ(n−½)/(4√π·γ(n)·τ). formula §4.5 enbw 1 2 3 4' id='t-noise-test_enbw_matches_rc_cascade'><td><span class='dot passed' title='passed'></span><code>test_enbw_matches_rc_cascade</code><span class='where'>tests/test_noise.py:153</span></td><td>SPEC ENBW factors equal the n-pole RC result Γ(n−½)/(4√π·Γ(n)·τ).</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.5'>§4.5 enbw</a></td><td><details><summary>4 cases</summary><ul><li class='mono'>1</li><li class='mono'>2</li><li class='mono'>3</li><li class='mono'>4</li></ul></details></td></tr>
+<tr data-row data-kind='formula' data-text='test_snr_definition snr compares an amplitude with rms: v_sig = √2·v_rms is 0 db; ×10 is +20 db; m = 0 → −inf. formula §4.6 snr' id='t-noise-test_snr_definition'><td><span class='dot passed' title='passed'></span><code>test_snr_definition</code><span class='where'>tests/test_noise.py:163</span></td><td>SNR compares an amplitude with rms: V_sig = √2·V_rms is 0 dB; ×10 is +20 dB; m = 0 → −inf.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.6'>§4.6 snr</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_lock_in_gain_is_bandwidth_ratio snr_lia − snr = 10·log₁₀(b_eq/enbw): the lock-in only narrows the noise bandwidth. formula §4.6 snr §4.5 v-rms-lia' id='t-noise-test_lock_in_gain_is_bandwidth_ratio'><td><span class='dot passed' title='passed'></span><code>test_lock_in_gain_is_bandwidth_ratio</code><span class='where'>tests/test_noise.py:172</span></td><td>SNR_LIA − SNR = 10·log₁₀(B_eq/ENBW): the lock-in only narrows the noise bandwidth.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.6'>§4.6 snr</a><br><a href='#spec-§4.5'>§4.5 v-rms-lia</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_shot_clear_rises_10db_per_decade_of_power i_sh ∝ √p, so 10× the power raises shot_clear by exactly 10 db. formula §4.6 shot-clear' id='t-noise-test_shot_clear_rises_10db_per_decade_of_power'><td><span class='dot passed' title='passed'></span><code>test_shot_clear_rises_10db_per_decade_of_power</code><span class='where'>tests/test_noise.py:187</span></td><td>i_sh ∝ √P, so 10× the power raises shot_clear by exactly 10 dB.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.6'>§4.6 shot-clear</a></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_noise_densities_frozen noisedensities is an immutable result. api' id='t-noise-test_noise_densities_frozen'><td><span class='dot passed' title='passed'></span><code>test_noise_densities_frozen</code><span class='where'>tests/test_noise.py:201</span></td><td>NoiseDensities is an immutable result.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><span class='where'>—</span></td><td>1</td></tr>
+<tr data-row data-kind='validation' data-text='test_enbw_rejects_bad_order enbw_lia accepts only orders 1, 2, 3, 4. validation §3.1 n-lia 0 5 1.5 true 1' id='t-noise-test_enbw_rejects_bad_order'><td><span class='dot passed' title='passed'></span><code>test_enbw_rejects_bad_order</code><span class='where'>tests/test_noise.py:209</span></td><td>enbw_lia accepts only orders 1, 2, 3, 4.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§3.1'>§3.1 n-lia</a></td><td><details><summary>5 cases</summary><ul><li class='mono'>0</li><li class='mono'>5</li><li class='mono'>1.5</li><li class='mono'>True</li><li class='mono'>1</li></ul></details></td></tr>
+<tr data-row data-kind='validation' data-text='test_rejects_bad_input non-positive/non-finite inputs raise valueerror (i₀, c_d, v_sig, i_sh may be 0). validation shot_density-args0 johnson_density-args1 johnson_density-args2 opamp_density-args3 opamp_density-args4 nep_density-args5 v_rms-args6 enbw_lia-args7 snr_db-args8 snr_db-args9 shot_clear_db-args10' id='t-noise-test_rejects_bad_input'><td><span class='dot passed' title='passed'></span><code>test_rejects_bad_input</code><span class='where'>tests/test_noise.py:218</span></td><td>Non-positive/non-finite inputs raise ValueError (I₀, C_d, V_sig, i_sh may be 0).</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><span class='where'>—</span></td><td><details><summary>11 cases</summary><ul><li class='mono'>shot_density-args0</li><li class='mono'>johnson_density-args1</li><li class='mono'>johnson_density-args2</li><li class='mono'>opamp_density-args3</li><li class='mono'>opamp_density-args4</li><li class='mono'>nep_density-args5</li><li class='mono'>v_rms-args6</li><li class='mono'>enbw_lia-args7</li><li class='mono'>snr_db-args8</li><li class='mono'>snr_db-args9</li><li class='mono'>shot_clear_db-args10</li></ul></details></td></tr>
+</tbody></table></div></section>
 <section class='topic' id='topic-params'><h2>params</h2>
 <p class='lead'><code>tests/test_params.py</code> · 13 functions · 36 cases — M1: Params fields, metadata and validation (SPEC §3.1).</p>
 <div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
