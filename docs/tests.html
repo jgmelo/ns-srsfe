@@ -109,14 +109,15 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 }
 </style></head><body><div class='layout'>
 <nav><h1>SRS-FE test catalog</h1>
-<div class='meta'>0d604bd · 2026-10-08 15:12</div>
+<div class='meta'>540fb75 · 2026-10-08 16:44</div>
 <ul><li><a href='#overview'>Overview</a></li>
-<li><a href='#spec'>SPEC coverage <span class='count'>131/148</span></a></li>
+<li><a href='#spec'>SPEC coverage <span class='count'>137/148</span></a></li>
 <li><a href='#topics'>Topics</a></li>
 <li class='sub'><a href='#topic-budget'>budget<span class='count'>12</span></a></li>
 <li class='sub'><a href='#topic-moku'>moku<span class='count'>9</span></a></li>
 <li class='sub'><a href='#topic-noise'>noise<span class='count'>45</span></a></li>
 <li class='sub'><a href='#topic-params'>params<span class='count'>36</span></a></li>
+<li class='sub'><a href='#topic-plots'>plots<span class='count'>13</span></a></li>
 <li class='sub'><a href='#topic-profiles'>profiles<span class='count'>38</span></a></li>
 <li class='sub'><a href='#topic-scaffold'>scaffold<span class='count'>2</span></a></li>
 <li class='sub'><a href='#topic-spectrum'>spectrum<span class='count'>30</span></a></li>
@@ -141,10 +142,10 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <section id='overview'><h2>Overview</h2>
 <p class='lead'>Generated from pytest collection. A <em>function</em> is one <code>def test_…</code>; parametrized functions expand into several <em>cases</em>.</p>
 <div class='tiles'>
-<div class='tile'><div class='v'>133</div><div class='l'>test functions</div></div>
-<div class='tile'><div class='v'>319</div><div class='l'>test cases</div></div>
-<div class='tile'><div class='v'>12</div><div class='l'>topics (files)</div></div>
-<div class='tile'><div class='v'>131/148</div><div class='l'>SPEC items covered</div></div>
+<div class='tile'><div class='v'>141</div><div class='l'>test functions</div></div>
+<div class='tile'><div class='v'>332</div><div class='l'>test cases</div></div>
+<div class='tile'><div class='v'>13</div><div class='l'>topics (files)</div></div>
+<div class='tile'><div class='v'>137/148</div><div class='l'>SPEC items covered</div></div>
 <div class='tile'><div class='v'>0</div><div class='l'>failed cases (last run)</div></div>
 </div>
 <h3>Cases by topic and kind</h3><p class='lead'>Cell: cases (functions). Empty columns show kinds no test exercises yet.</p>
@@ -203,6 +204,17 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <td class='empty'>·</td>
 <td class='empty'>·</td>
 <td><b>36</b><span class='fn'>13 fn</span></td></tr>
+<tr><td><a href='#topic-plots'>plots</a></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.13)">2<span class='fn'>2 fn</span></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.25)">10<span class='fn'>5 fn</span></td>
+<td><b>13</b><span class='fn'>8 fn</span></td></tr>
 <tr><td><a href='#topic-profiles'>profiles</a></td>
 <td class='empty'>·</td>
 <td class='empty'>·</td>
@@ -294,14 +306,14 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 </tbody><tfoot><tr><td>Total</td>
 <td>45<span class=fn>23 fn</span></td>
 <td>52<span class=fn>32 fn</span></td>
-<td>21<span class=fn>11 fn</span></td>
+<td>23<span class=fn>13 fn</span></td>
 <td>121<span class=fn>18 fn</span></td>
 <td>15<span class=fn>6 fn</span></td>
 <td>36<span class=fn>24 fn</span></td>
-<td>17<span class=fn>7 fn</span></td>
+<td>18<span class=fn>8 fn</span></td>
 <td>10<span class=fn>10 fn</span></td>
-<td>2<span class=fn>2 fn</span></td>
-<td>319<span class='fn'>133 fn</span></td></tr></tfoot></table></div>
+<td>12<span class=fn>7 fn</span></td>
+<td>332<span class='fn'>141 fn</span></td></tr></tfoot></table></div>
 </section>
 <section id='spec'><h2>SPEC coverage</h2>
 <p class='lead'>Items listed in <code>tests/spec_items.py</code> against the <code>@pytest.mark.spec(…)</code> markers. ✗ = no test yet.</p><div class='sections'>
@@ -309,8 +321,8 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>e and k_B values</span><span class='tests'><a href='#t-scaffold-test_package_imports'>test_package_imports</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§2'><header><h3>§2 Architecture rules</h3><span class='frac'>2/3</span></header><div class='bar'><span style='width:67%'></span></div><ul class='items'>
-<li class='gap'><span class='no'>✗</span><span>core/ never imports textual or matplotlib</span></li>
+<div class='card' id='spec-§2'><header><h3>§2 Architecture rules</h3><span class='frac'>3/3</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>core/ never imports textual or matplotlib</span><span class='tests'><a href='#t-plots-test_core_imports_no_ui_libraries'>test_core_imports_no_ui_libraries</a></span></li>
 <li><span class='yes'>✓</span><span>Both tank constructors return the same TankResult</span><span class='tests'><a href='#t-tank-test_both_constructors_return_tank_result'>test_both_constructors_return_tank_result</a></span></li>
 <li><span class='yes'>✓</span><span>Adding a tool = one file + registration</span><span class='tests'><a href='#t-tools-test_registry_and_register'>test_registry_and_register</a></span></li>
 </ul>
@@ -458,12 +470,12 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li class='gap'><span class='no'>✗</span><span>Editing inputs marks results stale</span></li>
 </ul>
 </div>
-<div class='card' id='spec-§8.2'><header><h3>§8.2 Plots</h3><span class='frac'>0/5</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
-<li class='gap'><span class='no'>✗</span><span>Bode</span></li>
-<li class='gap'><span class='no'>✗</span><span>Spectrum</span></li>
-<li class='gap'><span class='no'>✗</span><span>Budget</span></li>
-<li class='gap'><span class='no'>✗</span><span>Noise</span></li>
-<li class='gap'><span class='no'>✗</span><span>Subprocess runner renders from serialized Result</span></li>
+<div class='card' id='spec-§8.2'><header><h3>§8.2 Plots</h3><span class='frac'>5/5</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>Bode</span><span class='tests'><a href='#t-plots-test_figures_build'>test_figures_build</a>, <a href='#t-plots-test_bode_for_analyze'>test_bode_for_analyze</a></span></li>
+<li><span class='yes'>✓</span><span>Spectrum</span><span class='tests'><a href='#t-plots-test_figures_build'>test_figures_build</a>, <a href='#t-plots-test_single_calc_figures'>test_single_calc_figures</a></span></li>
+<li><span class='yes'>✓</span><span>Budget</span><span class='tests'><a href='#t-plots-test_figures_build'>test_figures_build</a></span></li>
+<li><span class='yes'>✓</span><span>Noise</span><span class='tests'><a href='#t-plots-test_figures_build'>test_figures_build</a>, <a href='#t-plots-test_single_calc_figures'>test_single_calc_figures</a></span></li>
+<li><span class='yes'>✓</span><span>Subprocess runner renders from serialized Result</span><span class='tests'><a href='#t-plots-test_runner_saves_pngs'>test_runner_saves_pngs</a>, <a href='#t-plots-test_runner_as_subprocess'>test_runner_as_subprocess</a></span></li>
 </ul>
 </div>
 <div class='card' id='spec-§8.3'><header><h3>§8.3 Key map</h3><span class='frac'>0/2</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
@@ -583,6 +595,18 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <tr data-row data-kind='validation' data-text='test_validate_value_rejects out-of-range values get a reason: ≤ 0, non-finite, m &lt; 0, bad choices, non-integer. validation §3.1 positive, m-nonneg, n-lia, v-range, q-mode, n-bits r_f-0.0 r_f--1.0 f_max-inf temp-nan m--1e-06 n_lia-0 n_lia-5 v_range-2.0 q_mode-other n_bits-0 n_bits-12.5' id='t-params-test_validate_value_rejects'><td><span class='dot passed' title='passed'></span><code>test_validate_value_rejects</code><span class='where'>tests/test_params.py:126</span></td><td>Out-of-range values get a reason: ≤ 0, non-finite, m &lt; 0, bad choices, non-integer.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§3.1'>§3.1 positive, m-nonneg, n-lia, v-range, q-mode, n-bits</a></td><td><details><summary>11 cases</summary><ul><li class='mono'>r_f-0.0</li><li class='mono'>r_f--1.0</li><li class='mono'>f_max-inf</li><li class='mono'>temp-nan</li><li class='mono'>m--1e-06</li><li class='mono'>n_lia-0</li><li class='mono'>n_lia-5</li><li class='mono'>v_range-2.0</li><li class='mono'>q_mode-other</li><li class='mono'>n_bits-0</li><li class='mono'>n_bits-12.5</li></ul></details></td></tr>
 <tr data-row data-kind='validation' data-text='test_validate_value_accepts boundary and allowed values pass: m = 0, n_lia = 4, v_range 1/10, unset. validation §3.1 m-nonneg, n-lia, v-range, q-mode, n-bits m-0.0 n_lia-4 v_range-10 v_range-1.0 q_mode-bandwidth n_bits-16 l_f-none' id='t-params-test_validate_value_accepts'><td><span class='dot passed' title='passed'></span><code>test_validate_value_accepts</code><span class='where'>tests/test_params.py:141</span></td><td>Boundary and allowed values pass: m = 0, n_lia = 4, v_range 1/10, unset.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§3.1'>§3.1 m-nonneg, n-lia, v-range, q-mode, n-bits</a></td><td><details><summary>7 cases</summary><ul><li class='mono'>m-0.0</li><li class='mono'>n_lia-4</li><li class='mono'>v_range-10</li><li class='mono'>v_range-1.0</li><li class='mono'>q_mode-bandwidth</li><li class='mono'>n_bits-16</li><li class='mono'>l_f-None</li></ul></details></td></tr>
 <tr data-row data-kind='validation' data-text='test_p_min_le_p_max p_min &gt; p_max flags both fields; equal is fine; one unset skips the check. validation §3.1 p-order' id='t-params-test_p_min_le_p_max'><td><span class='dot passed' title='passed'></span><code>test_p_min_le_p_max</code><span class='where'>tests/test_params.py:155</span></td><td>p_min &gt; p_max flags both fields; equal is fine; one unset skips the check.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§3.1'>§3.1 p-order</a></td><td>1</td></tr>
+</tbody></table></div></section>
+<section class='topic' id='topic-plots'><h2>plots</h2>
+<p class='lead'><code>tests/test_plots.py</code> · 8 functions · 13 cases — M7: plot figures build without error (Agg backend) and the runner saves PNGs (SPEC §8.2).</p>
+<div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
+<tr data-row data-kind='smoke' data-text='test_figures_build each plot builds a figure from the golden design/all result, with its panels. smoke §8.2 bode, spectrum, budget, noise bode spectrum budget noise' id='t-plots-test_figures_build'><td><span class='dot passed' title='passed'></span><code>test_figures_build</code><span class='where'>tests/test_plots.py:29</span></td><td>Each plot builds a Figure from the golden Design/All result, with its panels.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.2'>§8.2 bode, spectrum, budget, noise</a></td><td><details><summary>4 cases</summary><ul><li class='mono'>bode</li><li class='mono'>spectrum</li><li class='mono'>budget</li><li class='mono'>noise</li></ul></details></td></tr>
+<tr data-row data-kind='smoke' data-text='test_bode_for_analyze bode builds for an analyze result (no harmonics table, resonance from f0_calc). smoke §8.2 bode' id='t-plots-test_bode_for_analyze'><td><span class='dot passed' title='passed'></span><code>test_bode_for_analyze</code><span class='where'>tests/test_plots.py:40</span></td><td>Bode builds for an Analyze result (no harmonics table, resonance from f0_calc).</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.2'>§8.2 bode</a></td><td>1</td></tr>
+<tr data-row data-kind='smoke' data-text='test_single_calc_figures plots also build from the narrower calcs that offer them (no signal / no lock-in data). smoke §8.2 spectrum, noise 2-spectrum 4-noise 5-noise' id='t-plots-test_single_calc_figures'><td><span class='dot passed' title='passed'></span><code>test_single_calc_figures</code><span class='where'>tests/test_plots.py:49</span></td><td>Plots also build from the narrower calcs that offer them (no signal / no lock-in data).</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.2'>§8.2 spectrum, noise</a></td><td><details><summary>3 cases</summary><ul><li class='mono'>2-spectrum</li><li class='mono'>4-noise</li><li class='mono'>5-noise</li></ul></details></td></tr>
+<tr data-row data-kind='errors' data-text='test_unavailable_or_unknown_plot a plot the result does not offer raises valueerror; an unknown name raises keyerror. errors' id='t-plots-test_unavailable_or_unknown_plot'><td><span class='dot passed' title='passed'></span><code>test_unavailable_or_unknown_plot</code><span class='where'>tests/test_plots.py:59</span></td><td>A plot the result does not offer raises ValueError; an unknown name raises KeyError.</td><td><span class='chip' title='Bad files or operations are handled as specified (error or warning)'>errors</span></td><td><span class='where'>—</span></td><td>1</td></tr>
+<tr data-row data-kind='smoke' data-text='test_runner_saves_pngs runner.main reads a result json and writes &lt;prefix&gt;&lt;plot&gt;.png for each plot. smoke §8.2 runner' id='t-plots-test_runner_saves_pngs'><td><span class='dot passed' title='passed'></span><code>test_runner_saves_pngs</code><span class='where'>tests/test_plots.py:69</span></td><td>runner.main reads a Result JSON and writes &lt;prefix&gt;&lt;plot&gt;.png for each plot.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.2'>§8.2 runner</a></td><td>1</td></tr>
+<tr data-row data-kind='smoke' data-text='test_runner_as_subprocess `python -m srsfe.plots.runner &lt;result.json&gt; &lt;plot&gt; --save dir` works as a subprocess. smoke §8.2 runner' id='t-plots-test_runner_as_subprocess'><td><span class='dot passed' title='passed'></span><code>test_runner_as_subprocess</code><span class='where'>tests/test_plots.py:82</span></td><td>`python -m srsfe.plots.runner &lt;result.json&gt; &lt;plot&gt; --save DIR` works as a subprocess.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.2'>§8.2 runner</a></td><td>1</td></tr>
+<tr data-row data-kind='schema' data-text='test_figures_never_use_pyplot plots/figures.py builds figures directly: no pyplot import, never plt.show(). schema' id='t-plots-test_figures_never_use_pyplot'><td><span class='dot passed' title='passed'></span><code>test_figures_never_use_pyplot</code><span class='where'>tests/test_plots.py:96</span></td><td>plots/figures.py builds Figures directly: no pyplot import, never plt.show().</td><td><span class='chip' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</span></td><td><span class='where'>—</span></td><td>1</td></tr>
+<tr data-row data-kind='schema' data-text='test_core_imports_no_ui_libraries importing every core module pulls in neither textual nor matplotlib. schema §2 core-pure' id='t-plots-test_core_imports_no_ui_libraries'><td><span class='dot passed' title='passed'></span><code>test_core_imports_no_ui_libraries</code><span class='where'>tests/test_plots.py:107</span></td><td>Importing every core module pulls in neither textual nor matplotlib.</td><td><span class='chip' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</span></td><td><a href='#spec-§2'>§2 core-pure</a></td><td>1</td></tr>
 </tbody></table></div></section>
 <section class='topic' id='topic-profiles'><h2>profiles</h2>
 <p class='lead'><code>tests/test_profiles.py</code> · 21 functions · 38 cases — M1: profile store — round trip, load rules and migration (SPEC §7).</p>
