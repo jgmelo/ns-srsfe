@@ -109,10 +109,11 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 }
 </style></head><body><div class='layout'>
 <nav><h1>SRS-FE test catalog</h1>
-<div class='meta'>7e2e241 · 2026-10-08 14:49</div>
+<div class='meta'>b0417b9 · 2026-10-08 15:00</div>
 <ul><li><a href='#overview'>Overview</a></li>
-<li><a href='#spec'>SPEC coverage <span class='count'>87/148</span></a></li>
+<li><a href='#spec'>SPEC coverage <span class='count'>116/148</span></a></li>
 <li><a href='#topics'>Topics</a></li>
+<li class='sub'><a href='#topic-budget'>budget<span class='count'>12</span></a></li>
 <li class='sub'><a href='#topic-moku'>moku<span class='count'>9</span></a></li>
 <li class='sub'><a href='#topic-noise'>noise<span class='count'>45</span></a></li>
 <li class='sub'><a href='#topic-params'>params<span class='count'>36</span></a></li>
@@ -121,6 +122,7 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li class='sub'><a href='#topic-spectrum'>spectrum<span class='count'>30</span></a></li>
 <li class='sub'><a href='#topic-tank'>tank<span class='count'>41</span></a></li>
 <li class='sub'><a href='#topic-units'>units<span class='count'>52</span></a></li>
+<li class='sub'><a href='#topic-warnings'>warnings<span class='count'>17</span></a></li>
 <li><a href='#kinds'>Kinds</a></li></ul>
 <label for='q'>Filter tests</label><input id='q' type='search' placeholder='name, text, §…'>
 <label>Kind</label><div class='chips'>
@@ -137,10 +139,10 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <section id='overview'><h2>Overview</h2>
 <p class='lead'>Generated from pytest collection. A <em>function</em> is one <code>def test_…</code>; parametrized functions expand into several <em>cases</em>.</p>
 <div class='tiles'>
-<div class='tile'><div class='v'>92</div><div class='l'>test functions</div></div>
-<div class='tile'><div class='v'>253</div><div class='l'>test cases</div></div>
-<div class='tile'><div class='v'>8</div><div class='l'>topics (files)</div></div>
-<div class='tile'><div class='v'>87/148</div><div class='l'>SPEC items covered</div></div>
+<div class='tile'><div class='v'>111</div><div class='l'>test functions</div></div>
+<div class='tile'><div class='v'>282</div><div class='l'>test cases</div></div>
+<div class='tile'><div class='v'>10</div><div class='l'>topics (files)</div></div>
+<div class='tile'><div class='v'>116/148</div><div class='l'>SPEC items covered</div></div>
 <div class='tile'><div class='v'>0</div><div class='l'>failed cases (last run)</div></div>
 </div>
 <h3>Cases by topic and kind</h3><p class='lead'>Cell: cases (functions). Empty columns show kinds no test exercises yet.</p>
@@ -155,6 +157,17 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <th title='A W01–W09 condition fires or does not fire'>warning</th>
 <th title='Imports, screens or plots build/run without crashing'>smoke</th>
 <th>Total</th></tr></thead><tbody>
+<tr><td><a href='#topic-budget'>budget</a></td>
+<td style="background: rgba(var(--heat), 0.13)">2<span class='fn'>1 fn</span></td>
+<td style="background: rgba(var(--heat), 0.13)">2<span class='fn'>2 fn</span></td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.20)">7<span class='fn'>1 fn</span></td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td><b>12</b><span class='fn'>5 fn</span></td></tr>
 <tr><td><a href='#topic-moku'>moku</a></td>
 <td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
 <td style="background: rgba(var(--heat), 0.13)">2<span class='fn'>2 fn</span></td>
@@ -243,17 +256,28 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <td class='empty'>·</td>
 <td class='empty'>·</td>
 <td><b>52</b><span class='fn'>5 fn</span></td></tr>
+<tr><td><a href='#topic-warnings'>warnings</a></td>
+<td style="background: rgba(var(--heat), 0.20)">7<span class='fn'>4 fn</span></td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.23)">9<span class='fn'>9 fn</span></td>
+<td class='empty'>·</td>
+<td><b>17</b><span class='fn'>14 fn</span></td></tr>
 </tbody><tfoot><tr><td>Total</td>
-<td>29<span class=fn>14 fn</span></td>
-<td>46<span class=fn>26 fn</span></td>
-<td>6<span class=fn>6 fn</span></td>
-<td>112<span class=fn>15 fn</span></td>
+<td>38<span class=fn>19 fn</span></td>
+<td>48<span class=fn>28 fn</span></td>
+<td>7<span class=fn>7 fn</span></td>
+<td>119<span class=fn>16 fn</span></td>
 <td>11<span class=fn>4 fn</span></td>
-<td>31<span class=fn>19 fn</span></td>
+<td>32<span class=fn>20 fn</span></td>
 <td>16<span class=fn>6 fn</span></td>
-<td>·</td>
+<td>9<span class=fn>9 fn</span></td>
 <td>2<span class=fn>2 fn</span></td>
-<td>253<span class='fn'>92 fn</span></td></tr></tfoot></table></div>
+<td>282<span class='fn'>111 fn</span></td></tr></tfoot></table></div>
 </section>
 <section id='spec'><h2>SPEC coverage</h2>
 <p class='lead'>Items listed in <code>tests/spec_items.py</code> against the <code>@pytest.mark.spec(…)</code> markers. ✗ = no test yet.</p><div class='sections'>
@@ -319,9 +343,9 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>V_rms,LIA</span><span class='tests'><a href='#t-noise-test_golden_snr_lia'>test_golden_snr_lia</a>, <a href='#t-noise-test_lock_in_gain_is_bandwidth_ratio'>test_lock_in_gain_is_bandwidth_ratio</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§4.6'><header><h3>§4.6 Budget and SNR</h3><span class='frac'>2/4</span></header><div class='bar'><span style='width:50%'></span></div><ul class='items'>
-<li class='gap'><span class='no'>✗</span><span>V_coh</span></li>
-<li class='gap'><span class='no'>✗</span><span>occ_swing, occ_moku</span></li>
+<div class='card' id='spec-§4.6'><header><h3>§4.6 Budget and SNR</h3><span class='frac'>4/4</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>V_coh</span><span class='tests'><a href='#t-budget-test_golden_budget'>test_golden_budget</a>, <a href='#t-budget-test_budget_formulas'>test_budget_formulas</a></span></li>
+<li><span class='yes'>✓</span><span>occ_swing, occ_moku</span><span class='tests'><a href='#t-budget-test_golden_budget'>test_golden_budget</a>, <a href='#t-budget-test_budget_formulas'>test_budget_formulas</a>, <a href='#t-budget-test_moku_range_ten_times'>test_moku_range_ten_times</a></span></li>
 <li><span class='yes'>✓</span><span>SNR and SNR_LIA</span><span class='tests'><a href='#t-noise-test_golden_snr_and_shot_clear'>test_golden_snr_and_shot_clear</a>, <a href='#t-noise-test_golden_snr_lia'>test_golden_snr_lia</a>, <a href='#t-noise-test_snr_definition'>test_snr_definition</a>, <a href='#t-noise-test_lock_in_gain_is_bandwidth_ratio'>test_lock_in_gain_is_bandwidth_ratio</a></span></li>
 <li><span class='yes'>✓</span><span>shot_clear</span><span class='tests'><a href='#t-noise-test_golden_snr_and_shot_clear'>test_golden_snr_and_shot_clear</a>, <a href='#t-noise-test_shot_clear_rises_10db_per_decade_of_power'>test_shot_clear_rises_10db_per_decade_of_power</a></span></li>
 </ul>
@@ -330,26 +354,26 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>LSB and V_q</span><span class='tests'><a href='#t-moku-test_golden_lsb'>test_golden_lsb</a>, <a href='#t-moku-test_lsb_scaling'>test_lsb_scaling</a>, <a href='#t-moku-test_v_q_is_rms_of_uniform_error'>test_v_q_is_rms_of_uniform_error</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§5'><header><h3>§5 Warnings</h3><span class='frac'>0/19</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
-<li class='gap'><span class='no'>✗</span><span>Warning carries id, message, severity, power, fields</span></li>
-<li class='gap'><span class='no'>✗</span><span>W01 fires</span></li>
-<li class='gap'><span class='no'>✗</span><span>W01 does not fire</span></li>
-<li class='gap'><span class='no'>✗</span><span>W02 fires</span></li>
-<li class='gap'><span class='no'>✗</span><span>W02 does not fire</span></li>
-<li class='gap'><span class='no'>✗</span><span>W03 fires</span></li>
-<li class='gap'><span class='no'>✗</span><span>W03 does not fire</span></li>
-<li class='gap'><span class='no'>✗</span><span>W04 fires</span></li>
-<li class='gap'><span class='no'>✗</span><span>W04 does not fire</span></li>
-<li class='gap'><span class='no'>✗</span><span>W05 fires</span></li>
-<li class='gap'><span class='no'>✗</span><span>W05 does not fire</span></li>
-<li class='gap'><span class='no'>✗</span><span>W06 fires</span></li>
-<li class='gap'><span class='no'>✗</span><span>W06 does not fire</span></li>
-<li class='gap'><span class='no'>✗</span><span>W07 fires</span></li>
-<li class='gap'><span class='no'>✗</span><span>W07 does not fire</span></li>
-<li class='gap'><span class='no'>✗</span><span>W08 fires</span></li>
-<li class='gap'><span class='no'>✗</span><span>W08 does not fire</span></li>
-<li class='gap'><span class='no'>✗</span><span>W09 fires</span></li>
-<li class='gap'><span class='no'>✗</span><span>W09 does not fire</span></li>
+<div class='card' id='spec-§5'><header><h3>§5 Warnings</h3><span class='frac'>19/19</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>Warning carries id, message, severity, power, fields</span><span class='tests'><a href='#t-warnings-test_warning_contents'>test_warning_contents</a></span></li>
+<li><span class='yes'>✓</span><span>W01 fires</span><span class='tests'><a href='#t-warnings-test_w01'>test_w01</a></span></li>
+<li><span class='yes'>✓</span><span>W01 does not fire</span><span class='tests'><a href='#t-warnings-test_w01'>test_w01</a></span></li>
+<li><span class='yes'>✓</span><span>W02 fires</span><span class='tests'><a href='#t-warnings-test_w02'>test_w02</a></span></li>
+<li><span class='yes'>✓</span><span>W02 does not fire</span><span class='tests'><a href='#t-warnings-test_w02'>test_w02</a></span></li>
+<li><span class='yes'>✓</span><span>W03 fires</span><span class='tests'><a href='#t-warnings-test_w03'>test_w03</a></span></li>
+<li><span class='yes'>✓</span><span>W03 does not fire</span><span class='tests'><a href='#t-warnings-test_w03'>test_w03</a></span></li>
+<li><span class='yes'>✓</span><span>W04 fires</span><span class='tests'><a href='#t-warnings-test_w04'>test_w04</a></span></li>
+<li><span class='yes'>✓</span><span>W04 does not fire</span><span class='tests'><a href='#t-warnings-test_w04'>test_w04</a></span></li>
+<li><span class='yes'>✓</span><span>W05 fires</span><span class='tests'><a href='#t-warnings-test_w05'>test_w05</a></span></li>
+<li><span class='yes'>✓</span><span>W05 does not fire</span><span class='tests'><a href='#t-warnings-test_w05'>test_w05</a></span></li>
+<li><span class='yes'>✓</span><span>W06 fires</span><span class='tests'><a href='#t-warnings-test_w06'>test_w06</a></span></li>
+<li><span class='yes'>✓</span><span>W06 does not fire</span><span class='tests'><a href='#t-warnings-test_w06'>test_w06</a></span></li>
+<li><span class='yes'>✓</span><span>W07 fires</span><span class='tests'><a href='#t-warnings-test_w07'>test_w07</a></span></li>
+<li><span class='yes'>✓</span><span>W07 does not fire</span><span class='tests'><a href='#t-warnings-test_w07'>test_w07</a></span></li>
+<li><span class='yes'>✓</span><span>W08 fires</span><span class='tests'><a href='#t-warnings-test_w08'>test_w08</a></span></li>
+<li><span class='yes'>✓</span><span>W08 does not fire</span><span class='tests'><a href='#t-warnings-test_w08'>test_w08</a></span></li>
+<li><span class='yes'>✓</span><span>W09 fires</span><span class='tests'><a href='#t-warnings-test_w09'>test_w09</a></span></li>
+<li><span class='yes'>✓</span><span>W09 does not fire</span><span class='tests'><a href='#t-warnings-test_w09'>test_w09</a></span></li>
 </ul>
 </div>
 <div class='card' id='spec-§6'><header><h3>§6 Tools: Result</h3><span class='frac'>0/1</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
@@ -446,7 +470,7 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>v_q</span><span class='tests'><a href='#t-moku-test_golden_lsb'>test_golden_lsb</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§9.2'><header><h3>§9.2 Golden per-power values</h3><span class='frac'>15/18</span></header><div class='bar'><span style='width:83%'></span></div><ul class='items'>
+<div class='card' id='spec-§9.2'><header><h3>§9.2 Golden per-power values</h3><span class='frac'>18/18</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
 <li><span class='yes'>✓</span><span>i_0</span><span class='tests'><a href='#t-spectrum-test_golden_photocurrent'>test_golden_photocurrent</a></span></li>
 <li><span class='yes'>✓</span><span>q_p</span><span class='tests'><a href='#t-spectrum-test_golden_photocurrent'>test_golden_photocurrent</a></span></li>
 <li><span class='yes'>✓</span><span>i_pk</span><span class='tests'><a href='#t-spectrum-test_golden_photocurrent'>test_golden_photocurrent</a></span></li>
@@ -459,29 +483,38 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>i_tot</span><span class='tests'><a href='#t-noise-test_golden_power_dependent_noise'>test_golden_power_dependent_noise</a></span></li>
 <li><span class='yes'>✓</span><span>v_dens</span><span class='tests'><a href='#t-noise-test_golden_power_dependent_noise'>test_golden_power_dependent_noise</a></span></li>
 <li><span class='yes'>✓</span><span>v_rms</span><span class='tests'><a href='#t-noise-test_golden_power_dependent_noise'>test_golden_power_dependent_noise</a></span></li>
-<li class='gap'><span class='no'>✗</span><span>v_coh</span></li>
-<li class='gap'><span class='no'>✗</span><span>occ_swing</span></li>
-<li class='gap'><span class='no'>✗</span><span>occ_moku</span></li>
+<li><span class='yes'>✓</span><span>v_coh</span><span class='tests'><a href='#t-budget-test_golden_budget'>test_golden_budget</a></span></li>
+<li><span class='yes'>✓</span><span>occ_swing</span><span class='tests'><a href='#t-budget-test_golden_budget'>test_golden_budget</a></span></li>
+<li><span class='yes'>✓</span><span>occ_moku</span><span class='tests'><a href='#t-budget-test_golden_budget'>test_golden_budget</a></span></li>
 <li><span class='yes'>✓</span><span>snr</span><span class='tests'><a href='#t-noise-test_golden_snr_and_shot_clear'>test_golden_snr_and_shot_clear</a></span></li>
 <li><span class='yes'>✓</span><span>snr_lia</span><span class='tests'><a href='#t-noise-test_golden_snr_lia'>test_golden_snr_lia</a></span></li>
 <li><span class='yes'>✓</span><span>shot_clear</span><span class='tests'><a href='#t-noise-test_golden_snr_and_shot_clear'>test_golden_snr_and_shot_clear</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§9.3'><header><h3>§9.3 Golden expected warnings</h3><span class='frac'>0/4</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
-<li class='gap'><span class='no'>✗</span><span>W02 fires for n_lia 1, 2; not 3, 4</span></li>
-<li class='gap'><span class='no'>✗</span><span>W03 at P_max only</span></li>
-<li class='gap'><span class='no'>✗</span><span>W04 at both powers</span></li>
-<li class='gap'><span class='no'>✗</span><span>W01, W05, W08, W09 do not fire</span></li>
+<div class='card' id='spec-§9.3'><header><h3>§9.3 Golden expected warnings</h3><span class='frac'>4/4</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>W02 fires for n_lia 1, 2; not 3, 4</span><span class='tests'><a href='#t-warnings-test_golden_w02'>test_golden_w02</a></span></li>
+<li><span class='yes'>✓</span><span>W03 at P_max only</span><span class='tests'><a href='#t-warnings-test_golden_w03_w04'>test_golden_w03_w04</a></span></li>
+<li><span class='yes'>✓</span><span>W04 at both powers</span><span class='tests'><a href='#t-warnings-test_golden_w03_w04'>test_golden_w03_w04</a></span></li>
+<li><span class='yes'>✓</span><span>W01, W05, W08, W09 do not fire</span><span class='tests'><a href='#t-warnings-test_golden_silent'>test_golden_silent</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§9.4'><header><h3>§9.4 Analyze tool golden</h3><span class='frac'>2/3</span></header><div class='bar'><span style='width:67%'></span></div><ul class='items'>
+<div class='card' id='spec-§9.4'><header><h3>§9.4 Analyze tool golden</h3><span class='frac'>3/3</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
 <li><span class='yes'>✓</span><span>f0_calc, q, tau_tank</span><span class='tests'><a href='#t-tank-test_golden_analyze_tank'>test_golden_analyze_tank</a></span></li>
 <li><span class='yes'>✓</span><span>settles = True (equality within tolerance)</span><span class='tests'><a href='#t-tank-test_golden_analyze_settles'>test_golden_analyze_settles</a></span></li>
-<li class='gap'><span class='no'>✗</span><span>No W06/W07</span></li>
+<li><span class='yes'>✓</span><span>No W06/W07</span><span class='tests'><a href='#t-warnings-test_golden_analyze_no_warnings'>test_golden_analyze_no_warnings</a></span></li>
 </ul>
 </div>
 </div></section>
 <section id='topics'><h2>Topics</h2><p class='lead'>One section per test file.</p></section>
+<section class='topic' id='topic-budget'><h2>budget</h2>
+<p class='lead'><code>tests/test_budget.py</code> · 5 functions · 12 cases — M5: output occupancy budget (SPEC §4.6).</p>
+<div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
+<tr data-row data-kind='golden' data-text='test_golden_budget v_coh, occ_swing and occ_moku at both powers match spec §9.2. golden §4.6 v-coh, occupancy §9.2 v_coh, occ_swing, occ_moku p_min p_max' id='t-budget-test_golden_budget'><td><span class='dot passed' title='passed'></span><code>test_golden_budget</code><span class='where'>tests/test_budget.py:13</span></td><td>V_coh, occ_swing and occ_moku at both powers match SPEC §9.2.</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§4.6'>§4.6 v-coh, occupancy</a><br><a href='#spec-§9.2'>§9.2 v_coh, occ_swing, occ_moku</a></td><td><details><summary>2 cases</summary><ul><li class='mono'>p_min</li><li class='mono'>p_max</li></ul></details></td></tr>
+<tr data-row data-kind='formula' data-text='test_budget_formulas v_coh adds the three terms; moku occupancy counts 2·v_coh against peak-to-peak range. formula §4.6 v-coh, occupancy' id='t-budget-test_budget_formulas'><td><span class='dot passed' title='passed'></span><code>test_budget_formulas</code><span class='where'>tests/test_budget.py:25</span></td><td>V_coh adds the three terms; Moku occupancy counts 2·V_coh against peak-to-peak range.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.6'>§4.6 v-coh, occupancy</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_moku_range_ten_times switching the moku from 1 v to 10 v range cuts occ_moku tenfold; occ_swing unchanged. formula §4.6 occupancy' id='t-budget-test_moku_range_ten_times'><td><span class='dot passed' title='passed'></span><code>test_moku_range_ten_times</code><span class='where'>tests/test_budget.py:35</span></td><td>Switching the Moku from 1 V to 10 V range cuts occ_moku tenfold; occ_swing unchanged.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.6'>§4.6 occupancy</a></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_budget_frozen budget is an immutable result. api' id='t-budget-test_budget_frozen'><td><span class='dot passed' title='passed'></span><code>test_budget_frozen</code><span class='where'>tests/test_budget.py:45</span></td><td>Budget is an immutable result.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><span class='where'>—</span></td><td>1</td></tr>
+<tr data-row data-kind='validation' data-text='test_budget_rejects_bad_input negative voltages or non-positive k_crest, v_swing, v_range raise valueerror. validation args0 args1 args2 args3 args4 args5 args6' id='t-budget-test_budget_rejects_bad_input'><td><span class='dot passed' title='passed'></span><code>test_budget_rejects_bad_input</code><span class='where'>tests/test_budget.py:54</span></td><td>Negative voltages or non-positive k_crest, V_swing, V_range raise ValueError.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><span class='where'>—</span></td><td><details><summary>7 cases</summary><ul><li class='mono'>args0</li><li class='mono'>args1</li><li class='mono'>args2</li><li class='mono'>args3</li><li class='mono'>args4</li><li class='mono'>args5</li><li class='mono'>args6</li></ul></details></td></tr>
+</tbody></table></div></section>
 <section class='topic' id='topic-moku'><h2>moku</h2>
 <p class='lead'><code>tests/test_moku.py</code> · 4 functions · 9 cases — M4: Moku ADC LSB and quantization noise (SPEC §4.7).</p>
 <div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
@@ -607,6 +640,24 @@ N_τ·τ = N_τ·t_dwell/π) does not for N_τ = 5.</td><td><span class='chip' t
 <tr data-row data-kind='api' data-text='test_format format_eng: 5 significant digits, si prefix, rounding carry, none/0/inf, out of range. api §8.1 eng-format 100000.0-\u03a9-100.00 k\u03a9 6.3326e-05-h-63.326 \xb5h 1e-12-f-1.0000 pf 20000000.0-hz-20.000 mhz 0.6-a/w-600.00 ma/w 295-k-295.00 k -0.025033-v--25.033 mv 999.9999-\u03a9-1.0000 k\u03a9 0-v-0 v none-v-\u2014 1e-05-\u2013-10.000 \xb5 1e-21-a-1.0000e-21 a inf--inf' id='t-units-test_format'><td><span class='dot passed' title='passed'></span><code>test_format</code><span class='where'>tests/test_units.py:56</span></td><td>format_eng: 5 significant digits, SI prefix, rounding carry, None/0/inf, out of range.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><a href='#spec-§8.1'>§8.1 eng-format</a></td><td><details><summary>13 cases</summary><ul><li class='mono'>100000.0-\u03a9-100.00 k\u03a9</li><li class='mono'>6.3326e-05-H-63.326 \xb5H</li><li class='mono'>1e-12-F-1.0000 pF</li><li class='mono'>20000000.0-Hz-20.000 MHz</li><li class='mono'>0.6-A/W-600.00 mA/W</li><li class='mono'>295-K-295.00 K</li><li class='mono'>-0.025033-V--25.033 mV</li><li class='mono'>999.9999-\u03a9-1.0000 k\u03a9</li><li class='mono'>0-V-0 V</li><li class='mono'>None-V-\u2014</li><li class='mono'>1e-05-\u2013-10.000 \xb5</li><li class='mono'>1e-21-A-1.0000e-21 A</li><li class='mono'>inf--inf</li></ul></details></td></tr>
 <tr data-row data-kind='api' data-text='test_format_sig format_eng honours a custom number of significant digits. api §8.1 eng-format' id='t-units-test_format_sig'><td><span class='dot passed' title='passed'></span><code>test_format_sig</code><span class='where'>tests/test_units.py:81</span></td><td>format_eng honours a custom number of significant digits.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><a href='#spec-§8.1'>§8.1 eng-format</a></td><td>1</td></tr>
 <tr data-row data-kind='round_trip' data-text='test_round_trip format_eng → parse_eng returns the value within the 5-digit display precision. round_trip §8.1 eng-input, eng-format 1e-15 4.0363e-13 1250000.0 7.2095 12.717 2545.0 3e-08' id='t-units-test_round_trip'><td><span class='dot passed' title='passed'></span><code>test_round_trip</code><span class='where'>tests/test_units.py:88</span></td><td>format_eng → parse_eng returns the value within the 5-digit display precision.</td><td><span class='chip' title='save → load or format → parse gives back the same thing'>round_trip</span></td><td><a href='#spec-§8.1'>§8.1 eng-input, eng-format</a></td><td><details><summary>7 cases</summary><ul><li class='mono'>1e-15</li><li class='mono'>4.0363e-13</li><li class='mono'>1250000.0</li><li class='mono'>7.2095</li><li class='mono'>12.717</li><li class='mono'>2545.0</li><li class='mono'>3e-08</li></ul></details></td></tr>
+</tbody></table></div></section>
+<section class='topic' id='topic-warnings'><h2>warnings</h2>
+<p class='lead'><code>tests/test_warnings.py</code> · 14 functions · 17 cases — M5: warnings W01–W09 (SPEC §5): each fires once and stays silent once, plus golden §9.3.</p>
+<div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
+<tr data-row data-kind='warning' data-text='test_w01 w01 fires when τ_lia exceeds the dwell; equal is fine. warning §5 w01:fires, w01:silent' id='t-warnings-test_w01'><td><span class='dot passed' title='passed'></span><code>test_w01</code><span class='where'>tests/test_warnings.py:18</span></td><td>W01 fires when τ_LIA exceeds the dwell; equal is fine.</td><td><span class='chip' title='A W01–W09 condition fires or does not fire'>warning</span></td><td><a href='#spec-§5'>§5 W01:fires, W01:silent</a></td><td>1</td></tr>
+<tr data-row data-kind='warning' data-text='test_w02 w02 fires when enbw &gt; b_eq/5; exactly b_eq/5 is silent. warning §5 w02:fires, w02:silent' id='t-warnings-test_w02'><td><span class='dot passed' title='passed'></span><code>test_w02</code><span class='where'>tests/test_warnings.py:26</span></td><td>W02 fires when ENBW &gt; B_eq/5; exactly B_eq/5 is silent.</td><td><span class='chip' title='A W01–W09 condition fires or does not fire'>warning</span></td><td><a href='#spec-§5'>§5 W02:fires, W02:silent</a></td><td>1</td></tr>
+<tr data-row data-kind='warning' data-text='test_w03 w03 fires above 100 % opamp swing and carries the power it was checked at. warning §5 w03:fires, w03:silent' id='t-warnings-test_w03'><td><span class='dot passed' title='passed'></span><code>test_w03</code><span class='where'>tests/test_warnings.py:34</span></td><td>W03 fires above 100 % opamp swing and carries the power it was checked at.</td><td><span class='chip' title='A W01–W09 condition fires or does not fire'>warning</span></td><td><a href='#spec-§5'>§5 W03:fires, W03:silent</a></td><td>1</td></tr>
+<tr data-row data-kind='warning' data-text='test_w04 w04 fires above 100 % moku range and carries the power. warning §5 w04:fires, w04:silent' id='t-warnings-test_w04'><td><span class='dot passed' title='passed'></span><code>test_w04</code><span class='where'>tests/test_warnings.py:43</span></td><td>W04 fires above 100 % Moku range and carries the power.</td><td><span class='chip' title='A W01–W09 condition fires or does not fire'>warning</span></td><td><a href='#spec-§5'>§5 W04:fires, W04:silent</a></td><td>1</td></tr>
+<tr data-row data-kind='warning' data-text='test_w05 w05 fires when the tia output density is below 3·e_n,moku. warning §5 w05:fires, w05:silent' id='t-warnings-test_w05'><td><span class='dot passed' title='passed'></span><code>test_w05</code><span class='where'>tests/test_warnings.py:52</span></td><td>W05 fires when the TIA output density is below 3·e_n,Moku.</td><td><span class='chip' title='A W01–W09 condition fires or does not fire'>warning</span></td><td><a href='#spec-§5'>§5 W05:fires, W05:silent</a></td><td>1</td></tr>
+<tr data-row data-kind='warning' data-text='test_w06 w06 fires when the tank resonance is more than 1 % off f_0, either side. warning §5 w06:fires, w06:silent' id='t-warnings-test_w06'><td><span class='dot passed' title='passed'></span><code>test_w06</code><span class='where'>tests/test_warnings.py:61</span></td><td>W06 fires when the tank resonance is more than 1 % off f_0, either side.</td><td><span class='chip' title='A W01–W09 condition fires or does not fire'>warning</span></td><td><a href='#spec-§5'>§5 W06:fires, W06:silent</a></td><td>1</td></tr>
+<tr data-row data-kind='warning' data-text='test_w07 w07 fires when the tank does not settle (driven by tank.settles). warning §5 w07:fires, w07:silent' id='t-warnings-test_w07'><td><span class='dot passed' title='passed'></span><code>test_w07</code><span class='where'>tests/test_warnings.py:70</span></td><td>W07 fires when the tank does not settle (driven by tank.settles).</td><td><span class='chip' title='A W01–W09 condition fires or does not fire'>warning</span></td><td><a href='#spec-§5'>§5 W07:fires, W07:silent</a></td><td>1</td></tr>
+<tr data-row data-kind='warning' data-text='test_w08 w08 fires when the pulse is longer than 1/(10·f_max). warning §5 w08:fires, w08:silent' id='t-warnings-test_w08'><td><span class='dot passed' title='passed'></span><code>test_w08</code><span class='where'>tests/test_warnings.py:79</span></td><td>W08 fires when the pulse is longer than 1/(10·f_max).</td><td><span class='chip' title='A W01–W09 condition fires or does not fire'>warning</span></td><td><a href='#spec-§5'>§5 W08:fires, W08:silent</a></td><td>1</td></tr>
+<tr data-row data-kind='warning' data-text='test_w09 w09 fires when f_0 is more than 1 % away from f_rep/2. warning §5 w09:fires, w09:silent' id='t-warnings-test_w09'><td><span class='dot passed' title='passed'></span><code>test_w09</code><span class='where'>tests/test_warnings.py:87</span></td><td>W09 fires when f_0 is more than 1 % away from f_rep/2.</td><td><span class='chip' title='A W01–W09 condition fires or does not fire'>warning</span></td><td><a href='#spec-§5'>§5 W09:fires, W09:silent</a></td><td>1</td></tr>
+<tr data-row data-kind='schema' data-text='test_warning_contents every warning carries id, spec message, severity (w02/w08 info), power and fields. schema §5 fields' id='t-warnings-test_warning_contents'><td><span class='dot passed' title='passed'></span><code>test_warning_contents</code><span class='where'>tests/test_warnings.py:95</span></td><td>Every warning carries id, SPEC message, severity (W02/W08 info), power and fields.</td><td><span class='chip' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</span></td><td><a href='#spec-§5'>§5 fields</a></td><td>1</td></tr>
+<tr data-row data-kind='golden' data-text='test_golden_w02 golden: w02 fires for n_lia = 1, 2 and not for 3, 4. golden §9.3 w02 1 2 3 4' id='t-warnings-test_golden_w02'><td><span class='dot passed' title='passed'></span><code>test_golden_w02</code><span class='where'>tests/test_warnings.py:113</span></td><td>Golden: W02 fires for n_lia = 1, 2 and not for 3, 4.</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§9.3'>§9.3 w02</a></td><td><details><summary>4 cases</summary><ul><li class='mono'>1</li><li class='mono'>2</li><li class='mono'>3</li><li class='mono'>4</li></ul></details></td></tr>
+<tr data-row data-kind='golden' data-text='test_golden_w03_w04 golden: w03 fires at p_max only; w04 fires at both powers. golden §9.3 w03, w04' id='t-warnings-test_golden_w03_w04'><td><span class='dot passed' title='passed'></span><code>test_golden_w03_w04</code><span class='where'>tests/test_warnings.py:123</span></td><td>Golden: W03 fires at P_max only; W04 fires at both powers.</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§9.3'>§9.3 w03, w04</a></td><td>1</td></tr>
+<tr data-row data-kind='golden' data-text='test_golden_silent golden: w01, w05 (both powers), w08 and w09 do not fire. golden §9.3 silent' id='t-warnings-test_golden_silent'><td><span class='dot passed' title='passed'></span><code>test_golden_silent</code><span class='where'>tests/test_warnings.py:137</span></td><td>Golden: W01, W05 (both powers), W08 and W09 do not fire.</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§9.3'>§9.3 silent</a></td><td>1</td></tr>
+<tr data-row data-kind='golden' data-text='test_golden_analyze_no_warnings spec §9.4 analyzed tank: neither w06 nor w07 fires. golden §9.4 no-warnings' id='t-warnings-test_golden_analyze_no_warnings'><td><span class='dot passed' title='passed'></span><code>test_golden_analyze_no_warnings</code><span class='where'>tests/test_warnings.py:151</span></td><td>SPEC §9.4 analyzed tank: neither W06 nor W07 fires.</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§9.4'>§9.4 no-warnings</a></td><td>1</td></tr>
 </tbody></table></div></section>
 <section id='kinds'><h2>Kinds</h2><p class='lead'>Every test carries exactly one kind marker (registered in <code>tests/conftest.py</code> from <code>tests/spec_items.py</code>).</p><div class='kinds-legend'>
 <span class='chip'>golden</span><span>Compares against SPEC §9 golden values</span>
