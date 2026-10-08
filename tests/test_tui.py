@@ -235,3 +235,209 @@ async def test_load_issues_are_notified(pdir: Path) -> None:
         await pilot.pause()
         assert app.profile_name == "odd"
         assert any("'q'" in n.message for n in app._notifications)
+
+
+# -- tool screen (M9) ------------------------------------------------------------------------
+
+from textual.widgets import Tabs  # noqa: E402
+
+from srsfe.tools.base import Result  # noqa: E402
+from srsfe.tui.screens import plot_menu  # noqa: E402
+from srsfe.tui.screens.plot_menu import PlotMenu  # noqa: E402
+from srsfe.tui.widgets.eng_input import FieldRow  # noqa: E402
+from srsfe.tui.widgets.field_group import FieldGroup  # noqa: E402
+from srsfe.tui.widgets.results_table import ResultsTable  # noqa: E402
+from srsfe.tui.widgets.warnings_panel import WarningsPanel  # noqa: E402
+
+
+def row(app: SrsfeApp, name: str) -> FieldRow:
+    return app.screen.query_one(f"#row-{name}", FieldRow)
+
+
+def results(app: SrsfeApp) -> list[str]:
+    table = app.screen.query_one(ResultsTable)
+    return [str(r.value) for r in table.rows]
+
+
+async def open_golden(app: SrsfeApp, pilot, tool: str = "d") -> None:  # type: ignore[no-untyped-def]
+    app.load("golden")
+    await pilot.press(tool)
+    await pilot.pause()
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.1", "tool-screen")
+async def test_tool_screen_built_from_declaration(pdir: Path) -> None:
+    """Calc tabs, groups and field rows come from the Tool; calc keys switch the highlighting."""
+    app = SrsfeApp(pdir, pdir / "plots")
+    async with app.run_test(size=(150, 50)) as pilot:
+        await open_golden(app, pilot)
+        tabs = app.screen.query_one(Tabs)
+        assert tabs.active == "calc-1"
+        assert [g.group.key for g in app.screen.query(FieldGroup)] == ["t", "l", "n", "i", "m", "f"]
+        assert row(app, "r_f").has_class("required") and row(app, "q_mode").has_class("optional")
+        assert row(app, "p_min").has_class("unused")
+        groups = {g.group.key: g for g in app.screen.query(FieldGroup)}
+        assert not groups["t"].collapsed and groups["l"].collapsed
+        await pilot.press("4")
+        assert tabs.active == "calc-4" and row(app, "m").has_class("required")
+        assert row(app, "en_moku").has_class("optional") and not groups["n"].collapsed
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.3", "navigation")
+@pytest.mark.spec("§8.1", "eng-input")
+async def test_group_field_navigation_and_editing(pdir: Path) -> None:
+    """t enters Tank, r edits r_f; '47k' is stored as 47e3 SI; Esc climbs back to the launcher."""
+    app = SrsfeApp(pdir, pdir / "plots")
+    async with app.run_test(size=(150, 50)) as pilot:
+        await open_golden(app, pilot)
+        screen = app.screen
+        await pilot.press("t")
+        assert screen.level == "group:t"  # type: ignore[attr-defined]
+        await pilot.press("r")
+        assert app.focused is row(app, "r_f").input
+        await type_text(pilot, "47k")
+        await pilot.pause()
+        assert app.params.r_f == 47e3 and header(app).endswith("golden*")
+        await pilot.press("q")  # typed into the input, not "quit"
+        assert row(app, "r_f").has_class("invalid") and app.is_running
+        await pilot.press("backspace", "escape")
+        assert app.focused is None and screen.level == "group:t"  # type: ignore[attr-defined]
+        await pilot.press("escape")
+        assert screen.level == "top"  # type: ignore[attr-defined]
+        await pilot.press("escape")
+        assert isinstance(app.screen, LauncherScreen)
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.3", "navigation")
+async def test_single_field_group_edits_directly(pdir: Path) -> None:
+    """The Spectrum group (only f_max) jumps straight into editing f_max."""
+    app = SrsfeApp(pdir, pdir / "plots")
+    async with app.run_test(size=(150, 50)) as pilot:
+        await open_golden(app, pilot)
+        await pilot.press("f")
+        assert app.focused is row(app, "f_max").input
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.1", "tool-screen")
+@pytest.mark.spec("§6.1", "all")
+async def test_calculate_fills_results_and_warnings(pdir: Path) -> None:
+    """0 then c runs Design/All on golden: results table and the four golden warnings."""
+    app = SrsfeApp(pdir, pdir / "plots")
+    async with app.run_test(size=(150, 50)) as pilot:
+        await open_golden(app, pilot)
+        await pilot.press("0", "c")
+        await pilot.pause()
+        labels = results(app)
+        assert labels[0] == "q" and "v_coh" in labels and "snr_lia" in labels
+        text = str(app.screen.query_one(WarningsPanel).render())
+        assert text.count("W04") == 2 and "W03 · P_max" in text
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.1", "calc-validates", "eng-invalid")
+async def test_calculate_validates_first(pdir: Path) -> None:
+    """Missing required → error toast, nothing runs, field marked; invalid text blocks too."""
+    app = SrsfeApp(pdir, pdir / "plots")
+    async with app.run_test(size=(150, 50)) as pilot:
+        await open_golden(app, pilot)
+        await pilot.press("t", "d", "backspace", "escape", "escape", "c")  # entry selects all
+        await pilot.pause()
+        assert app.params.t_dwell is None and row(app, "t_dwell").has_class("missing")
+        assert results(app) == []
+        assert any("t_dwell" in n.message for n in app._notifications)
+        await pilot.press("t", "d")
+        await type_text(pilot, "1x")
+        await pilot.press("escape", "escape", "c")
+        await pilot.pause()
+        assert row(app, "t_dwell").has_class("invalid") and results(app) == []
+        assert any("Invalid" in n.message for n in app._notifications)
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.1", "tool-screen")
+async def test_f5_calculates_while_typing(pdir: Path) -> None:
+    """F5 is always active: it calculates even with focus in an input."""
+    app = SrsfeApp(pdir, pdir / "plots")
+    async with app.run_test(size=(150, 50)) as pilot:
+        await open_golden(app, pilot)
+        await pilot.press("t", "n")  # entering selects all
+        await type_text(pilot, "4")
+        await pilot.press("f5")
+        await pilot.pause()
+        assert "q" in results(app)
+        assert app.screen.results["1"].get("q") == pytest.approx(15.708, rel=1e-4)  # type: ignore[attr-defined]
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.1", "tool-screen")
+@pytest.mark.spec("§6.2", "outputs")
+async def test_analyze_tool_screen(pdir: Path) -> None:
+    """Analyze: enter L and C by key, calculate, read f0_calc."""
+    app = SrsfeApp(pdir, pdir / "plots")
+    async with app.run_test(size=(150, 50)) as pilot:
+        await open_golden(app, pilot, "a")
+        await pilot.press("t", "l")
+        await type_text(pilot, "63.3257u")
+        await pilot.press("escape", "c")
+        await type_text(pilot, "1p")
+        await pilot.press("escape", "escape", "c")
+        await pilot.pause()
+        assert "f0_calc" in results(app) and "settles" in results(app)
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.1", "plot-menu")
+async def test_plot_menu_show_and_save(pdir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """p needs a result; the menu lists available plots, b/s/u/n toggle, Enter shows, v saves."""
+    shown: list[list[str]] = []
+    monkeypatch.setattr(plot_menu, "launch", lambda result, plots: shown.append(plots))
+    app = SrsfeApp(pdir, pdir / "plots")
+    async with app.run_test(size=(150, 50)) as pilot:
+        await open_golden(app, pilot)
+        await pilot.press("0", "p")
+        assert not isinstance(app.screen, PlotMenu)  # nothing calculated yet
+        await pilot.press("c", "p")
+        assert isinstance(app.screen, PlotMenu)
+        assert app.screen.selected == ["bode", "spectrum", "budget", "noise"]
+        await pilot.press("s", "u", "n", "enter")
+        assert shown == [["bode"]] and not isinstance(app.screen, PlotMenu)
+        await pilot.press("p", "b", "s", "u", "v")
+        await pilot.pause()
+        assert (pdir / "plots" / "golden_noise.png").is_file()
+        assert not (pdir / "plots" / "golden_bode.png").exists()
+        await pilot.press("p", "escape")
+        assert not isinstance(app.screen, PlotMenu)
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.3", "navigation")
+async def test_top_level_actions(pdir: Path) -> None:
+    """v focuses results (Esc back); s saves; w saves as; o opens Profiles and reloads inputs."""
+    app = SrsfeApp(pdir, pdir / "plots")
+    async with app.run_test(size=(150, 50)) as pilot:
+        await open_golden(app, pilot)
+        await pilot.press("v")
+        assert isinstance(app.focused, ResultsTable)
+        await pilot.press("escape")
+        assert app.focused is None and app.screen.level == "top"  # type: ignore[attr-defined]
+        app.set_params(app.params.replace(r_f=33e3))
+        await pilot.press("s")
+        await pilot.pause()
+        assert ProfileStore(pdir).load("golden").params.r_f == 33e3
+        await pilot.press("w")
+        await type_text(pilot, "variant")
+        await pilot.press("enter")
+        await pilot.pause()
+        assert app.profile_name == "variant"
+        await pilot.press("o")
+        assert isinstance(app.screen, ProfilesScreen)
+        await pilot.press("up", "up", "l")  # cursor starts on the active "variant"; up twice → "default"
+        await pilot.pause()
+        assert app.profile_name == "default"
+        await pilot.press("escape")  # back to the tool screen: inputs show the loaded profile
+        await pilot.pause()
+        assert row(app, "r_f").input.value == "100k" and row(app, "en_moku").input.value == "30n"

@@ -17,6 +17,52 @@ from srsfe.core.warnings import DesignWarning
 
 POWERS = ("p_min", "p_max")
 PLOTS = ("bode", "spectrum", "budget", "noise")
+# Plot-menu toggle keys (SPEC §8.3), declared next to the plot names.
+PLOT_KEYS = {"bode": "b", "spectrum": "s", "budget": "u", "noise": "n"}
+
+# Output metadata (SPEC §3.2): name → (unit, description). "bool" marks a yes/no output.
+OUTPUTS: dict[str, tuple[str, str]] = {
+    "q": ("–", "Tank quality factor"),
+    "l_f": ("H", "Tank inductance"),
+    "c_f": ("F", "Tank capacitance"),
+    "f0_calc": ("Hz", "Resonance from L, C"),
+    "tau_tank": ("s", "Tank ring-down time constant"),
+    "bw_3db": ("Hz", "Tank −3 dB bandwidth"),
+    "b_eq": ("Hz", "Tank noise-equivalent bandwidth"),
+    "settles": ("bool", "N_τ·τ_tank ≤ t_dwell"),
+    "i_0": ("A", "Average photocurrent"),
+    "q_p": ("C", "Charge per pulse"),
+    "i_pk": ("A", "Peak pulse current"),
+    "f_n": ("Hz", "Harmonic frequency"),
+    "i_n": ("A", "Harmonic line current 2·I₀"),
+    "z_n": ("Ω", "|Z_f| at the harmonic"),
+    "att_n": ("dB", "Attenuation re R"),
+    "v_n": ("V", "Harmonic output amplitude"),
+    "v_n_sum": ("V", "Coherent sum ΣV_n"),
+    "v_n_rss": ("V", "RSS of V_n"),
+    "i_sig": ("A", "Signal current m·I₀"),
+    "v_sig": ("V", "Signal output amplitude"),
+    "i_sh": ("A/√Hz", "Shot noise"),
+    "i_r": ("A/√Hz", "Johnson noise of R"),
+    "i_en": ("A/√Hz", "Opamp voltage noise, input-referred"),
+    "i_nep": ("A/√Hz", "PD NEP noise"),
+    "i_elec": ("A/√Hz", "Electronic noise √(i_R² + i_en² + i_NEP²)"),
+    "i_tot": ("A/√Hz", "Total input noise"),
+    "v_dens": ("V/√Hz", "Output noise density R·i_tot"),
+    "v_rms": ("V", "Output rms noise over B_eq"),
+    "enbw_lia": ("Hz", "Lock-in ENBW"),
+    "v_rms_lia": ("V", "Output rms noise over ENBW"),
+    "v_coh": ("V", "Worst-case coherent output peak"),
+    "occ_swing": ("%", "Occupancy of opamp swing"),
+    "occ_moku": ("%", "Occupancy of Moku range"),
+    "snr": ("dB", "SNR over B_eq"),
+    "snr_lia": ("dB", "Lock-in SNR"),
+    "shot_clear": ("dB", "Shot-noise clearance over electronic noise"),
+    "lsb": ("V", "ADC LSB"),
+    "v_q": ("V", "Quantization noise rms"),
+}
+# Outputs that live in the per-power "harmonics" table rather than scalars/per_power.
+HARMONIC_COLUMNS = ("f_n", "i_n", "z_n", "att_n", "v_n")
 
 
 # -- Result --------------------------------------------------------------------------

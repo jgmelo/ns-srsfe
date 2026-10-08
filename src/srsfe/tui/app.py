@@ -23,9 +23,10 @@ class SrsfeApp(App[None]):
 
     header_text: reactive[str] = reactive("")
 
-    def __init__(self, profiles_dir: str | Path = "profiles") -> None:
+    def __init__(self, profiles_dir: str | Path = "profiles", plots_dir: str | Path = "plots") -> None:
         super().__init__()
         self.store = ProfileStore(profiles_dir)
+        self.plots_dir = Path(plots_dir)
         self.profile_name = DEFAULT_PROFILE
         self.notes = ""
         self.params = Params()
@@ -143,6 +144,15 @@ class SrsfeApp(App[None]):
 
     def action_save(self) -> None:
         self.save()
+
+    def action_calculate(self) -> None:
+        """F5: calculate on the tool screen; nothing elsewhere."""
+        calculate = getattr(self.screen, "action_calculate", None)
+        if calculate is not None:
+            calculate()
+
+    def action_help(self) -> None:
+        self.notify("The help overlay arrives in M10.")
 
     async def action_quit(self) -> None:
         self.guard_unsaved("quitting", self.exit)
