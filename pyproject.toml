@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "srsfe"
+version = "0.1.0"
+description = "Design calculator for the resonant TIA front end of an SRS photodetector"
+requires-python = ">=3.11"
+dependencies = ["textual>=0.80", "matplotlib>=3.8", "numpy>=1.26"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-asyncio>=0.23"]
+
+[project.scripts]
+srsfe = "srsfe.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
