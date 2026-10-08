@@ -160,7 +160,8 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 ### 4.2 Light and spectrum
 - I₀ = P·ℜ, q_p = I₀/f_rep, I_pk = q_p/τ_p
 - Lines: I₀ at DC (shorted by L — no output), 2·I₀ at fₙ = n·f_rep, m·I₀ at f₀
-- n = 1 … ⌊f_max/f_rep⌋
+- n = 1 … ⌊f_max/f_rep⌋ (floor taken on f_max/f_rep·(1 + 1e-9); slack absorbs float
+  rounding only, so f_max = k·f_rep includes harmonic k)
 - Vₙ = 2·I₀·|Z_f(fₙ)|, attₙ = 20·log₁₀(|Z_f(fₙ)|/R)
 
 ### 4.3 Signal
