@@ -109,13 +109,14 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 }
 </style></head><body><div class='layout'>
 <nav><h1>SRS-FE test catalog</h1>
-<div class='meta'>9059f58 · 2026-10-08 14:26</div>
+<div class='meta'>aa35ad1 · 2026-10-08 14:32</div>
 <ul><li><a href='#overview'>Overview</a></li>
-<li><a href='#spec'>SPEC coverage <span class='count'>48/148</span></a></li>
+<li><a href='#spec'>SPEC coverage <span class='count'>62/148</span></a></li>
 <li><a href='#topics'>Topics</a></li>
 <li class='sub'><a href='#topic-params'>params<span class='count'>36</span></a></li>
 <li class='sub'><a href='#topic-profiles'>profiles<span class='count'>38</span></a></li>
 <li class='sub'><a href='#topic-scaffold'>scaffold<span class='count'>2</span></a></li>
+<li class='sub'><a href='#topic-spectrum'>spectrum<span class='count'>30</span></a></li>
 <li class='sub'><a href='#topic-tank'>tank<span class='count'>41</span></a></li>
 <li class='sub'><a href='#topic-units'>units<span class='count'>52</span></a></li>
 <li><a href='#kinds'>Kinds</a></li></ul>
@@ -134,10 +135,10 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <section id='overview'><h2>Overview</h2>
 <p class='lead'>Generated from pytest collection. A <em>function</em> is one <code>def test_…</code>; parametrized functions expand into several <em>cases</em>.</p>
 <div class='tiles'>
-<div class='tile'><div class='v'>60</div><div class='l'>test functions</div></div>
-<div class='tile'><div class='v'>169</div><div class='l'>test cases</div></div>
-<div class='tile'><div class='v'>5</div><div class='l'>topics (files)</div></div>
-<div class='tile'><div class='v'>48/148</div><div class='l'>SPEC items covered</div></div>
+<div class='tile'><div class='v'>72</div><div class='l'>test functions</div></div>
+<div class='tile'><div class='v'>199</div><div class='l'>test cases</div></div>
+<div class='tile'><div class='v'>6</div><div class='l'>topics (files)</div></div>
+<div class='tile'><div class='v'>62/148</div><div class='l'>SPEC items covered</div></div>
 <div class='tile'><div class='v'>0</div><div class='l'>failed cases (last run)</div></div>
 </div>
 <h3>Cases by topic and kind</h3><p class='lead'>Cell: cases (functions). Empty columns show kinds no test exercises yet.</p>
@@ -185,6 +186,17 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <td class='empty'>·</td>
 <td style="background: rgba(var(--heat), 0.13)">2<span class='fn'>2 fn</span></td>
 <td><b>2</b><span class='fn'>2 fn</span></td></tr>
+<tr><td><a href='#topic-spectrum'>spectrum</a></td>
+<td style="background: rgba(var(--heat), 0.20)">7<span class='fn'>4 fn</span></td>
+<td style="background: rgba(var(--heat), 0.27)">12<span class='fn'>6 fn</span></td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.25)">10<span class='fn'>1 fn</span></td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td><b>30</b><span class='fn'>12 fn</span></td></tr>
 <tr><td><a href='#topic-tank'>tank</a></td>
 <td style="background: rgba(var(--heat), 0.16)">4<span class='fn'>4 fn</span></td>
 <td style="background: rgba(var(--heat), 0.40)">21<span class='fn'>10 fn</span></td>
@@ -208,16 +220,16 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <td class='empty'>·</td>
 <td><b>52</b><span class='fn'>5 fn</span></td></tr>
 </tbody><tfoot><tr><td>Total</td>
-<td>4<span class=fn>4 fn</span></td>
-<td>21<span class=fn>10 fn</span></td>
+<td>11<span class=fn>8 fn</span></td>
+<td>33<span class=fn>16 fn</span></td>
 <td>6<span class=fn>6 fn</span></td>
-<td>80<span class=fn>11 fn</span></td>
+<td>90<span class=fn>12 fn</span></td>
 <td>11<span class=fn>4 fn</span></td>
-<td>29<span class=fn>17 fn</span></td>
+<td>30<span class=fn>18 fn</span></td>
 <td>16<span class=fn>6 fn</span></td>
 <td>·</td>
 <td>2<span class=fn>2 fn</span></td>
-<td>169<span class='fn'>60 fn</span></td></tr></tfoot></table></div>
+<td>199<span class='fn'>72 fn</span></td></tr></tfoot></table></div>
 </section>
 <section id='spec'><h2>SPEC coverage</h2>
 <p class='lead'>Items listed in <code>tests/spec_items.py</code> against the <code>@pytest.mark.spec(…)</code> markers. ✗ = no test yet.</p><div class='sections'>
@@ -259,14 +271,14 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>BW₋₃dB and B_eq</span><span class='tests'><a href='#t-tank-test_golden_sizing'>test_golden_sizing</a>, <a href='#t-tank-test_bandwidth_mode'>test_bandwidth_mode</a>, <a href='#t-tank-test_minus_3db_points'>test_minus_3db_points</a>, <a href='#t-tank-test_b_eq_is_noise_bandwidth'>test_b_eq_is_noise_bandwidth</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§4.2'><header><h3>§4.2 Light and spectrum</h3><span class='frac'>0/3</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
-<li class='gap'><span class='no'>✗</span><span>I₀, q_p, I_pk</span></li>
-<li class='gap'><span class='no'>✗</span><span>n = 1 … ⌊f_max/f_rep⌋</span></li>
-<li class='gap'><span class='no'>✗</span><span>Vₙ and attₙ</span></li>
+<div class='card' id='spec-§4.2'><header><h3>§4.2 Light and spectrum</h3><span class='frac'>3/3</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>I₀, q_p, I_pk</span><span class='tests'><a href='#t-spectrum-test_golden_photocurrent'>test_golden_photocurrent</a>, <a href='#t-spectrum-test_pulse_charge_and_peak'>test_pulse_charge_and_peak</a></span></li>
+<li><span class='yes'>✓</span><span>n = 1 … ⌊f_max/f_rep⌋</span><span class='tests'><a href='#t-spectrum-test_golden_harmonics_table'>test_golden_harmonics_table</a>, <a href='#t-spectrum-test_harmonic_count'>test_harmonic_count</a>, <a href='#t-spectrum-test_no_harmonics_below_f_rep'>test_no_harmonics_below_f_rep</a></span></li>
+<li><span class='yes'>✓</span><span>Vₙ and attₙ</span><span class='tests'><a href='#t-spectrum-test_golden_harmonics_table'>test_golden_harmonics_table</a>, <a href='#t-spectrum-test_golden_harmonic_voltages'>test_golden_harmonic_voltages</a>, <a href='#t-spectrum-test_v_n_relations'>test_v_n_relations</a>, <a href='#t-spectrum-test_harmonics_use_tank_resonance'>test_harmonics_use_tank_resonance</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§4.3'><header><h3>§4.3 Signal</h3><span class='frac'>0/1</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
-<li class='gap'><span class='no'>✗</span><span>I_sig, V_sig</span></li>
+<div class='card' id='spec-§4.3'><header><h3>§4.3 Signal</h3><span class='frac'>1/1</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>I_sig, V_sig</span><span class='tests'><a href='#t-spectrum-test_golden_signal'>test_golden_signal</a>, <a href='#t-spectrum-test_signal_zero_modulation'>test_signal_zero_modulation</a></span></li>
 </ul>
 </div>
 <div class='card' id='spec-§4.4'><header><h3>§4.4 Noise densities</h3><span class='frac'>0/6</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
@@ -391,16 +403,16 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>profiles/golden.json loads and is valid</span><span class='tests'><a href='#t-params-test_golden_params_load_and_are_valid'>test_golden_params_load_and_are_valid</a>, <a href='#t-profiles-test_golden_file_loads'>test_golden_file_loads</a>, <a href='#t-scaffold-test_golden_profile_loads'>test_golden_profile_loads</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§9.1'><header><h3>§9.1 Golden scalar values</h3><span class='frac'>7/16</span></header><div class='bar'><span style='width:44%'></span></div><ul class='items'>
+<div class='card' id='spec-§9.1'><header><h3>§9.1 Golden scalar values</h3><span class='frac'>9/16</span></header><div class='bar'><span style='width:56%'></span></div><ul class='items'>
 <li><span class='yes'>✓</span><span>q</span><span class='tests'><a href='#t-tank-test_golden_sizing'>test_golden_sizing</a></span></li>
 <li><span class='yes'>✓</span><span>l_f</span><span class='tests'><a href='#t-tank-test_golden_sizing'>test_golden_sizing</a></span></li>
 <li><span class='yes'>✓</span><span>c_f</span><span class='tests'><a href='#t-tank-test_golden_sizing'>test_golden_sizing</a></span></li>
 <li><span class='yes'>✓</span><span>tau_tank</span><span class='tests'><a href='#t-tank-test_golden_sizing'>test_golden_sizing</a></span></li>
 <li><span class='yes'>✓</span><span>bw_3db</span><span class='tests'><a href='#t-tank-test_golden_sizing'>test_golden_sizing</a></span></li>
 <li><span class='yes'>✓</span><span>b_eq</span><span class='tests'><a href='#t-tank-test_golden_sizing'>test_golden_sizing</a></span></li>
-<li class='gap'><span class='no'>✗</span><span>f_n</span></li>
-<li><span class='yes'>✓</span><span>z_n</span><span class='tests'><a href='#t-tank-test_golden_z_at_harmonics'>test_golden_z_at_harmonics</a></span></li>
-<li class='gap'><span class='no'>✗</span><span>att_n</span></li>
+<li><span class='yes'>✓</span><span>f_n</span><span class='tests'><a href='#t-spectrum-test_golden_harmonics_table'>test_golden_harmonics_table</a></span></li>
+<li><span class='yes'>✓</span><span>z_n</span><span class='tests'><a href='#t-spectrum-test_golden_harmonics_table'>test_golden_harmonics_table</a>, <a href='#t-tank-test_golden_z_at_harmonics'>test_golden_z_at_harmonics</a></span></li>
+<li><span class='yes'>✓</span><span>att_n</span><span class='tests'><a href='#t-spectrum-test_golden_harmonics_table'>test_golden_harmonics_table</a></span></li>
 <li class='gap'><span class='no'>✗</span><span>enbw_lia</span></li>
 <li class='gap'><span class='no'>✗</span><span>i_r</span></li>
 <li class='gap'><span class='no'>✗</span><span>i_en</span></li>
@@ -410,15 +422,15 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li class='gap'><span class='no'>✗</span><span>v_q</span></li>
 </ul>
 </div>
-<div class='card' id='spec-§9.2'><header><h3>§9.2 Golden per-power values</h3><span class='frac'>0/18</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
-<li class='gap'><span class='no'>✗</span><span>i_0</span></li>
-<li class='gap'><span class='no'>✗</span><span>q_p</span></li>
-<li class='gap'><span class='no'>✗</span><span>i_pk</span></li>
-<li class='gap'><span class='no'>✗</span><span>v_n</span></li>
-<li class='gap'><span class='no'>✗</span><span>v_n_sum</span></li>
-<li class='gap'><span class='no'>✗</span><span>v_n_rss</span></li>
-<li class='gap'><span class='no'>✗</span><span>i_sig</span></li>
-<li class='gap'><span class='no'>✗</span><span>v_sig</span></li>
+<div class='card' id='spec-§9.2'><header><h3>§9.2 Golden per-power values</h3><span class='frac'>8/18</span></header><div class='bar'><span style='width:44%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>i_0</span><span class='tests'><a href='#t-spectrum-test_golden_photocurrent'>test_golden_photocurrent</a></span></li>
+<li><span class='yes'>✓</span><span>q_p</span><span class='tests'><a href='#t-spectrum-test_golden_photocurrent'>test_golden_photocurrent</a></span></li>
+<li><span class='yes'>✓</span><span>i_pk</span><span class='tests'><a href='#t-spectrum-test_golden_photocurrent'>test_golden_photocurrent</a></span></li>
+<li><span class='yes'>✓</span><span>v_n</span><span class='tests'><a href='#t-spectrum-test_golden_harmonic_voltages'>test_golden_harmonic_voltages</a></span></li>
+<li><span class='yes'>✓</span><span>v_n_sum</span><span class='tests'><a href='#t-spectrum-test_golden_harmonic_voltages'>test_golden_harmonic_voltages</a></span></li>
+<li><span class='yes'>✓</span><span>v_n_rss</span><span class='tests'><a href='#t-spectrum-test_golden_harmonic_voltages'>test_golden_harmonic_voltages</a></span></li>
+<li><span class='yes'>✓</span><span>i_sig</span><span class='tests'><a href='#t-spectrum-test_golden_signal'>test_golden_signal</a></span></li>
+<li><span class='yes'>✓</span><span>v_sig</span><span class='tests'><a href='#t-spectrum-test_golden_signal'>test_golden_signal</a></span></li>
 <li class='gap'><span class='no'>✗</span><span>i_sh</span></li>
 <li class='gap'><span class='no'>✗</span><span>i_tot</span></li>
 <li class='gap'><span class='no'>✗</span><span>v_dens</span></li>
@@ -493,6 +505,22 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
 <tr data-row data-kind='smoke' data-text='test_package_imports the package imports; physical constants have their spec values. smoke §0 constants' id='t-scaffold-test_package_imports'><td><span class='dot passed' title='passed'></span><code>test_package_imports</code><span class='where'>tests/test_scaffold.py:11</span></td><td>The package imports; physical constants have their SPEC values.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§0'>§0 constants</a></td><td>1</td></tr>
 <tr data-row data-kind='smoke' data-text='test_golden_profile_loads the conftest fixture reads profiles/golden.json. smoke §9 profile' id='t-scaffold-test_golden_profile_loads'><td><span class='dot passed' title='passed'></span><code>test_golden_profile_loads</code><span class='where'>tests/test_scaffold.py:20</span></td><td>The conftest fixture reads profiles/golden.json.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§9'>§9 profile</a></td><td>1</td></tr>
+</tbody></table></div></section>
+<section class='topic' id='topic-spectrum'><h2>spectrum</h2>
+<p class='lead'><code>tests/test_spectrum.py</code> · 12 functions · 30 cases — M3: photocurrent, harmonics table and signal (SPEC §4.2, §4.3).</p>
+<div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
+<tr data-row data-kind='golden' data-text='test_golden_photocurrent i₀, q_p, i_pk at both powers match spec §9.2. golden §4.2 i0 §9.2 i_0, q_p, i_pk p_min p_max' id='t-spectrum-test_golden_photocurrent'><td><span class='dot passed' title='passed'></span><code>test_golden_photocurrent</code><span class='where'>tests/test_spectrum.py:37</span></td><td>I₀, q_p, I_pk at both powers match SPEC §9.2.</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§4.2'>§4.2 i0</a><br><a href='#spec-§9.2'>§9.2 i_0, q_p, i_pk</a></td><td><details><summary>2 cases</summary><ul><li class='mono'>p_min</li><li class='mono'>p_max</li></ul></details></td></tr>
+<tr data-row data-kind='golden' data-text='test_golden_harmonics_table golden table has n = 1…5 at 40…200 mhz with spec §9.1 |z_f| and attenuation. golden §4.2 harmonics-range, v-n §9.1 f_n, z_n, att_n' id='t-spectrum-test_golden_harmonics_table'><td><span class='dot passed' title='passed'></span><code>test_golden_harmonics_table</code><span class='where'>tests/test_spectrum.py:51</span></td><td>Golden table has n = 1…5 at 40…200 MHz with SPEC §9.1 |Z_f| and attenuation.</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§4.2'>§4.2 harmonics-range, v-n</a><br><a href='#spec-§9.1'>§9.1 f_n, z_n, att_n</a></td><td>1</td></tr>
+<tr data-row data-kind='golden' data-text='test_golden_harmonic_voltages v_n, σv_n and rss at both powers match spec §9.2. golden §4.2 v-n §9.2 v_n, v_n_sum, v_n_rss p_min p_max' id='t-spectrum-test_golden_harmonic_voltages'><td><span class='dot passed' title='passed'></span><code>test_golden_harmonic_voltages</code><span class='where'>tests/test_spectrum.py:64</span></td><td>V_n, ΣV_n and RSS at both powers match SPEC §9.2.</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§4.2'>§4.2 v-n</a><br><a href='#spec-§9.2'>§9.2 v_n, v_n_sum, v_n_rss</a></td><td><details><summary>2 cases</summary><ul><li class='mono'>p_min</li><li class='mono'>p_max</li></ul></details></td></tr>
+<tr data-row data-kind='golden' data-text='test_golden_signal i_sig = m·i₀ and v_sig = i_sig·r at both powers match spec §9.2. golden §4.3 signal §9.2 i_sig, v_sig p_min p_max' id='t-spectrum-test_golden_signal'><td><span class='dot passed' title='passed'></span><code>test_golden_signal</code><span class='where'>tests/test_spectrum.py:79</span></td><td>I_sig = m·I₀ and V_sig = I_sig·R at both powers match SPEC §9.2.</td><td><span class='chip' title='Compares against SPEC §9 golden values'>golden</span></td><td><a href='#spec-§4.3'>§4.3 signal</a><br><a href='#spec-§9.2'>§9.2 i_sig, v_sig</a></td><td><details><summary>2 cases</summary><ul><li class='mono'>p_min</li><li class='mono'>p_max</li></ul></details></td></tr>
+<tr data-row data-kind='formula' data-text='test_harmonic_count n runs to ⌊f_max/f_rep⌋; exact multiples are included despite float rounding. formula §4.2 harmonics-range 40000000.0-200000000.0-5 40000000.0-199900000.0-4 40000000.0-39000000.0-0 40000000.0-40000000.0-1 100000.0-300000.0-3 76000000.0-1000000000.0-13 1000000.0-49000000.0-49' id='t-spectrum-test_harmonic_count'><td><span class='dot passed' title='passed'></span><code>test_harmonic_count</code><span class='where'>tests/test_spectrum.py:94</span></td><td>n runs to ⌊f_max/f_rep⌋; exact multiples are included despite float rounding.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.2'>§4.2 harmonics-range</a></td><td><details><summary>7 cases</summary><ul><li class='mono'>40000000.0-200000000.0-5</li><li class='mono'>40000000.0-199900000.0-4</li><li class='mono'>40000000.0-39000000.0-0</li><li class='mono'>40000000.0-40000000.0-1</li><li class='mono'>100000.0-300000.0-3</li><li class='mono'>76000000.0-1000000000.0-13</li><li class='mono'>1000000.0-49000000.0-49</li></ul></details></td></tr>
+<tr data-row data-kind='formula' data-text='test_no_harmonics_below_f_rep f_max &lt; f_rep gives an empty table with zero sum and rss (dc is never listed). formula §4.2 harmonics-range' id='t-spectrum-test_no_harmonics_below_f_rep'><td><span class='dot passed' title='passed'></span><code>test_no_harmonics_below_f_rep</code><span class='where'>tests/test_spectrum.py:106</span></td><td>f_max &lt; f_rep gives an empty table with zero sum and RSS (DC is never listed).</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.2'>§4.2 harmonics-range</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_pulse_charge_and_peak q_p·f_rep = i₀ and i_pk·τ_p = q_p (charge conservation). formula §4.2 i0' id='t-spectrum-test_pulse_charge_and_peak'><td><span class='dot passed' title='passed'></span><code>test_pulse_charge_and_peak</code><span class='where'>tests/test_spectrum.py:114</span></td><td>q_p·f_rep = I₀ and I_pk·τ_p = q_p (charge conservation).</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.2'>§4.2 i0</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_v_n_relations each line is 2·i₀; v_n = 2·i₀·r·10^(att/20); rss ≤ σv_n; v_n linear in i₀. formula §4.2 v-n' id='t-spectrum-test_v_n_relations'><td><span class='dot passed' title='passed'></span><code>test_v_n_relations</code><span class='where'>tests/test_spectrum.py:125</span></td><td>Each line is 2·I₀; V_n = 2·I₀·R·10^(att/20); RSS ≤ ΣV_n; V_n linear in I₀.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.2'>§4.2 v-n</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_harmonics_use_tank_resonance |z_f(f_n)| uses the tank&#x27;s own f_res: a tank resonating on a harmonic passes it at r. formula §4.2 v-n' id='t-spectrum-test_harmonics_use_tank_resonance'><td><span class='dot passed' title='passed'></span><code>test_harmonics_use_tank_resonance</code><span class='where'>tests/test_spectrum.py:139</span></td><td>|Z_f(f_n)| uses the tank&#x27;s own f_res: a tank resonating on a harmonic passes it at R.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.2'>§4.2 v-n</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_signal_zero_modulation m = 0 gives no signal; v_sig scales with r. formula §4.3 signal' id='t-spectrum-test_signal_zero_modulation'><td><span class='dot passed' title='passed'></span><code>test_signal_zero_modulation</code><span class='where'>tests/test_spectrum.py:150</span></td><td>m = 0 gives no signal; V_sig scales with R.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§4.3'>§4.3 signal</a></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_harmonics_is_frozen_tuples harmonics is a frozen dataclass of plain tuples/floats (ready for json in m6). api' id='t-spectrum-test_harmonics_is_frozen_tuples'><td><span class='dot passed' title='passed'></span><code>test_harmonics_is_frozen_tuples</code><span class='where'>tests/test_spectrum.py:161</span></td><td>Harmonics is a frozen dataclass of plain tuples/floats (ready for JSON in M6).</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><span class='where'>—</span></td><td>1</td></tr>
+<tr data-row data-kind='validation' data-text='test_rejects_bad_input non-positive/non-finite inputs raise valueerror (i₀ and m may be 0). validation photocurrent-args0 photocurrent-args1 pulse_charge-args2 pulse_charge-args3 peak_current-args4 peak_current-args5 n_harmonics-args6 n_harmonics-args7 signal-args8 signal-args9' id='t-spectrum-test_rejects_bad_input'><td><span class='dot passed' title='passed'></span><code>test_rejects_bad_input</code><span class='where'>tests/test_spectrum.py:177</span></td><td>Non-positive/non-finite inputs raise ValueError (I₀ and m may be 0).</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><span class='where'>—</span></td><td><details><summary>10 cases</summary><ul><li class='mono'>photocurrent-args0</li><li class='mono'>photocurrent-args1</li><li class='mono'>pulse_charge-args2</li><li class='mono'>pulse_charge-args3</li><li class='mono'>peak_current-args4</li><li class='mono'>peak_current-args5</li><li class='mono'>n_harmonics-args6</li><li class='mono'>n_harmonics-args7</li><li class='mono'>signal-args8</li><li class='mono'>signal-args9</li></ul></details></td></tr>
 </tbody></table></div></section>
 <section class='topic' id='topic-tank'><h2>tank</h2>
 <p class='lead'><code>tests/test_tank.py</code> · 19 functions · 41 cases — M2: tank sizing, analysis of existing parts and Z_f (SPEC §4.1).</p>
