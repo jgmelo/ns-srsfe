@@ -25,3 +25,14 @@ ANALYZE_INPUTS = {"l_f": 63.3257e-6, "c_f": 1e-12, "r_f": 100e3, "f_0": 20e6,
 ANALYZE_F0_CALC = 20.000e6  # Hz
 ANALYZE_Q = 12.566
 ANALYZE_TAU_TANK = 200e-9  # s
+
+# §9.2 per-power values: {"p_min": ..., "p_max": ...}
+I_0 = {"p_min": 60.000e-6, "p_max": 600.00e-6}  # A
+Q_P = {"p_min": 1.5000e-12, "p_max": 15.000e-12}  # C
+I_PK = {"p_min": 0.75000, "p_max": 7.5000}  # A
+_V_N_MIN = [0.63573, 0.25459, 0.16369, 0.12125, 0.096454]  # V
+V_N = {"p_min": _V_N_MIN, "p_max": [10 * v for v in _V_N_MIN]}  # "×10" in SPEC
+V_N_SUM = {"p_min": 1.2717, "p_max": 12.717}  # V
+V_N_RSS = {"p_min": 0.72095, "p_max": 7.2095}  # V
+I_SIG = {"p_min": 600.00e-12, "p_max": 6.0000e-9}  # A
+V_SIG = {"p_min": 60.000e-6, "p_max": 600.00e-6}  # V
