@@ -6,7 +6,7 @@ from typing import Any
 import numpy as np
 import pytest
 
-from srsfe.core.tank import TankResult, tank_from_dwell, tank_from_lc, z_f
+from srsfe.core.tank import SETTLE_RTOL, TankResult, settles, tank_from_dwell, tank_from_lc, z_f
 from tests import golden
 
 
@@ -49,9 +49,18 @@ def test_golden_analyze_tank() -> None:
     """tank_from_lc on the SPEC §9.4 parts gives f0_calc = 20 MHz, q, τ_tank = 200 ns."""
     a = golden.ANALYZE_INPUTS
     t = tank_from_lc(a["r_f"], a["l_f"], a["c_f"])
-    assert t.f_0 == pytest.approx(golden.ANALYZE_F0_CALC, rel=golden.REL)
+    assert t.f_res == pytest.approx(golden.ANALYZE_F0_CALC, rel=golden.REL)
     assert t.q == pytest.approx(golden.ANALYZE_Q, rel=golden.REL)
     assert t.tau_tank == pytest.approx(golden.ANALYZE_TAU_TANK, rel=golden.REL)
+
+
+@pytest.mark.golden
+@pytest.mark.spec("§9.4", "settles")
+def test_golden_analyze_settles() -> None:
+    """SPEC §9.4: the analyzed tank settles; N_τ·τ_tank = t_dwell up to rounding counts."""
+    a = golden.ANALYZE_INPUTS
+    t = tank_from_lc(a["r_f"], a["l_f"], a["c_f"])
+    assert t.settles(a["n_tau"], a["t_dwell"]) is True
 
 
 # -- formulas ----------------------------------------------------------------------
@@ -145,6 +154,27 @@ def test_b_eq_is_noise_bandwidth(q: float) -> None:
     assert integral == pytest.approx(tank_from_lc(r, *_lc(r, f0, q)).b_eq, rel=1e-4)
 
 
+@pytest.mark.formula
+@pytest.mark.spec("§3.2", "settles")
+def test_settles_boundary() -> None:
+    """settles: ≤ holds with only float-rounding slack (rtol 1e-9); clearly longer fails."""
+    assert settles(200e-9, 5, 1e-6)
+    assert settles(200e-9 * (1 + SETTLE_RTOL / 2), 5, 1e-6)
+    assert not settles(200e-9 * (1 + 1e-6), 5, 1e-6)
+    assert not settles(201e-9, 5, 1e-6)
+    assert settles(100e-9, 5, 1e-6)
+
+
+@pytest.mark.formula
+@pytest.mark.spec("§3.2", "settles")
+@pytest.mark.parametrize("mode", ["settling", "bandwidth"])
+def test_designed_tank_settles_in_settling_mode_only(mode: str) -> None:
+    """A settling-mode design settles exactly at the limit; bandwidth mode (Q = f₀·t_dwell,
+    N_τ·τ = N_τ·t_dwell/π) does not for N_τ = 5."""
+    t = tank_from_dwell(100e3, 20e6, 1e-6, 5, mode)
+    assert t.settles(5, 1e-6) is (mode == "settling")
+
+
 # -- round trip / API ----------------------------------------------------------------
 
 
@@ -155,7 +185,7 @@ def test_dwell_then_lc_round_trip(mode: str) -> None:
     """tank_from_lc on the L, C from tank_from_dwell reproduces the same tank."""
     a = tank_from_dwell(82e3, 25e6, 0.8e-6, 6, mode)
     b = tank_from_lc(a.r_f, a.l_f, a.c_f)
-    for name in ("f_0", "q", "l_f", "c_f", "tau_tank", "bw_3db", "b_eq"):
+    for name in ("f_res", "q", "l_f", "c_f", "tau_tank", "bw_3db", "b_eq"):
         assert getattr(b, name) == pytest.approx(getattr(a, name), rel=1e-12), name
 
 

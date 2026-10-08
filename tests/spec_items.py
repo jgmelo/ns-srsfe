@@ -61,6 +61,7 @@ SECTIONS: list[Section] = [
         "q-mode": 'q_mode ∈ {"settling", "bandwidth"}',
         "p-order": "p_min ≤ p_max",
     }),
+    Section("§3.2", "Derived", {"settles": "settles = N_τ·τ_tank ≤ t_dwell (rounding slack)"}),
     Section("§4.1", "Tank formulas", {
         "q-settling": "Q, settling mode",
         "q-bandwidth": "Q, bandwidth mode",

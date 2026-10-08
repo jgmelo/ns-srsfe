@@ -124,7 +124,7 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 |---|---|---|
 | `q` | – | Tank quality factor |
 | `l_f`, `c_f` | H, F | Tank L, C (derived in Design tool) |
-| `f0_calc` | Hz | Resonance from L, C (Analyze tool) |
+| `f0_calc` | Hz | Resonance from L, C (Analyze tool); `TankResult.f_res` |
 | `tau_tank` | s | Tank ring-down time constant |
 | `bw_3db`, `b_eq` | Hz | Tank −3 dB and noise-equivalent bandwidth |
 | `enbw_lia` | Hz | Lock-in ENBW |
@@ -140,7 +140,7 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 | `occ_swing`, `occ_moku` | % | Occupancy of opamp swing / Moku range |
 | `snr`, `snr_lia`, `shot_clear` | dB | SNR over B_eq, lock-in SNR, shot-noise clearance |
 | `lsb`, `v_q` | V | ADC LSB, quantization noise rms |
-| `settles` | bool | N_τ·τ_tank ≤ t_dwell (Analyze tool) |
+| `settles` | bool | N_τ·τ_tank ≤ t_dwell·(1 + 1e-9) (Analyze tool; slack absorbs float rounding only) |
 
 ---
 
@@ -153,6 +153,8 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 - From existing parts: f₀_calc = 1/(2π√(LC)), Q = R·√(C/L)
 - τ_tank = Q / (π·f₀)
 - Z_f(f) = R / [1 + jQ(f/f₀ − f₀/f)]
+- `TankResult.f_res` is the tank's own resonance, used in Z_f: f_res = f_0 (Design),
+  f_res = f₀_calc (Analyze). The input `f_0` is always the signal frequency.
 - BW₋₃dB = f₀/Q, B_eq = (π/2)·BW₋₃dB
 
 ### 4.2 Light and spectrum
@@ -198,7 +200,7 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 | W04 | occ_moku > 100 | Output exceeds Moku input range |
 | W05 | v_dens < 3·e_n,Moku | Moku noise not negligible vs TIA output noise |
 | W06 | \|f₀_calc − f_0\|/f_0 > 0.01 | Tank resonance off signal frequency (Analyze) |
-| W07 | N_τ·τ_tank > t_dwell | Tank does not settle within dwell (Analyze) |
+| W07 | not `settles` (N_τ·τ_tank > t_dwell·(1 + 1e-9)) | Tank does not settle within dwell (Analyze) |
 | W08 | τ_p > 1/(10·f_max) | Impulse approximation questionable |
 | W09 | \|f_0 − f_rep/2\|/f_0 > 0.01 | Signal frequency is not f_rep/2 |
 
@@ -392,4 +394,4 @@ dB values: absolute tolerance 0.01 dB.
 
 Inputs l_f = 63.3257e-6 H, c_f = 1e-12 F, r_f = 100e3 Ω, f_0 = 20e6, t_dwell = 1e-6, n_tau = 5
 → f0_calc = 20.000e6 Hz, q = 12.566, tau_tank = 200e-9 s, settles = True (equality within
-tolerance counts as settling), no W06/W07.
+the 1e-9 rounding slack counts as settling), no W06/W07.

@@ -17,21 +17,25 @@ Q_MODES = ("settling", "bandwidth")
 
 @dataclass(frozen=True)
 class TankResult:
-    """Tank parameters, SI. `f_0` is the tank's own resonance: the input f_0 for
-    tank_from_dwell, f₀_calc for tank_from_lc."""
+    """Tank parameters, SI. `f_res` is the tank's own resonance: equal to the input f_0
+    (signal frequency) for tank_from_dwell, f₀_calc for tank_from_lc (SPEC §4.1)."""
 
-    r_f: float  # Ω, |Z_f(f_0)|
-    f_0: float  # Hz
+    r_f: float  # Ω, |Z_f(f_res)|
+    f_res: float  # Hz
     q: float
     l_f: float  # H
     c_f: float  # F
-    tau_tank: float  # s, ring-down time constant Q/(π f_0)
-    bw_3db: float  # Hz, f_0/Q
+    tau_tank: float  # s, ring-down time constant Q/(π f_res)
+    bw_3db: float  # Hz, f_res/Q
     b_eq: float  # Hz, noise-equivalent bandwidth (π/2)·bw_3db
 
     def z(self, f: ArrayLike) -> NDArray[np.complex128]:
         """Z_f at frequency/frequencies f (Hz)."""
-        return z_f(f, self.r_f, self.f_0, self.q)
+        return z_f(f, self.r_f, self.f_res, self.q)
+
+    def settles(self, n_tau: float, t_dwell: float) -> bool:
+        """N_τ·τ_tank ≤ t_dwell, with float-rounding slack (SPEC §3.2)."""
+        return settles(self.tau_tank, n_tau, t_dwell)
 
 
 def _require_positive(**values: float) -> None:
@@ -43,7 +47,7 @@ def _require_positive(**values: float) -> None:
 def _build(r: float, f0: float, q: float, l: float, c: float) -> TankResult:
     bw = f0 / q
     return TankResult(
-        r_f=r, f_0=f0, q=q, l_f=l, c_f=c,
+        r_f=r, f_res=f0, q=q, l_f=l, c_f=c,
         tau_tank=q / (math.pi * f0),
         bw_3db=bw,
         b_eq=math.pi / 2 * bw,
@@ -88,3 +92,13 @@ def z_f(f: ArrayLike, r: float, f0: float, q: float) -> NDArray[np.complex128]:
     fn = f[nz]
     out[nz] = r / (1 + 1j * q * (fn / f0 - f0 / fn))
     return out
+
+
+# Relative slack for float rounding only: τ_tank = 2RC exactly, so a tank sized for
+# N_τ·τ_tank = t_dwell must count as settling (SPEC §3.2, §9.4).
+SETTLE_RTOL = 1e-9
+
+
+def settles(tau_tank: float, n_tau: float, t_dwell: float) -> bool:
+    """N_τ·τ_tank ≤ t_dwell·(1 + SETTLE_RTOL). W07 fires when this is False."""
+    return n_tau * tau_tank <= t_dwell * (1 + SETTLE_RTOL)
