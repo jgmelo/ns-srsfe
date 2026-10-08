@@ -36,3 +36,26 @@ V_N_SUM = {"p_min": 1.2717, "p_max": 12.717}  # V
 V_N_RSS = {"p_min": 0.72095, "p_max": 7.2095}  # V
 I_SIG = {"p_min": 600.00e-12, "p_max": 6.0000e-9}  # A
 V_SIG = {"p_min": 60.000e-6, "p_max": 600.00e-6}  # V
+
+# §9.1 noise / lock-in / Moku scalars
+ENBW_LIA = {1: 1.25e6, 2: 0.625e6, 3: 0.46875e6, 4: 0.390625e6}  # Hz, by n_lia
+I_R = 4.0363e-13  # A/√Hz
+I_EN = 1.8851e-12  # A/√Hz
+I_NEP = 4.2600e-15  # A/√Hz
+I_ELEC = 1.9279e-12  # A/√Hz
+LSB = 244.14e-6  # V
+V_Q = 70.477e-6  # V
+
+# §9.2 noise / SNR
+I_SH = {"p_min": 4.3848e-12, "p_max": 1.3866e-11}  # A/√Hz
+I_TOT = {"p_min": 4.7899e-12, "p_max": 1.3999e-11}  # A/√Hz
+V_DENS = {"p_min": 479.0e-9, "p_max": 1.3999e-6}  # V/√Hz
+V_RMS = {"p_min": 757.34e-6, "p_max": 2.2135e-3}  # V
+SNR = {"p_min": -25.033, "p_max": -14.349}  # dB
+SNR_LIA = {  # dB, by n_lia
+    1: {"p_min": -22.023, "p_max": -11.338},
+    2: {"p_min": -19.013, "p_max": -8.328},
+    3: {"p_min": -17.763, "p_max": -7.079},
+    4: {"p_min": -16.971, "p_max": -6.287},
+}
+SHOT_CLEAR = {"p_min": 7.137, "p_max": 17.137}  # dB
