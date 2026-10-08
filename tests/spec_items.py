@@ -149,7 +149,11 @@ SECTIONS: list[Section] = [
         "w04": "W04 at both powers",
         "silent": "W01, W05, W08, W09 do not fire",
     }),
-    Section("§9.4", "Analyze tool golden", {"analyze": "Analyze golden outputs, no W06/W07"}),
+    Section("§9.4", "Analyze tool golden", {
+        "tank": "f0_calc, q, tau_tank",
+        "settles": "settles = True (equality within tolerance)",
+        "no-warnings": "No W06/W07",
+    }),
 ]
 
 SECTION_BY_KEY: dict[str, Section] = {s.key: s for s in SECTIONS}
