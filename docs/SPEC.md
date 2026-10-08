@@ -193,17 +193,19 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 
 ## 5. Warnings
 
-| ID | Condition | Message |
-|---|---|---|
-| W01 | τ_LIA > t_dwell | Lock-in smears adjacent pixels |
-| W02 | ENBW > B_eq/5 | Tank, not lock-in, limits noise bandwidth |
-| W03 | occ_swing > 100 | Output exceeds opamp swing |
-| W04 | occ_moku > 100 | Output exceeds Moku input range |
-| W05 | v_dens < 3·e_n,Moku | Moku noise not negligible vs TIA output noise |
-| W06 | \|f₀_calc − f_0\|/f_0 > 0.01 | Tank resonance off signal frequency (Analyze) |
-| W07 | not `settles` (N_τ·τ_tank > t_dwell·(1 + 1e-9)) | Tank does not settle within dwell (Analyze) |
-| W08 | τ_p > 1/(10·f_max) | Impulse approximation questionable |
-| W09 | \|f_0 − f_rep/2\|/f_0 > 0.01 | Signal frequency is not f_rep/2 |
+| ID | Condition | Message | Severity | Power | Fields |
+|---|---|---|---|---|---|
+| W01 | τ_LIA > t_dwell | Lock-in smears adjacent pixels | warn | – | tau_lia, t_dwell |
+| W02 | ENBW > B_eq/5 | Tank, not lock-in, limits noise bandwidth | info | – | enbw_lia, b_eq |
+| W03 | occ_swing > 100 | Output exceeds opamp swing | warn | each | v_coh, occ_swing, v_swing |
+| W04 | occ_moku > 100 | Output exceeds Moku input range | warn | each | v_coh, occ_moku, v_range |
+| W05 | v_dens < 3·e_n,Moku | Moku noise not negligible vs TIA output noise | warn | each | v_dens, en_moku |
+| W06 | \|f₀_calc − f_0\|/f_0 > 0.01 | Tank resonance off signal frequency (Analyze) | warn | – | f0_calc, f_0 |
+| W07 | not `settles` (N_τ·τ_tank > t_dwell·(1 + 1e-9)) | Tank does not settle within dwell (Analyze) | warn | – | settles, tau_tank, n_tau, t_dwell |
+| W08 | τ_p > 1/(10·f_max) | Impulse approximation questionable | info | – | tau_p, f_max |
+| W09 | \|f_0 − f_rep/2\|/f_0 > 0.01 | Signal frequency is not f_rep/2 | warn | – | f_0, f_rep |
+
+Power "each": checked separately at P_min and P_max; the warning carries the power it fired at.
 
 Warnings carry `id`, `message`, `severity` ("warn" | "info"), `power` (None | "p_min" | "p_max"),
 and the names of the fields involved (used to put ⚠ next to result rows).

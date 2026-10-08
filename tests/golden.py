@@ -59,3 +59,14 @@ SNR_LIA = {  # dB, by n_lia
     4: {"p_min": -16.971, "p_max": -6.287},
 }
 SHOT_CLEAR = {"p_min": 7.137, "p_max": 17.137}  # dB
+
+# §9.2 budget
+V_COH = {"p_min": 1.2740, "p_max": 12.724}  # V
+OCC_SWING = {"p_min": 63.70, "p_max": 636.2}  # %
+OCC_MOKU = {"p_min": 254.8, "p_max": 2545}  # %
+
+# §9.3 expected warnings (golden, n_lia = 1)
+W02_FIRES_FOR_N_LIA = {1: True, 2: True, 3: False, 4: False}
+W03_POWERS = {"p_max"}
+W04_POWERS = {"p_min", "p_max"}
+SILENT = {"W01", "W05", "W08", "W09"}
