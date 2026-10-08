@@ -109,9 +109,9 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 }
 </style></head><body><div class='layout'>
 <nav><h1>SRS-FE test catalog</h1>
-<div class='meta'>540fb75 · 2026-10-08 16:44</div>
+<div class='meta'>46c0c18 · 2026-10-08 17:00</div>
 <ul><li><a href='#overview'>Overview</a></li>
-<li><a href='#spec'>SPEC coverage <span class='count'>137/148</span></a></li>
+<li><a href='#spec'>SPEC coverage <span class='count'>141/148</span></a></li>
 <li><a href='#topics'>Topics</a></li>
 <li class='sub'><a href='#topic-budget'>budget<span class='count'>12</span></a></li>
 <li class='sub'><a href='#topic-moku'>moku<span class='count'>9</span></a></li>
@@ -124,6 +124,7 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li class='sub'><a href='#topic-sweep'>sweep<span class='count'>4</span></a></li>
 <li class='sub'><a href='#topic-tank'>tank<span class='count'>41</span></a></li>
 <li class='sub'><a href='#topic-tools'>tools<span class='count'>33</span></a></li>
+<li class='sub'><a href='#topic-tui'>tui<span class='count'>10</span></a></li>
 <li class='sub'><a href='#topic-units'>units<span class='count'>52</span></a></li>
 <li class='sub'><a href='#topic-warnings'>warnings<span class='count'>17</span></a></li>
 <li><a href='#kinds'>Kinds</a></li></ul>
@@ -142,10 +143,10 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <section id='overview'><h2>Overview</h2>
 <p class='lead'>Generated from pytest collection. A <em>function</em> is one <code>def test_…</code>; parametrized functions expand into several <em>cases</em>.</p>
 <div class='tiles'>
-<div class='tile'><div class='v'>141</div><div class='l'>test functions</div></div>
-<div class='tile'><div class='v'>332</div><div class='l'>test cases</div></div>
-<div class='tile'><div class='v'>13</div><div class='l'>topics (files)</div></div>
-<div class='tile'><div class='v'>137/148</div><div class='l'>SPEC items covered</div></div>
+<div class='tile'><div class='v'>151</div><div class='l'>test functions</div></div>
+<div class='tile'><div class='v'>342</div><div class='l'>test cases</div></div>
+<div class='tile'><div class='v'>14</div><div class='l'>topics (files)</div></div>
+<div class='tile'><div class='v'>141/148</div><div class='l'>SPEC items covered</div></div>
 <div class='tile'><div class='v'>0</div><div class='l'>failed cases (last run)</div></div>
 </div>
 <h3>Cases by topic and kind</h3><p class='lead'>Cell: cases (functions). Empty columns show kinds no test exercises yet.</p>
@@ -281,6 +282,17 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
 <td class='empty'>·</td>
 <td><b>33</b><span class='fn'>18 fn</span></td></tr>
+<tr><td><a href='#topic-tui'>tui</a></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.25)">10<span class='fn'>10 fn</span></td>
+<td><b>10</b><span class='fn'>10 fn</span></td></tr>
 <tr><td><a href='#topic-units'>units</a></td>
 <td class='empty'>·</td>
 <td class='empty'>·</td>
@@ -312,8 +324,8 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <td>36<span class=fn>24 fn</span></td>
 <td>18<span class=fn>8 fn</span></td>
 <td>10<span class=fn>10 fn</span></td>
-<td>12<span class=fn>7 fn</span></td>
-<td>332<span class='fn'>141 fn</span></td></tr></tfoot></table></div>
+<td>22<span class=fn>17 fn</span></td>
+<td>342<span class='fn'>151 fn</span></td></tr></tfoot></table></div>
 </section>
 <section id='spec'><h2>SPEC coverage</h2>
 <p class='lead'>Items listed in <code>tests/spec_items.py</code> against the <code>@pytest.mark.spec(…)</code> markers. ✗ = no test yet.</p><div class='sections'>
@@ -438,7 +450,7 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>Input Params not mutated</span><span class='tests'><a href='#t-sweep-test_sweep_does_not_mutate'>test_sweep_does_not_mutate</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§7'><header><h3>§7 Profiles</h3><span class='frac'>14/16</span></header><div class='bar'><span style='width:88%'></span></div><ul class='items'>
+<div class='card' id='spec-§7'><header><h3>§7 Profiles</h3><span class='frac'>15/16</span></header><div class='bar'><span style='width:94%'></span></div><ul class='items'>
 <li><span class='yes'>✓</span><span>File format (schema_version, name, notes, created, modified, params)</span><span class='tests'><a href='#t-profiles-test_golden_file_loads'>test_golden_file_loads</a>, <a href='#t-profiles-test_file_contains_inputs_only_with_nulls'>test_file_contains_inputs_only_with_nulls</a>, <a href='#t-profiles-test_malformed_document'>test_malformed_document</a>, <a href='#t-profiles-test_invalid_json'>test_invalid_json</a></span></li>
 <li><span class='yes'>✓</span><span>Stores inputs only, never derived values</span><span class='tests'><a href='#t-profiles-test_file_contains_inputs_only_with_nulls'>test_file_contains_inputs_only_with_nulls</a></span></li>
 <li><span class='yes'>✓</span><span>Unset fields stored as null</span><span class='tests'><a href='#t-profiles-test_file_contains_inputs_only_with_nulls'>test_file_contains_inputs_only_with_nulls</a></span></li>
@@ -448,21 +460,21 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>duplicate</span><span class='tests'><a href='#t-profiles-test_duplicate'>test_duplicate</a></span></li>
 <li><span class='yes'>✓</span><span>rename</span><span class='tests'><a href='#t-profiles-test_rename'>test_rename</a></span></li>
 <li><span class='yes'>✓</span><span>delete</span><span class='tests'><a href='#t-profiles-test_delete'>test_delete</a></span></li>
-<li><span class='yes'>✓</span><span>Unknown keys → warn and drop</span><span class='tests'><a href='#t-profiles-test_unknown_keys_dropped_with_issue'>test_unknown_keys_dropped_with_issue</a></span></li>
+<li><span class='yes'>✓</span><span>Unknown keys → warn and drop</span><span class='tests'><a href='#t-profiles-test_unknown_keys_dropped_with_issue'>test_unknown_keys_dropped_with_issue</a>, <a href='#t-tui-test_load_issues_are_notified'>test_load_issues_are_notified</a></span></li>
 <li><span class='yes'>✓</span><span>Missing keys → null</span><span class='tests'><a href='#t-profiles-test_missing_keys_become_null'>test_missing_keys_become_null</a></span></li>
 <li><span class='yes'>✓</span><span>Wrong type → error</span><span class='tests'><a href='#t-profiles-test_wrong_type_is_error'>test_wrong_type_is_error</a></span></li>
 <li><span class='yes'>✓</span><span>migrate() upgrades older schema_versions</span><span class='tests'><a href='#t-profiles-test_migrate_current_is_noop'>test_migrate_current_is_noop</a>, <a href='#t-profiles-test_migrate_rejects'>test_migrate_rejects</a>, <a href='#t-profiles-test_migration_chain_applied'>test_migration_chain_applied</a></span></li>
-<li><span class='yes'>✓</span><span>default.json created from defaults if missing</span><span class='tests'><a href='#t-profiles-test_ensure_default'>test_ensure_default</a></span></li>
+<li><span class='yes'>✓</span><span>default.json created from defaults if missing</span><span class='tests'><a href='#t-profiles-test_ensure_default'>test_ensure_default</a>, <a href='#t-tui-test_starts_on_launcher_with_default_profile'>test_starts_on_launcher_with_default_profile</a></span></li>
 <li class='gap'><span class='no'>✗</span><span>App opens the last-used profile</span></li>
-<li class='gap'><span class='no'>✗</span><span>Dirty flag in header; prompt on switch/quit</span></li>
+<li><span class='yes'>✓</span><span>Dirty flag in header; prompt on switch/quit</span><span class='tests'><a href='#t-tui-test_dirty_flag_and_save'>test_dirty_flag_and_save</a>, <a href='#t-tui-test_quit_prompts_when_dirty'>test_quit_prompts_when_dirty</a>, <a href='#t-tui-test_switching_profile_prompts_when_dirty'>test_switching_profile_prompts_when_dirty</a></span></li>
 </ul>
 </div>
-<div class='card' id='spec-§8.1'><header><h3>§8.1 TUI screens and inputs</h3><span class='frac'>3/10</span></header><div class='bar'><span style='width:30%'></span></div><ul class='items'>
-<li class='gap'><span class='no'>✗</span><span>Launcher</span></li>
+<div class='card' id='spec-§8.1'><header><h3>§8.1 TUI screens and inputs</h3><span class='frac'>6/10</span></header><div class='bar'><span style='width:60%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>Launcher</span><span class='tests'><a href='#t-tui-test_starts_on_launcher_with_default_profile'>test_starts_on_launcher_with_default_profile</a>, <a href='#t-tui-test_launcher_keys_open_screens'>test_launcher_keys_open_screens</a></span></li>
 <li class='gap'><span class='no'>✗</span><span>Tool screen</span></li>
 <li class='gap'><span class='no'>✗</span><span>Plot menu</span></li>
-<li class='gap'><span class='no'>✗</span><span>Profiles screen</span></li>
-<li class='gap'><span class='no'>✗</span><span>Dialogs</span></li>
+<li><span class='yes'>✓</span><span>Profiles screen</span><span class='tests'><a href='#t-tui-test_profiles_table_and_load'>test_profiles_table_and_load</a>, <a href='#t-tui-test_switching_profile_prompts_when_dirty'>test_switching_profile_prompts_when_dirty</a>, <a href='#t-tui-test_profiles_new_duplicate_rename_notes_delete'>test_profiles_new_duplicate_rename_notes_delete</a>, <a href='#t-tui-test_cannot_delete_active_and_prompt_escape'>test_cannot_delete_active_and_prompt_escape</a></span></li>
+<li><span class='yes'>✓</span><span>Dialogs</span><span class='tests'><a href='#t-tui-test_quit_prompts_when_dirty'>test_quit_prompts_when_dirty</a>, <a href='#t-tui-test_quit_save_then_exit'>test_quit_save_then_exit</a>, <a href='#t-tui-test_switching_profile_prompts_when_dirty'>test_switching_profile_prompts_when_dirty</a>, <a href='#t-tui-test_profiles_new_duplicate_rename_notes_delete'>test_profiles_new_duplicate_rename_notes_delete</a></span></li>
 <li><span class='yes'>✓</span><span>Engineering-notation input</span><span class='tests'><a href='#t-units-test_parse'>test_parse</a>, <a href='#t-units-test_round_trip'>test_round_trip</a></span></li>
 <li><span class='yes'>✓</span><span>Invalid input → reason</span><span class='tests'><a href='#t-units-test_parse_rejects'>test_parse_rejects</a></span></li>
 <li><span class='yes'>✓</span><span>Engineering formatting of results</span><span class='tests'><a href='#t-units-test_format'>test_format</a>, <a href='#t-units-test_format_sig'>test_format_sig</a>, <a href='#t-units-test_round_trip'>test_round_trip</a></span></li>
@@ -709,6 +721,20 @@ N_τ·τ = N_τ·t_dwell/π) does not for N_τ = 5.</td><td><span class='chip' t
 <tr data-row data-kind='formula' data-text='test_analyze_optional_inputs without f_0 no w06; without t_dwell/n_tau no settles/w07; an off, slow tank fires both. formula §5 w06:fires, w07:fires §6.2 optional' id='t-tools-test_analyze_optional_inputs'><td><span class='dot passed' title='passed'></span><code>test_analyze_optional_inputs</code><span class='where'>tests/test_tools.py:237</span></td><td>Without f_0 no W06; without t_dwell/n_tau no settles/W07; an off, slow tank fires both.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§5'>§5 W06:fires, W07:fires</a><br><a href='#spec-§6.2'>§6.2 optional</a></td><td>1</td></tr>
 <tr data-row data-kind='round_trip' data-text='test_result_json_round_trip result → json → result is lossless, including warnings, tables and params. round_trip §6 result-json tool_calc0 tool_calc1 tool_calc2' id='t-tools-test_result_json_round_trip'><td><span class='dot passed' title='passed'></span><code>test_result_json_round_trip</code><span class='where'>tests/test_tools.py:253</span></td><td>Result → JSON → Result is lossless, including warnings, tables and params.</td><td><span class='chip' title='save → load or format → parse gives back the same thing'>round_trip</span></td><td><a href='#spec-§6'>§6 result-json</a></td><td><details><summary>3 cases</summary><ul><li class='mono'>tool_calc0</li><li class='mono'>tool_calc1</li><li class='mono'>tool_calc2</li></ul></details></td></tr>
 <tr data-row data-kind='round_trip' data-text='test_result_json_non_finite m = 0 gives snr = −inf; it is tagged in strict json and restored on load. round_trip §6 result-json' id='t-tools-test_result_json_non_finite'><td><span class='dot passed' title='passed'></span><code>test_result_json_non_finite</code><span class='where'>tests/test_tools.py:266</span></td><td>m = 0 gives SNR = −inf; it is tagged in strict JSON and restored on load.</td><td><span class='chip' title='save → load or format → parse gives back the same thing'>round_trip</span></td><td><a href='#spec-§6'>§6 result-json</a></td><td>1</td></tr>
+</tbody></table></div></section>
+<section class='topic' id='topic-tui'><h2>tui</h2>
+<p class='lead'><code>tests/test_tui.py</code> · 10 functions · 10 cases — M8: TUI shell smoke tests with App.run_test() (SPEC §7, §8.1).</p>
+<div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
+<tr data-row data-kind='smoke' data-text='test_starts_on_launcher_with_default_profile the app opens the launcher; default.json is created from defaults; header names it. smoke §7 default-profile §8.1 launcher' id='t-tui-test_starts_on_launcher_with_default_profile'><td><span class='dot passed' title='passed'></span><code>test_starts_on_launcher_with_default_profile</code><span class='where'>tests/test_tui.py:41</span></td><td>The app opens the launcher; default.json is created from defaults; header names it.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§7'>§7 default-profile</a><br><a href='#spec-§8.1'>§8.1 launcher</a></td><td>1</td></tr>
+<tr data-row data-kind='smoke' data-text='test_launcher_keys_open_screens d / a open the tool screen, o opens profiles, esc returns to the launcher. smoke §8.1 launcher' id='t-tui-test_launcher_keys_open_screens'><td><span class='dot passed' title='passed'></span><code>test_launcher_keys_open_screens</code><span class='where'>tests/test_tui.py:57</span></td><td>d / a open the tool screen, o opens Profiles, Esc returns to the launcher.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.1'>§8.1 launcher</a></td><td>1</td></tr>
+<tr data-row data-kind='smoke' data-text='test_dirty_flag_and_save editing inputs adds * to the header; ctrl+s saves the profile and clears it. smoke §7 dirty-flag' id='t-tui-test_dirty_flag_and_save'><td><span class='dot passed' title='passed'></span><code>test_dirty_flag_and_save</code><span class='where'>tests/test_tui.py:72</span></td><td>Editing inputs adds * to the header; Ctrl+S saves the profile and clears it.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§7'>§7 dirty-flag</a></td><td>1</td></tr>
+<tr data-row data-kind='smoke' data-text='test_quit_prompts_when_dirty quitting with unsaved changes asks: c cancels, d discards and quits. smoke §7 dirty-flag §8.1 dialogs' id='t-tui-test_quit_prompts_when_dirty'><td><span class='dot passed' title='passed'></span><code>test_quit_prompts_when_dirty</code><span class='where'>tests/test_tui.py:90</span></td><td>Quitting with unsaved changes asks: c cancels, d discards and quits.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§7'>§7 dirty-flag</a><br><a href='#spec-§8.1'>§8.1 dialogs</a></td><td>1</td></tr>
+<tr data-row data-kind='smoke' data-text='test_quit_save_then_exit in the unsaved dialog, s saves the profile and then quits; a clean app quits at once. smoke §8.1 dialogs' id='t-tui-test_quit_save_then_exit'><td><span class='dot passed' title='passed'></span><code>test_quit_save_then_exit</code><span class='where'>tests/test_tui.py:110</span></td><td>In the unsaved dialog, s saves the profile and then quits; a clean app quits at once.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.1'>§8.1 dialogs</a></td><td>1</td></tr>
+<tr data-row data-kind='smoke' data-text='test_profiles_table_and_load profiles lists name/modified/notes; l (or enter) loads the highlighted profile. smoke §8.1 profiles' id='t-tui-test_profiles_table_and_load'><td><span class='dot passed' title='passed'></span><code>test_profiles_table_and_load</code><span class='where'>tests/test_tui.py:133</span></td><td>Profiles lists name/modified/notes; l (or Enter) loads the highlighted profile.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.1'>§8.1 profiles</a></td><td>1</td></tr>
+<tr data-row data-kind='smoke' data-text='test_switching_profile_prompts_when_dirty loading another profile with unsaved changes asks first; c keeps the current one. smoke §7 dirty-flag §8.1 profiles, dialogs' id='t-tui-test_switching_profile_prompts_when_dirty'><td><span class='dot passed' title='passed'></span><code>test_switching_profile_prompts_when_dirty</code><span class='where'>tests/test_tui.py:152</span></td><td>Loading another profile with unsaved changes asks first; c keeps the current one.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§7'>§7 dirty-flag</a><br><a href='#spec-§8.1'>§8.1 profiles, dialogs</a></td><td>1</td></tr>
+<tr data-row data-kind='smoke' data-text='test_profiles_new_duplicate_rename_notes_delete n, d, r, e and x drive the profile store through prompt and delete dialogs. smoke §8.1 profiles, dialogs' id='t-tui-test_profiles_new_duplicate_rename_notes_delete'><td><span class='dot passed' title='passed'></span><code>test_profiles_new_duplicate_rename_notes_delete</code><span class='where'>tests/test_tui.py:169</span></td><td>n, d, r, e and x drive the profile store through prompt and delete dialogs.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.1'>§8.1 profiles, dialogs</a></td><td>1</td></tr>
+<tr data-row data-kind='smoke' data-text='test_cannot_delete_active_and_prompt_escape the active profile cannot be deleted; esc in a prompt cancels without changes. smoke §8.1 profiles' id='t-tui-test_cannot_delete_active_and_prompt_escape'><td><span class='dot passed' title='passed'></span><code>test_cannot_delete_active_and_prompt_escape</code><span class='where'>tests/test_tui.py:211</span></td><td>The active profile cannot be deleted; Esc in a prompt cancels without changes.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.1'>§8.1 profiles</a></td><td>1</td></tr>
+<tr data-row data-kind='smoke' data-text='test_load_issues_are_notified loading a profile with unknown keys works and raises a warning notification. smoke §7 unknown-keys' id='t-tui-test_load_issues_are_notified'><td><span class='dot passed' title='passed'></span><code>test_load_issues_are_notified</code><span class='where'>tests/test_tui.py:225</span></td><td>Loading a profile with unknown keys works and raises a warning notification.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§7'>§7 unknown-keys</a></td><td>1</td></tr>
 </tbody></table></div></section>
 <section class='topic' id='topic-units'><h2>units</h2>
 <p class='lead'><code>tests/test_units.py</code> · 5 functions · 52 cases — M1: engineering-notation parse/format.</p>
