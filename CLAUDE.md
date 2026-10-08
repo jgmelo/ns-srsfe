@@ -12,6 +12,7 @@ Design calculator (Textual TUI) for the resonant TIA front end of an SRS photode
 - Install: `pip install -e ".[dev]"`
 - Tests: `pytest -q`
 - Run: `python -m srsfe`
+- Test catalog: `python scripts/test_catalog.py --run --check` → `docs/tests.html`
 
 ## Conventions
 - Python ≥ 3.11, type hints everywhere, `dataclasses` (frozen for results).
@@ -29,6 +30,10 @@ Design calculator (Textual TUI) for the resonant TIA front end of an SRS photode
 - Golden values: SPEC §9, loaded from `profiles/golden.json` via `tests/conftest.py`.
   Use `pytest.approx(rel=1e-3)`; dB values `abs=0.01`.
 - Each warning in SPEC §5 needs one test where it fires and one where it does not.
+- Every test has a docstring, exactly one kind marker (`golden`, `formula`, …) and
+  `@pytest.mark.spec(section, *items)` for the SPEC items it covers; vocabulary in
+  `tests/spec_items.py` (keep it in step with SPEC.md).
+- At the end of each milestone regenerate and commit `docs/tests.html` (test catalog).
 - TUI: smoke tests with `App.run_test()` (pytest-asyncio) — screens open, keys navigate,
   calculate fills results. No pixel tests.
 

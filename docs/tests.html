@@ -1,0 +1,520 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>SRS-FE test catalog</title>
+<style>
+:root {
+  --bg: #fbfbfa; --surface: #ffffff; --surface-2: #f3f3f1; --text: #1d1d1b;
+  --muted: #6b6b66; --border: #e3e3df; --accent: #2f5fb3; --accent-soft: #e6edf8;
+  --ok: #24804a; --bad: #c0362c; --skip: #8a8a84; --heat: 47, 95, 179;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615; --surface: #1e1e1c; --surface-2: #262624; --text: #e9e9e5;
+    --muted: #9a9a94; --border: #34342f; --accent: #8fb0ef; --accent-soft: #24304a;
+    --ok: #5cc68a; --bad: #f07a6f; --skip: #8a8a84; --heat: 143, 176, 239;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+code, .mono { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 12.5px; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); min-height: 100vh; }
+nav { position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto;
+  padding: 20px 16px; border-right: 1px solid var(--border); background: var(--surface); }
+nav h1 { font-size: 15px; margin: 0 0 2px; }
+nav .meta { color: var(--muted); font-size: 12px; margin-bottom: 16px; }
+nav ul { list-style: none; margin: 0 0 16px; padding: 0; }
+nav li a { display: flex; justify-content: space-between; padding: 3px 6px; border-radius: 4px;
+  color: var(--text); }
+nav li a:hover { background: var(--surface-2); text-decoration: none; }
+nav li.sub a { padding-left: 18px; color: var(--muted); }
+nav .count { color: var(--muted); font-size: 12px; }
+nav label { display: block; font-size: 12px; color: var(--muted); margin: 8px 0 4px; }
+#q { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--bg); color: var(--text); font: inherit; }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px;
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+  white-space: nowrap; }
+button.chip { cursor: pointer; font: inherit; font-size: 12px; }
+button.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent);
+  color: var(--surface); }
+main { padding: 24px 32px 64px; max-width: 1200px; }
+h2 { font-size: 20px; margin: 36px 0 4px; padding-top: 8px; }
+h2:first-child { margin-top: 0; }
+h3 { font-size: 15px; margin: 0; }
+.lead { color: var(--muted); margin: 0 0 14px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;
+  margin: 12px 0 20px; }
+.tile { background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 14px; }
+.tile .v { font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.tile .l { color: var(--muted); font-size: 12px; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+th, td { padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: left;
+  vertical-align: top; }
+th { background: var(--surface-2); font-weight: 600; font-size: 12px; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+.matrix td, .matrix th { text-align: center; font-variant-numeric: tabular-nums; }
+.matrix td:first-child, .matrix th:first-child { text-align: left; }
+.matrix .fn { display: block; color: var(--muted); font-size: 11px; }
+.matrix .empty { color: var(--border); }
+.matrix tfoot td { font-weight: 600; background: var(--surface-2); }
+.issues { border: 1px solid var(--bad); border-radius: 8px; padding: 10px 14px; margin: 0 0 20px; }
+.issues h3 { color: var(--bad); }
+.issues ul { margin: 6px 0 0; padding-left: 18px; }
+.sections { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(330px, 100%), 1fr)); gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px 14px; }
+.card header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.card .frac { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.bar { height: 4px; background: var(--surface-2); border-radius: 2px; margin: 6px 0 8px; }
+.bar span { display: block; height: 100%; background: var(--ok); border-radius: 2px; }
+.items { list-style: none; margin: 0; padding: 0; }
+.items li { display: grid; grid-template-columns: 16px 1fr; gap: 6px; padding: 2px 0; }
+.items .tests { grid-column: 2; font-size: 12px; }
+.yes { color: var(--ok); } .no { color: var(--bad); }
+.items li.gap > span:nth-child(2) { color: var(--muted); }
+.sec-only { font-size: 12px; color: var(--muted); margin-top: 6px; }
+.tests-table { table-layout: fixed; }
+.tests-table th:nth-child(1) { width: 27%; } .tests-table th:nth-child(2) { width: 37%; }
+.tests-table th:nth-child(3) { width: 10%; } .tests-table th:nth-child(4) { width: 16%; }
+.tests-table th:nth-child(5) { width: 10%; }
+.tests-table code { overflow-wrap: anywhere; }
+details summary { white-space: nowrap; }
+.where { display: block; color: var(--muted); font-size: 11.5px; }
+details summary { cursor: pointer; color: var(--accent); }
+details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y: auto; }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
+.dot.passed { background: var(--ok); } .dot.failed { background: var(--bad); }
+.dot.skipped { background: var(--skip); }
+.kinds-legend { display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px;
+  margin: 10px 0 0; font-size: 13px; }
+.hidden { display: none !important; }
+@media (max-width: 800px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  nav { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+  main { padding: 16px; }
+  .tests-table { table-layout: auto; min-width: 640px; }
+  .tests-table th { width: auto !important; }
+}
+@media print {
+  nav { display: none; } .layout { display: block; } main { max-width: none; }
+  details > ul { max-height: none; }
+}
+</style></head><body><div class='layout'>
+<nav><h1>SRS-FE test catalog</h1>
+<div class='meta'>194ba9f-dirty · 2026-10-08 13:56</div>
+<ul><li><a href='#overview'>Overview</a></li>
+<li><a href='#spec'>SPEC coverage <span class='count'>30/145</span></a></li>
+<li><a href='#topics'>Topics</a></li>
+<li class='sub'><a href='#topic-params'>params<span class='count'>36</span></a></li>
+<li class='sub'><a href='#topic-profiles'>profiles<span class='count'>38</span></a></li>
+<li class='sub'><a href='#topic-scaffold'>scaffold<span class='count'>2</span></a></li>
+<li class='sub'><a href='#topic-units'>units<span class='count'>52</span></a></li>
+<li><a href='#kinds'>Kinds</a></li></ul>
+<label for='q'>Filter tests</label><input id='q' type='search' placeholder='name, text, §…'>
+<label>Kind</label><div class='chips'>
+<button class='chip' data-kind='golden' aria-pressed='false' title='Compares against SPEC §9 golden values'>golden</button>
+<button class='chip' data-kind='formula' aria-pressed='false' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</button>
+<button class='chip' data-kind='schema' aria-pressed='false' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</button>
+<button class='chip' data-kind='validation' aria-pressed='false' title='Accepts good input / rejects bad input'>validation</button>
+<button class='chip' data-kind='round_trip' aria-pressed='false' title='save → load or format → parse gives back the same thing'>round_trip</button>
+<button class='chip' data-kind='api' aria-pressed='false' title='An operation does what it says (copy, rename, list, migrate, …)'>api</button>
+<button class='chip' data-kind='errors' aria-pressed='false' title='Bad files or operations are handled as specified (error or warning)'>errors</button>
+<button class='chip' data-kind='warning' aria-pressed='false' title='A W01–W09 condition fires or does not fire'>warning</button>
+<button class='chip' data-kind='smoke' aria-pressed='false' title='Imports, screens or plots build/run without crashing'>smoke</button>
+</div></nav><main>
+<section id='overview'><h2>Overview</h2>
+<p class='lead'>Generated from pytest collection. A <em>function</em> is one <code>def test_…</code>; parametrized functions expand into several <em>cases</em>.</p>
+<div class='tiles'>
+<div class='tile'><div class='v'>41</div><div class='l'>test functions</div></div>
+<div class='tile'><div class='v'>128</div><div class='l'>test cases</div></div>
+<div class='tile'><div class='v'>4</div><div class='l'>topics (files)</div></div>
+<div class='tile'><div class='v'>30/145</div><div class='l'>SPEC items covered</div></div>
+<div class='tile'><div class='v'>0</div><div class='l'>failed cases (last run)</div></div>
+</div>
+<h3>Cases by topic and kind</h3><p class='lead'>Cell: cases (functions). Empty columns show kinds no test exercises yet.</p>
+<div class='scroll'><table class='matrix'><thead><tr><th>Topic</th>
+<th title='Compares against SPEC §9 golden values'>golden</th>
+<th title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</th>
+<th title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</th>
+<th title='Accepts good input / rejects bad input'>validation</th>
+<th title='save → load or format → parse gives back the same thing'>round_trip</th>
+<th title='An operation does what it says (copy, rename, list, migrate, …)'>api</th>
+<th title='Bad files or operations are handled as specified (error or warning)'>errors</th>
+<th title='A W01–W09 condition fires or does not fire'>warning</th>
+<th title='Imports, screens or plots build/run without crashing'>smoke</th>
+<th>Total</th></tr></thead><tbody>
+<tr><td><a href='#topic-params'>params</a></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.16)">4<span class='fn'>4 fn</span></td>
+<td style="background: rgba(var(--heat), 0.51)">28<span class='fn'>5 fn</span></td>
+<td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
+<td style="background: rgba(var(--heat), 0.14)">3<span class='fn'>3 fn</span></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td><b>36</b><span class='fn'>13 fn</span></td></tr>
+<tr><td><a href='#topic-profiles'>profiles</a></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.13)">2<span class='fn'>2 fn</span></td>
+<td style="background: rgba(var(--heat), 0.22)">8<span class='fn'>1 fn</span></td>
+<td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
+<td style="background: rgba(var(--heat), 0.26)">11<span class='fn'>11 fn</span></td>
+<td style="background: rgba(var(--heat), 0.33)">16<span class='fn'>6 fn</span></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td><b>38</b><span class='fn'>21 fn</span></td></tr>
+<tr><td><a href='#topic-scaffold'>scaffold</a></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.13)">2<span class='fn'>2 fn</span></td>
+<td><b>2</b><span class='fn'>2 fn</span></td></tr>
+<tr><td><a href='#topic-units'>units</a></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.55)">31<span class='fn'>2 fn</span></td>
+<td style="background: rgba(var(--heat), 0.20)">7<span class='fn'>1 fn</span></td>
+<td style="background: rgba(var(--heat), 0.30)">14<span class='fn'>2 fn</span></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td><b>52</b><span class='fn'>5 fn</span></td></tr>
+</tbody><tfoot><tr><td>Total</td>
+<td>·</td>
+<td>·</td>
+<td>6<span class=fn>6 fn</span></td>
+<td>67<span class=fn>8 fn</span></td>
+<td>9<span class=fn>3 fn</span></td>
+<td>28<span class=fn>16 fn</span></td>
+<td>16<span class=fn>6 fn</span></td>
+<td>·</td>
+<td>2<span class=fn>2 fn</span></td>
+<td>128<span class='fn'>41 fn</span></td></tr></tfoot></table></div>
+</section>
+<section id='spec'><h2>SPEC coverage</h2>
+<p class='lead'>Items listed in <code>tests/spec_items.py</code> against the <code>@pytest.mark.spec(…)</code> markers. ✗ = no test yet.</p><div class='sections'>
+<div class='card' id='spec-§0'><header><h3>§0 Constants (preamble)</h3><span class='frac'>1/1</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>e and k_B values</span><span class='tests'><a href='#t-scaffold-test_package_imports'>test_package_imports</a></span></li>
+</ul>
+</div>
+<div class='card' id='spec-§2'><header><h3>§2 Architecture rules</h3><span class='frac'>0/3</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>core/ never imports textual or matplotlib</span></li>
+<li class='gap'><span class='no'>✗</span><span>Both tank constructors return the same TankResult</span></li>
+<li class='gap'><span class='no'>✗</span><span>Adding a tool = one file + registration</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§3.1'><header><h3>§3.1 Inputs</h3><span class='frac'>11/11</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>Field names and order</span><span class='tests'><a href='#t-params-test_fields_match_spec_order'>test_fields_match_spec_order</a></span></li>
+<li><span class='yes'>✓</span><span>Default values</span><span class='tests'><a href='#t-params-test_defaults_match_spec'>test_defaults_match_spec</a></span></li>
+<li><span class='yes'>✓</span><span>Unit, symbol, group, key, description per field</span><span class='tests'><a href='#t-params-test_metadata_complete'>test_metadata_complete</a>, <a href='#t-params-test_selected_metadata'>test_selected_metadata</a></span></li>
+<li><span class='yes'>✓</span><span>Field types (number / integer / text)</span><span class='tests'><a href='#t-params-test_selected_metadata'>test_selected_metadata</a>, <a href='#t-params-test_coerce_ok'>test_coerce_ok</a>, <a href='#t-params-test_coerce_wrong_type'>test_coerce_wrong_type</a></span></li>
+<li><span class='yes'>✓</span><span>Numeric inputs &gt; 0</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a></span></li>
+<li><span class='yes'>✓</span><span>m ≥ 0</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
+<li><span class='yes'>✓</span><span>n_lia ∈ {1,2,3,4}</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
+<li><span class='yes'>✓</span><span>v_range ∈ {1, 10}</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
+<li><span class='yes'>✓</span><span>n_bits integer</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
+<li><span class='yes'>✓</span><span>q_mode ∈ {&quot;settling&quot;, &quot;bandwidth&quot;}</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
+<li><span class='yes'>✓</span><span>p_min ≤ p_max</span><span class='tests'><a href='#t-params-test_p_min_le_p_max'>test_p_min_le_p_max</a></span></li>
+</ul>
+</div>
+<div class='card' id='spec-§4.1'><header><h3>§4.1 Tank formulas</h3><span class='frac'>0/7</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>Q, settling mode</span></li>
+<li class='gap'><span class='no'>✗</span><span>Q, bandwidth mode</span></li>
+<li class='gap'><span class='no'>✗</span><span>L and C from R, Q, ω₀</span></li>
+<li class='gap'><span class='no'>✗</span><span>f₀_calc and Q from existing L, C</span></li>
+<li class='gap'><span class='no'>✗</span><span>τ_tank</span></li>
+<li class='gap'><span class='no'>✗</span><span>Z_f(f)</span></li>
+<li class='gap'><span class='no'>✗</span><span>BW₋₃dB and B_eq</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§4.2'><header><h3>§4.2 Light and spectrum</h3><span class='frac'>0/3</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>I₀, q_p, I_pk</span></li>
+<li class='gap'><span class='no'>✗</span><span>n = 1 … ⌊f_max/f_rep⌋</span></li>
+<li class='gap'><span class='no'>✗</span><span>Vₙ and attₙ</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§4.3'><header><h3>§4.3 Signal</h3><span class='frac'>0/1</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>I_sig, V_sig</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§4.4'><header><h3>§4.4 Noise densities</h3><span class='frac'>0/6</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>i_sh</span></li>
+<li class='gap'><span class='no'>✗</span><span>i_R</span></li>
+<li class='gap'><span class='no'>✗</span><span>i_en</span></li>
+<li class='gap'><span class='no'>✗</span><span>i_NEP</span></li>
+<li class='gap'><span class='no'>✗</span><span>i_tot and i_elec</span></li>
+<li class='gap'><span class='no'>✗</span><span>v_dens and V_rms</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§4.5'><header><h3>§4.5 Lock-in</h3><span class='frac'>0/2</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>ENBW for n = 1…4</span></li>
+<li class='gap'><span class='no'>✗</span><span>V_rms,LIA</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§4.6'><header><h3>§4.6 Budget and SNR</h3><span class='frac'>0/4</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>V_coh</span></li>
+<li class='gap'><span class='no'>✗</span><span>occ_swing, occ_moku</span></li>
+<li class='gap'><span class='no'>✗</span><span>SNR and SNR_LIA</span></li>
+<li class='gap'><span class='no'>✗</span><span>shot_clear</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§4.7'><header><h3>§4.7 Moku</h3><span class='frac'>0/1</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>LSB and V_q</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§5'><header><h3>§5 Warnings</h3><span class='frac'>0/19</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>Warning carries id, message, severity, power, fields</span></li>
+<li class='gap'><span class='no'>✗</span><span>W01 fires</span></li>
+<li class='gap'><span class='no'>✗</span><span>W01 does not fire</span></li>
+<li class='gap'><span class='no'>✗</span><span>W02 fires</span></li>
+<li class='gap'><span class='no'>✗</span><span>W02 does not fire</span></li>
+<li class='gap'><span class='no'>✗</span><span>W03 fires</span></li>
+<li class='gap'><span class='no'>✗</span><span>W03 does not fire</span></li>
+<li class='gap'><span class='no'>✗</span><span>W04 fires</span></li>
+<li class='gap'><span class='no'>✗</span><span>W04 does not fire</span></li>
+<li class='gap'><span class='no'>✗</span><span>W05 fires</span></li>
+<li class='gap'><span class='no'>✗</span><span>W05 does not fire</span></li>
+<li class='gap'><span class='no'>✗</span><span>W06 fires</span></li>
+<li class='gap'><span class='no'>✗</span><span>W06 does not fire</span></li>
+<li class='gap'><span class='no'>✗</span><span>W07 fires</span></li>
+<li class='gap'><span class='no'>✗</span><span>W07 does not fire</span></li>
+<li class='gap'><span class='no'>✗</span><span>W08 fires</span></li>
+<li class='gap'><span class='no'>✗</span><span>W08 does not fire</span></li>
+<li class='gap'><span class='no'>✗</span><span>W09 fires</span></li>
+<li class='gap'><span class='no'>✗</span><span>W09 does not fire</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§6'><header><h3>§6 Tools: Result</h3><span class='frac'>0/1</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>Result is JSON-serializable (round trip)</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§6.1'><header><h3>§6.1 Design tool</h3><span class='frac'>0/8</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>Calc 1 Sizing</span></li>
+<li class='gap'><span class='no'>✗</span><span>Calc 2 Spectrum</span></li>
+<li class='gap'><span class='no'>✗</span><span>Calc 3 Budget</span></li>
+<li class='gap'><span class='no'>✗</span><span>Calc 4 Noise</span></li>
+<li class='gap'><span class='no'>✗</span><span>Calc 5 Lock-in</span></li>
+<li class='gap'><span class='no'>✗</span><span>Calc 0 All</span></li>
+<li class='gap'><span class='no'>✗</span><span>Missing required inputs are reported, nothing runs</span></li>
+<li class='gap'><span class='no'>✗</span><span>Optional inputs gate dependent outputs/warnings</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§6.2'><header><h3>§6.2 Analyze tool</h3><span class='frac'>0/2</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>f0_calc, q, tau_tank, bw_3db, b_eq</span></li>
+<li class='gap'><span class='no'>✗</span><span>f_0 enables W06; t_dwell + n_tau enable settles, W07</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§6.3'><header><h3>§6.3 Sweep engine</h3><span class='frac'>0/3</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>One run per value, requested outputs collected</span></li>
+<li class='gap'><span class='no'>✗</span><span>Per-power outputs expand to name@p_min / name@p_max</span></li>
+<li class='gap'><span class='no'>✗</span><span>Input Params not mutated</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§7'><header><h3>§7 Profiles</h3><span class='frac'>14/16</span></header><div class='bar'><span style='width:88%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>File format (schema_version, name, notes, created, modified, params)</span><span class='tests'><a href='#t-profiles-test_golden_file_loads'>test_golden_file_loads</a>, <a href='#t-profiles-test_file_contains_inputs_only_with_nulls'>test_file_contains_inputs_only_with_nulls</a>, <a href='#t-profiles-test_malformed_document'>test_malformed_document</a>, <a href='#t-profiles-test_invalid_json'>test_invalid_json</a></span></li>
+<li><span class='yes'>✓</span><span>Stores inputs only, never derived values</span><span class='tests'><a href='#t-profiles-test_file_contains_inputs_only_with_nulls'>test_file_contains_inputs_only_with_nulls</a></span></li>
+<li><span class='yes'>✓</span><span>Unset fields stored as null</span><span class='tests'><a href='#t-profiles-test_file_contains_inputs_only_with_nulls'>test_file_contains_inputs_only_with_nulls</a></span></li>
+<li><span class='yes'>✓</span><span>list()</span><span class='tests'><a href='#t-profiles-test_list'>test_list</a></span></li>
+<li><span class='yes'>✓</span><span>save → load round trip</span><span class='tests'><a href='#t-profiles-test_round_trip'>test_round_trip</a>, <a href='#t-profiles-test_save_keeps_created_and_notes'>test_save_keeps_created_and_notes</a></span></li>
+<li><span class='yes'>✓</span><span>save_as</span><span class='tests'><a href='#t-profiles-test_save_as_refuses_overwrite'>test_save_as_refuses_overwrite</a></span></li>
+<li><span class='yes'>✓</span><span>duplicate</span><span class='tests'><a href='#t-profiles-test_duplicate'>test_duplicate</a></span></li>
+<li><span class='yes'>✓</span><span>rename</span><span class='tests'><a href='#t-profiles-test_rename'>test_rename</a></span></li>
+<li><span class='yes'>✓</span><span>delete</span><span class='tests'><a href='#t-profiles-test_delete'>test_delete</a></span></li>
+<li><span class='yes'>✓</span><span>Unknown keys → warn and drop</span><span class='tests'><a href='#t-profiles-test_unknown_keys_dropped_with_issue'>test_unknown_keys_dropped_with_issue</a></span></li>
+<li><span class='yes'>✓</span><span>Missing keys → null</span><span class='tests'><a href='#t-profiles-test_missing_keys_become_null'>test_missing_keys_become_null</a></span></li>
+<li><span class='yes'>✓</span><span>Wrong type → error</span><span class='tests'><a href='#t-profiles-test_wrong_type_is_error'>test_wrong_type_is_error</a></span></li>
+<li><span class='yes'>✓</span><span>migrate() upgrades older schema_versions</span><span class='tests'><a href='#t-profiles-test_migrate_current_is_noop'>test_migrate_current_is_noop</a>, <a href='#t-profiles-test_migrate_rejects'>test_migrate_rejects</a>, <a href='#t-profiles-test_migration_chain_applied'>test_migration_chain_applied</a></span></li>
+<li><span class='yes'>✓</span><span>default.json created from defaults if missing</span><span class='tests'><a href='#t-profiles-test_ensure_default'>test_ensure_default</a></span></li>
+<li class='gap'><span class='no'>✗</span><span>App opens the last-used profile</span></li>
+<li class='gap'><span class='no'>✗</span><span>Dirty flag in header; prompt on switch/quit</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§8.1'><header><h3>§8.1 TUI screens and inputs</h3><span class='frac'>3/10</span></header><div class='bar'><span style='width:30%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>Launcher</span></li>
+<li class='gap'><span class='no'>✗</span><span>Tool screen</span></li>
+<li class='gap'><span class='no'>✗</span><span>Plot menu</span></li>
+<li class='gap'><span class='no'>✗</span><span>Profiles screen</span></li>
+<li class='gap'><span class='no'>✗</span><span>Dialogs</span></li>
+<li><span class='yes'>✓</span><span>Engineering-notation input</span><span class='tests'><a href='#t-units-test_parse'>test_parse</a>, <a href='#t-units-test_round_trip'>test_round_trip</a></span></li>
+<li><span class='yes'>✓</span><span>Invalid input → reason</span><span class='tests'><a href='#t-units-test_parse_rejects'>test_parse_rejects</a></span></li>
+<li><span class='yes'>✓</span><span>Engineering formatting of results</span><span class='tests'><a href='#t-units-test_format'>test_format</a>, <a href='#t-units-test_format_sig'>test_format_sig</a>, <a href='#t-units-test_round_trip'>test_round_trip</a></span></li>
+<li class='gap'><span class='no'>✗</span><span>Calculate validates first</span></li>
+<li class='gap'><span class='no'>✗</span><span>Editing inputs marks results stale</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§8.2'><header><h3>§8.2 Plots</h3><span class='frac'>0/5</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>Bode</span></li>
+<li class='gap'><span class='no'>✗</span><span>Spectrum</span></li>
+<li class='gap'><span class='no'>✗</span><span>Budget</span></li>
+<li class='gap'><span class='no'>✗</span><span>Noise</span></li>
+<li class='gap'><span class='no'>✗</span><span>Subprocess runner renders from serialized Result</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§8.3'><header><h3>§8.3 Key map</h3><span class='frac'>0/2</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>No key collisions at any level, every tool</span></li>
+<li class='gap'><span class='no'>✗</span><span>Group/field keys and Esc navigate the focus tree</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§9'><header><h3>§9 Golden profile</h3><span class='frac'>1/1</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>profiles/golden.json loads and is valid</span><span class='tests'><a href='#t-params-test_golden_params_load_and_are_valid'>test_golden_params_load_and_are_valid</a>, <a href='#t-profiles-test_golden_file_loads'>test_golden_file_loads</a>, <a href='#t-scaffold-test_golden_profile_loads'>test_golden_profile_loads</a></span></li>
+</ul>
+</div>
+<div class='card' id='spec-§9.1'><header><h3>§9.1 Golden scalar values</h3><span class='frac'>0/16</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>q</span></li>
+<li class='gap'><span class='no'>✗</span><span>l_f</span></li>
+<li class='gap'><span class='no'>✗</span><span>c_f</span></li>
+<li class='gap'><span class='no'>✗</span><span>tau_tank</span></li>
+<li class='gap'><span class='no'>✗</span><span>bw_3db</span></li>
+<li class='gap'><span class='no'>✗</span><span>b_eq</span></li>
+<li class='gap'><span class='no'>✗</span><span>f_n</span></li>
+<li class='gap'><span class='no'>✗</span><span>z_n</span></li>
+<li class='gap'><span class='no'>✗</span><span>att_n</span></li>
+<li class='gap'><span class='no'>✗</span><span>enbw_lia</span></li>
+<li class='gap'><span class='no'>✗</span><span>i_r</span></li>
+<li class='gap'><span class='no'>✗</span><span>i_en</span></li>
+<li class='gap'><span class='no'>✗</span><span>i_nep</span></li>
+<li class='gap'><span class='no'>✗</span><span>i_elec</span></li>
+<li class='gap'><span class='no'>✗</span><span>lsb</span></li>
+<li class='gap'><span class='no'>✗</span><span>v_q</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§9.2'><header><h3>§9.2 Golden per-power values</h3><span class='frac'>0/18</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>i_0</span></li>
+<li class='gap'><span class='no'>✗</span><span>q_p</span></li>
+<li class='gap'><span class='no'>✗</span><span>i_pk</span></li>
+<li class='gap'><span class='no'>✗</span><span>v_n</span></li>
+<li class='gap'><span class='no'>✗</span><span>v_n_sum</span></li>
+<li class='gap'><span class='no'>✗</span><span>v_n_rss</span></li>
+<li class='gap'><span class='no'>✗</span><span>i_sig</span></li>
+<li class='gap'><span class='no'>✗</span><span>v_sig</span></li>
+<li class='gap'><span class='no'>✗</span><span>i_sh</span></li>
+<li class='gap'><span class='no'>✗</span><span>i_tot</span></li>
+<li class='gap'><span class='no'>✗</span><span>v_dens</span></li>
+<li class='gap'><span class='no'>✗</span><span>v_rms</span></li>
+<li class='gap'><span class='no'>✗</span><span>v_coh</span></li>
+<li class='gap'><span class='no'>✗</span><span>occ_swing</span></li>
+<li class='gap'><span class='no'>✗</span><span>occ_moku</span></li>
+<li class='gap'><span class='no'>✗</span><span>snr</span></li>
+<li class='gap'><span class='no'>✗</span><span>snr_lia</span></li>
+<li class='gap'><span class='no'>✗</span><span>shot_clear</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§9.3'><header><h3>§9.3 Golden expected warnings</h3><span class='frac'>0/4</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>W02 fires for n_lia 1, 2; not 3, 4</span></li>
+<li class='gap'><span class='no'>✗</span><span>W03 at P_max only</span></li>
+<li class='gap'><span class='no'>✗</span><span>W04 at both powers</span></li>
+<li class='gap'><span class='no'>✗</span><span>W01, W05, W08, W09 do not fire</span></li>
+</ul>
+</div>
+<div class='card' id='spec-§9.4'><header><h3>§9.4 Analyze tool golden</h3><span class='frac'>0/1</span></header><div class='bar'><span style='width:0%'></span></div><ul class='items'>
+<li class='gap'><span class='no'>✗</span><span>Analyze golden outputs, no W06/W07</span></li>
+</ul>
+</div>
+</div></section>
+<section id='topics'><h2>Topics</h2><p class='lead'>One section per test file.</p></section>
+<section class='topic' id='topic-params'><h2>params</h2>
+<p class='lead'><code>tests/test_params.py</code> · 13 functions · 36 cases — M1: Params fields, metadata and validation (SPEC §3.1).</p>
+<div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
+<tr data-row data-kind='schema' data-text='test_fields_match_spec_order params has exactly the spec §3.1 fields, in table order. schema §3.1 fields' id='t-params-test_fields_match_spec_order'><td><span class='dot passed' title='passed'></span><code>test_fields_match_spec_order</code><span class='where'>tests/test_params.py:20</span></td><td>Params has exactly the SPEC §3.1 fields, in table order.</td><td><span class='chip' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</span></td><td><a href='#spec-§3.1'>§3.1 fields</a></td><td>1</td></tr>
+<tr data-row data-kind='schema' data-text='test_metadata_complete every field has a unit, group, symbol, description and a one-letter key. schema §3.1 metadata' id='t-params-test_metadata_complete'><td><span class='dot passed' title='passed'></span><code>test_metadata_complete</code><span class='where'>tests/test_params.py:28</span></td><td>Every field has a unit, group, symbol, description and a one-letter key.</td><td><span class='chip' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</span></td><td><a href='#spec-§3.1'>§3.1 metadata</a></td><td>1</td></tr>
+<tr data-row data-kind='schema' data-text='test_selected_metadata spot-check units, groups, keys and types against the spec table. schema §3.1 metadata, types' id='t-params-test_selected_metadata'><td><span class='dot passed' title='passed'></span><code>test_selected_metadata</code><span class='where'>tests/test_params.py:38</span></td><td>Spot-check units, groups, keys and types against the SPEC table.</td><td><span class='chip' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</span></td><td><a href='#spec-§3.1'>§3.1 metadata, types</a></td><td>1</td></tr>
+<tr data-row data-kind='schema' data-text='test_defaults_match_spec params() carries the spec defaults (l_f, c_f unset) and is valid. schema §3.1 defaults' id='t-params-test_defaults_match_spec'><td><span class='dot passed' title='passed'></span><code>test_defaults_match_spec</code><span class='where'>tests/test_params.py:50</span></td><td>Params() carries the SPEC defaults (l_f, c_f unset) and is valid.</td><td><span class='chip' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</span></td><td><a href='#spec-§3.1'>§3.1 defaults</a></td><td>1</td></tr>
+<tr data-row data-kind='round_trip' data-text='test_golden_params_load_and_are_valid golden params survive from_dict → to_dict unchanged and pass validation. round_trip §9 profile' id='t-params-test_golden_params_load_and_are_valid'><td><span class='dot passed' title='passed'></span><code>test_golden_params_load_and_are_valid</code><span class='where'>tests/test_params.py:61</span></td><td>Golden params survive from_dict → to_dict unchanged and pass validation.</td><td><span class='chip' title='save → load or format → parse gives back the same thing'>round_trip</span></td><td><a href='#spec-§9'>§9 profile</a></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_params_frozen_and_replace_copies params is immutable; replace() returns a coerced copy and leaves the original alone. api' id='t-params-test_params_frozen_and_replace_copies'><td><span class='dot passed' title='passed'></span><code>test_params_frozen_and_replace_copies</code><span class='where'>tests/test_params.py:70</span></td><td>Params is immutable; replace() returns a coerced copy and leaves the original alone.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><span class='where'>—</span></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_from_dict_missing_is_none_unknown_raises from_dict: missing keys become none (unset); unknown keys raise keyerror. api' id='t-params-test_from_dict_missing_is_none_unknown_raises'><td><span class='dot passed' title='passed'></span><code>test_from_dict_missing_is_none_unknown_raises</code><span class='where'>tests/test_params.py:81</span></td><td>from_dict: missing keys become None (unset); unknown keys raise KeyError.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><span class='where'>—</span></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_missing missing() lists the unset fields among those asked for. api' id='t-params-test_missing'><td><span class='dot passed' title='passed'></span><code>test_missing</code><span class='where'>tests/test_params.py:90</span></td><td>missing() lists the unset fields among those asked for.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><span class='where'>—</span></td><td>1</td></tr>
+<tr data-row data-kind='validation' data-text='test_coerce_ok coerce() normalises types: int → float, integral float → int, none passes. validation §3.1 types r_f-5-5.0 n_lia-2.0-2 q_mode-bandwidth-bandwidth l_f-none-none' id='t-params-test_coerce_ok'><td><span class='dot passed' title='passed'></span><code>test_coerce_ok</code><span class='where'>tests/test_params.py:97</span></td><td>coerce() normalises types: int → float, integral float → int, None passes.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§3.1'>§3.1 types</a></td><td><details><summary>4 cases</summary><ul><li class='mono'>r_f-5-5.0</li><li class='mono'>n_lia-2.0-2</li><li class='mono'>q_mode-bandwidth-bandwidth</li><li class='mono'>l_f-None-None</li></ul></details></td></tr>
+<tr data-row data-kind='validation' data-text='test_coerce_wrong_type coerce() raises typeerror for text-in-number, bools, non-integers, numbers-in-text. validation §3.1 types r_f-100k r_f-true n_bits-12.5 q_mode-1 n_lia-value4' id='t-params-test_coerce_wrong_type'><td><span class='dot passed' title='passed'></span><code>test_coerce_wrong_type</code><span class='where'>tests/test_params.py:114</span></td><td>coerce() raises TypeError for text-in-number, bools, non-integers, numbers-in-text.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§3.1'>§3.1 types</a></td><td><details><summary>5 cases</summary><ul><li class='mono'>r_f-100k</li><li class='mono'>r_f-True</li><li class='mono'>n_bits-12.5</li><li class='mono'>q_mode-1</li><li class='mono'>n_lia-value4</li></ul></details></td></tr>
+<tr data-row data-kind='validation' data-text='test_validate_value_rejects out-of-range values get a reason: ≤ 0, non-finite, m &lt; 0, bad choices, non-integer. validation §3.1 positive, m-nonneg, n-lia, v-range, q-mode, n-bits r_f-0.0 r_f--1.0 f_max-inf temp-nan m--1e-06 n_lia-0 n_lia-5 v_range-2.0 q_mode-other n_bits-0 n_bits-12.5' id='t-params-test_validate_value_rejects'><td><span class='dot passed' title='passed'></span><code>test_validate_value_rejects</code><span class='where'>tests/test_params.py:126</span></td><td>Out-of-range values get a reason: ≤ 0, non-finite, m &lt; 0, bad choices, non-integer.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§3.1'>§3.1 positive, m-nonneg, n-lia, v-range, q-mode, n-bits</a></td><td><details><summary>11 cases</summary><ul><li class='mono'>r_f-0.0</li><li class='mono'>r_f--1.0</li><li class='mono'>f_max-inf</li><li class='mono'>temp-nan</li><li class='mono'>m--1e-06</li><li class='mono'>n_lia-0</li><li class='mono'>n_lia-5</li><li class='mono'>v_range-2.0</li><li class='mono'>q_mode-other</li><li class='mono'>n_bits-0</li><li class='mono'>n_bits-12.5</li></ul></details></td></tr>
+<tr data-row data-kind='validation' data-text='test_validate_value_accepts boundary and allowed values pass: m = 0, n_lia = 4, v_range 1/10, unset. validation §3.1 m-nonneg, n-lia, v-range, q-mode, n-bits m-0.0 n_lia-4 v_range-10 v_range-1.0 q_mode-bandwidth n_bits-16 l_f-none' id='t-params-test_validate_value_accepts'><td><span class='dot passed' title='passed'></span><code>test_validate_value_accepts</code><span class='where'>tests/test_params.py:141</span></td><td>Boundary and allowed values pass: m = 0, n_lia = 4, v_range 1/10, unset.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§3.1'>§3.1 m-nonneg, n-lia, v-range, q-mode, n-bits</a></td><td><details><summary>7 cases</summary><ul><li class='mono'>m-0.0</li><li class='mono'>n_lia-4</li><li class='mono'>v_range-10</li><li class='mono'>v_range-1.0</li><li class='mono'>q_mode-bandwidth</li><li class='mono'>n_bits-16</li><li class='mono'>l_f-None</li></ul></details></td></tr>
+<tr data-row data-kind='validation' data-text='test_p_min_le_p_max p_min &gt; p_max flags both fields; equal is fine; one unset skips the check. validation §3.1 p-order' id='t-params-test_p_min_le_p_max'><td><span class='dot passed' title='passed'></span><code>test_p_min_le_p_max</code><span class='where'>tests/test_params.py:155</span></td><td>p_min &gt; p_max flags both fields; equal is fine; one unset skips the check.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§3.1'>§3.1 p-order</a></td><td>1</td></tr>
+</tbody></table></div></section>
+<section class='topic' id='topic-profiles'><h2>profiles</h2>
+<p class='lead'><code>tests/test_profiles.py</code> · 21 functions · 38 cases — M1: profile store — round trip, load rules and migration (SPEC §7).</p>
+<div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
+<tr data-row data-kind='schema' data-text='test_golden_file_loads profiles/golden.json loads through the store with no issues and the golden params. schema §9 profile §7 file-format' id='t-profiles-test_golden_file_loads'><td><span class='dot passed' title='passed'></span><code>test_golden_file_loads</code><span class='where'>tests/test_profiles.py:38</span></td><td>profiles/golden.json loads through the store with no issues and the golden params.</td><td><span class='chip' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</span></td><td><a href='#spec-§9'>§9 profile</a><br><a href='#spec-§7'>§7 file-format</a></td><td>1</td></tr>
+<tr data-row data-kind='round_trip' data-text='test_round_trip save → load gives back equal params, notes and timestamps. round_trip §7 load-save' id='t-profiles-test_round_trip'><td><span class='dot passed' title='passed'></span><code>test_round_trip</code><span class='where'>tests/test_profiles.py:50</span></td><td>save → load gives back equal Params, notes and timestamps.</td><td><span class='chip' title='save → load or format → parse gives back the same thing'>round_trip</span></td><td><a href='#spec-§7'>§7 load-save</a></td><td>1</td></tr>
+<tr data-row data-kind='schema' data-text='test_file_contains_inputs_only_with_nulls saved file has exactly the spec keys, input params only, unset fields as null. schema §7 file-format, inputs-only, nulls' id='t-profiles-test_file_contains_inputs_only_with_nulls'><td><span class='dot passed' title='passed'></span><code>test_file_contains_inputs_only_with_nulls</code><span class='where'>tests/test_profiles.py:62</span></td><td>Saved file has exactly the SPEC keys, input params only, unset fields as null.</td><td><span class='chip' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</span></td><td><a href='#spec-§7'>§7 file-format, inputs-only, nulls</a></td><td>1</td></tr>
+<tr data-row data-kind='errors' data-text='test_unknown_keys_dropped_with_issue unknown param keys (e.g. a derived &#x27;q&#x27;) are dropped and reported in issues. errors §7 unknown-keys' id='t-profiles-test_unknown_keys_dropped_with_issue'><td><span class='dot passed' title='passed'></span><code>test_unknown_keys_dropped_with_issue</code><span class='where'>tests/test_profiles.py:74</span></td><td>Unknown param keys (e.g. a derived &#x27;q&#x27;) are dropped and reported in issues.</td><td><span class='chip' title='Bad files or operations are handled as specified (error or warning)'>errors</span></td><td><a href='#spec-§7'>§7 unknown-keys</a></td><td>1</td></tr>
+<tr data-row data-kind='errors' data-text='test_missing_keys_become_null params missing from the file load as none. errors §7 missing-keys' id='t-profiles-test_missing_keys_become_null'><td><span class='dot passed' title='passed'></span><code>test_missing_keys_become_null</code><span class='where'>tests/test_profiles.py:84</span></td><td>Params missing from the file load as None.</td><td><span class='chip' title='Bad files or operations are handled as specified (error or warning)'>errors</span></td><td><a href='#spec-§7'>§7 missing-keys</a></td><td>1</td></tr>
+<tr data-row data-kind='errors' data-text='test_wrong_type_is_error a param of the wrong type makes load raise profileerror. errors §7 wrong-type params0 params1 params2 params3' id='t-profiles-test_wrong_type_is_error'><td><span class='dot passed' title='passed'></span><code>test_wrong_type_is_error</code><span class='where'>tests/test_profiles.py:93</span></td><td>A param of the wrong type makes load raise ProfileError.</td><td><span class='chip' title='Bad files or operations are handled as specified (error or warning)'>errors</span></td><td><a href='#spec-§7'>§7 wrong-type</a></td><td><details><summary>4 cases</summary><ul><li class='mono'>params0</li><li class='mono'>params1</li><li class='mono'>params2</li><li class='mono'>params3</li></ul></details></td></tr>
+<tr data-row data-kind='errors' data-text='test_malformed_document non-object documents, bad &#x27;params&#x27; or non-string metadata raise profileerror. errors §7 file-format doc0 doc1 doc2 doc3' id='t-profiles-test_malformed_document'><td><span class='dot passed' title='passed'></span><code>test_malformed_document</code><span class='where'>tests/test_profiles.py:105</span></td><td>Non-object documents, bad &#x27;params&#x27; or non-string metadata raise ProfileError.</td><td><span class='chip' title='Bad files or operations are handled as specified (error or warning)'>errors</span></td><td><a href='#spec-§7'>§7 file-format</a></td><td><details><summary>4 cases</summary><ul><li class='mono'>doc0</li><li class='mono'>doc1</li><li class='mono'>doc2</li><li class='mono'>doc3</li></ul></details></td></tr>
+<tr data-row data-kind='errors' data-text='test_invalid_json unparseable json raises profileerror. errors §7 file-format' id='t-profiles-test_invalid_json'><td><span class='dot passed' title='passed'></span><code>test_invalid_json</code><span class='where'>tests/test_profiles.py:118</span></td><td>Unparseable JSON raises ProfileError.</td><td><span class='chip' title='Bad files or operations are handled as specified (error or warning)'>errors</span></td><td><a href='#spec-§7'>§7 file-format</a></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_file_name_is_authoritative the profile name comes from the file name, not the &#x27;name&#x27; inside it. api' id='t-profiles-test_file_name_is_authoritative'><td><span class='dot passed' title='passed'></span><code>test_file_name_is_authoritative</code><span class='where'>tests/test_profiles.py:128</span></td><td>The profile name comes from the file name, not the &#x27;name&#x27; inside it.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><span class='where'>—</span></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_migrate_current_is_noop a current-version document passes through migrate() unchanged. api §7 migrate' id='t-profiles-test_migrate_current_is_noop'><td><span class='dot passed' title='passed'></span><code>test_migrate_current_is_noop</code><span class='where'>tests/test_profiles.py:138</span></td><td>A current-version document passes through migrate() unchanged.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><a href='#spec-§7'>§7 migrate</a></td><td>1</td></tr>
+<tr data-row data-kind='errors' data-text='test_migrate_rejects missing, non-integer, future or unmigratable schema_version raises profileerror. errors §7 migrate none 1 true 2 0' id='t-profiles-test_migrate_rejects'><td><span class='dot passed' title='passed'></span><code>test_migrate_rejects</code><span class='where'>tests/test_profiles.py:146</span></td><td>Missing, non-integer, future or unmigratable schema_version raises ProfileError.</td><td><span class='chip' title='Bad files or operations are handled as specified (error or warning)'>errors</span></td><td><a href='#spec-§7'>§7 migrate</a></td><td><details><summary>5 cases</summary><ul><li class='mono'>None</li><li class='mono'>1</li><li class='mono'>True</li><li class='mono'>2</li><li class='mono'>0</li></ul></details></td></tr>
+<tr data-row data-kind='api' data-text='test_migration_chain_applied a registered v0 → v1 step runs on load; saving writes the current schema. api §7 migrate' id='t-profiles-test_migration_chain_applied'><td><span class='dot passed' title='passed'></span><code>test_migration_chain_applied</code><span class='where'>tests/test_profiles.py:160</span></td><td>A registered v0 → v1 step runs on load; saving writes the current schema.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><a href='#spec-§7'>§7 migrate</a></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_list list() returns profiles sorted by name with notes/modified, skipping broken files. api §7 list' id='t-profiles-test_list'><td><span class='dot passed' title='passed'></span><code>test_list</code><span class='where'>tests/test_profiles.py:187</span></td><td>list() returns profiles sorted by name with notes/modified, skipping broken files.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><a href='#spec-§7'>§7 list</a></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_save_keeps_created_and_notes overwriting keeps &#x27;created&#x27; and notes unless new notes are given. api §7 load-save' id='t-profiles-test_save_keeps_created_and_notes'><td><span class='dot passed' title='passed'></span><code>test_save_keeps_created_and_notes</code><span class='where'>tests/test_profiles.py:200</span></td><td>Overwriting keeps &#x27;created&#x27; and notes unless new notes are given.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><a href='#spec-§7'>§7 load-save</a></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_save_as_refuses_overwrite save_as refuses an existing name. api §7 save-as' id='t-profiles-test_save_as_refuses_overwrite'><td><span class='dot passed' title='passed'></span><code>test_save_as_refuses_overwrite</code><span class='where'>tests/test_profiles.py:214</span></td><td>save_as refuses an existing name.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><a href='#spec-§7'>§7 save-as</a></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_duplicate duplicate copies params and notes; refuses existing target or missing source. api §7 duplicate' id='t-profiles-test_duplicate'><td><span class='dot passed' title='passed'></span><code>test_duplicate</code><span class='where'>tests/test_profiles.py:223</span></td><td>duplicate copies params and notes; refuses existing target or missing source.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><a href='#spec-§7'>§7 duplicate</a></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_rename rename moves the file, updates the stored name, refuses an existing target. api §7 rename' id='t-profiles-test_rename'><td><span class='dot passed' title='passed'></span><code>test_rename</code><span class='where'>tests/test_profiles.py:237</span></td><td>rename moves the file, updates the stored name, refuses an existing target.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><a href='#spec-§7'>§7 rename</a></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_delete delete removes the file; deleting or loading a missing profile raises. api §7 delete' id='t-profiles-test_delete'><td><span class='dot passed' title='passed'></span><code>test_delete</code><span class='where'>tests/test_profiles.py:251</span></td><td>delete removes the file; deleting or loading a missing profile raises.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><a href='#spec-§7'>§7 delete</a></td><td>1</td></tr>
+<tr data-row data-kind='api' data-text='test_ensure_default ensure_default creates default.json from params() once, then loads it. api §7 default-profile' id='t-profiles-test_ensure_default'><td><span class='dot passed' title='passed'></span><code>test_ensure_default</code><span class='where'>tests/test_profiles.py:264</span></td><td>ensure_default creates default.json from Params() once, then loads it.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><a href='#spec-§7'>§7 default-profile</a></td><td>1</td></tr>
+<tr data-row data-kind='validation' data-text='test_invalid_names names that are empty, padded, hidden or contain path separators are rejected. validation   a a  ../x a/b .hidden -x a\\b' id='t-profiles-test_invalid_names'><td><span class='dot passed' title='passed'></span><code>test_invalid_names</code><span class='where'>tests/test_profiles.py:274</span></td><td>Names that are empty, padded, hidden or contain path separators are rejected.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><span class='where'>—</span></td><td><details><summary>8 cases</summary><ul><li class='mono'></li><li class='mono'> a</li><li class='mono'>a </li><li class='mono'>../x</li><li class='mono'>a/b</li><li class='mono'>.hidden</li><li class='mono'>-x</li><li class='mono'>a\\b</li></ul></details></td></tr>
+<tr data-row data-kind='api' data-text='test_no_temp_files_left atomic writes leave no temporary files behind. api' id='t-profiles-test_no_temp_files_left'><td><span class='dot passed' title='passed'></span><code>test_no_temp_files_left</code><span class='where'>tests/test_profiles.py:282</span></td><td>Atomic writes leave no temporary files behind.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><span class='where'>—</span></td><td>1</td></tr>
+</tbody></table></div></section>
+<section class='topic' id='topic-scaffold'><h2>scaffold</h2>
+<p class='lead'><code>tests/test_scaffold.py</code> · 2 functions · 2 cases — M0: package imports and the golden profile loads.</p>
+<div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
+<tr data-row data-kind='smoke' data-text='test_package_imports the package imports; physical constants have their spec values. smoke §0 constants' id='t-scaffold-test_package_imports'><td><span class='dot passed' title='passed'></span><code>test_package_imports</code><span class='where'>tests/test_scaffold.py:11</span></td><td>The package imports; physical constants have their SPEC values.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§0'>§0 constants</a></td><td>1</td></tr>
+<tr data-row data-kind='smoke' data-text='test_golden_profile_loads the conftest fixture reads profiles/golden.json. smoke §9 profile' id='t-scaffold-test_golden_profile_loads'><td><span class='dot passed' title='passed'></span><code>test_golden_profile_loads</code><span class='where'>tests/test_scaffold.py:20</span></td><td>The conftest fixture reads profiles/golden.json.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§9'>§9 profile</a></td><td>1</td></tr>
+</tbody></table></div></section>
+<section class='topic' id='topic-units'><h2>units</h2>
+<p class='lead'><code>tests/test_units.py</code> · 5 functions · 52 cases — M1: engineering-notation parse/format.</p>
+<div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
+<tr data-row data-kind='validation' data-text='test_parse parse_eng accepts spec examples, every prefix spelling and an optional unit suffix. validation §8.1 eng-input 100k--100000.0 2p--2e-12 20m--20000000.0 1e-6--1e-06 1\xb5--1e-06 1\u03bc--1e-06 1u--1e-06 1m--0.001 2.5n--2.5e-09 7.1f--7.1e-15  295 --295.0 .5--0.5 -3k---3000.0 1.5e3k--1500000.0 100k\u03a9-\u03a9-100000.0 2 pf-f-2e-12 20mhz-hz-20000000.0 1ms-s-0.001 295k-k-295.0 2.5nv/\u221ahz-v/\u221ahz-2.5e-09 1 vpp-vpp-1.0' id='t-units-test_parse'><td><span class='dot passed' title='passed'></span><code>test_parse</code><span class='where'>tests/test_units.py:10</span></td><td>parse_eng accepts SPEC examples, every prefix spelling and an optional unit suffix.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§8.1'>§8.1 eng-input</a></td><td><details><summary>21 cases</summary><ul><li class='mono'>100k--100000.0</li><li class='mono'>2p--2e-12</li><li class='mono'>20M--20000000.0</li><li class='mono'>1e-6--1e-06</li><li class='mono'>1\xb5--1e-06</li><li class='mono'>1\u03bc--1e-06</li><li class='mono'>1u--1e-06</li><li class='mono'>1m--0.001</li><li class='mono'>2.5n--2.5e-09</li><li class='mono'>7.1f--7.1e-15</li><li class='mono'> 295 --295.0</li><li class='mono'>.5--0.5</li><li class='mono'>-3k---3000.0</li><li class='mono'>1.5e3k--1500000.0</li><li class='mono'>100k\u03a9-\u03a9-100000.0</li><li class='mono'>2 pF-F-2e-12</li><li class='mono'>20MHz-Hz-20000000.0</li><li class='mono'>1ms-s-0.001</li><li class='mono'>295K-K-295.0</li><li class='mono'>2.5nV/\u221aHz-V/\u221aHz-2.5e-09</li><li class='mono'>1 Vpp-Vpp-1.0</li></ul></details></td></tr>
+<tr data-row data-kind='validation' data-text='test_parse_rejects parse_eng raises valueerror (with a reason) for empty, garbage, bad prefix, overflow. validation §8.1 eng-invalid -    - abc- 1x- 1k- 1..2- k- 1k\u03a9- 1e999- 1 2-' id='t-units-test_parse_rejects'><td><span class='dot passed' title='passed'></span><code>test_parse_rejects</code><span class='where'>tests/test_units.py:43</span></td><td>parse_eng raises ValueError (with a reason) for empty, garbage, bad prefix, overflow.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§8.1'>§8.1 eng-invalid</a></td><td><details><summary>10 cases</summary><ul><li class='mono'>-</li><li class='mono'>   -</li><li class='mono'>abc-</li><li class='mono'>1x-</li><li class='mono'>1K-</li><li class='mono'>1..2-</li><li class='mono'>k-</li><li class='mono'>1k\u03a9-</li><li class='mono'>1e999-</li><li class='mono'>1 2-</li></ul></details></td></tr>
+<tr data-row data-kind='api' data-text='test_format format_eng: 5 significant digits, si prefix, rounding carry, none/0/inf, out of range. api §8.1 eng-format 100000.0-\u03a9-100.00 k\u03a9 6.3326e-05-h-63.326 \xb5h 1e-12-f-1.0000 pf 20000000.0-hz-20.000 mhz 0.6-a/w-600.00 ma/w 295-k-295.00 k -0.025033-v--25.033 mv 999.9999-\u03a9-1.0000 k\u03a9 0-v-0 v none-v-\u2014 1e-05-\u2013-10.000 \xb5 1e-21-a-1.0000e-21 a inf--inf' id='t-units-test_format'><td><span class='dot passed' title='passed'></span><code>test_format</code><span class='where'>tests/test_units.py:56</span></td><td>format_eng: 5 significant digits, SI prefix, rounding carry, None/0/inf, out of range.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><a href='#spec-§8.1'>§8.1 eng-format</a></td><td><details><summary>13 cases</summary><ul><li class='mono'>100000.0-\u03a9-100.00 k\u03a9</li><li class='mono'>6.3326e-05-H-63.326 \xb5H</li><li class='mono'>1e-12-F-1.0000 pF</li><li class='mono'>20000000.0-Hz-20.000 MHz</li><li class='mono'>0.6-A/W-600.00 mA/W</li><li class='mono'>295-K-295.00 K</li><li class='mono'>-0.025033-V--25.033 mV</li><li class='mono'>999.9999-\u03a9-1.0000 k\u03a9</li><li class='mono'>0-V-0 V</li><li class='mono'>None-V-\u2014</li><li class='mono'>1e-05-\u2013-10.000 \xb5</li><li class='mono'>1e-21-A-1.0000e-21 A</li><li class='mono'>inf--inf</li></ul></details></td></tr>
+<tr data-row data-kind='api' data-text='test_format_sig format_eng honours a custom number of significant digits. api §8.1 eng-format' id='t-units-test_format_sig'><td><span class='dot passed' title='passed'></span><code>test_format_sig</code><span class='where'>tests/test_units.py:81</span></td><td>format_eng honours a custom number of significant digits.</td><td><span class='chip' title='An operation does what it says (copy, rename, list, migrate, …)'>api</span></td><td><a href='#spec-§8.1'>§8.1 eng-format</a></td><td>1</td></tr>
+<tr data-row data-kind='round_trip' data-text='test_round_trip format_eng → parse_eng returns the value within the 5-digit display precision. round_trip §8.1 eng-input, eng-format 1e-15 4.0363e-13 1250000.0 7.2095 12.717 2545.0 3e-08' id='t-units-test_round_trip'><td><span class='dot passed' title='passed'></span><code>test_round_trip</code><span class='where'>tests/test_units.py:88</span></td><td>format_eng → parse_eng returns the value within the 5-digit display precision.</td><td><span class='chip' title='save → load or format → parse gives back the same thing'>round_trip</span></td><td><a href='#spec-§8.1'>§8.1 eng-input, eng-format</a></td><td><details><summary>7 cases</summary><ul><li class='mono'>1e-15</li><li class='mono'>4.0363e-13</li><li class='mono'>1250000.0</li><li class='mono'>7.2095</li><li class='mono'>12.717</li><li class='mono'>2545.0</li><li class='mono'>3e-08</li></ul></details></td></tr>
+</tbody></table></div></section>
+<section id='kinds'><h2>Kinds</h2><p class='lead'>Every test carries exactly one kind marker (registered in <code>tests/conftest.py</code> from <code>tests/spec_items.py</code>).</p><div class='kinds-legend'>
+<span class='chip'>golden</span><span>Compares against SPEC §9 golden values</span>
+<span class='chip'>formula</span><span>Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)</span>
+<span class='chip'>schema</span><span>Data layout matches SPEC: fields, order, defaults, metadata, file format</span>
+<span class='chip'>validation</span><span>Accepts good input / rejects bad input</span>
+<span class='chip'>round_trip</span><span>save → load or format → parse gives back the same thing</span>
+<span class='chip'>api</span><span>An operation does what it says (copy, rename, list, migrate, …)</span>
+<span class='chip'>errors</span><span>Bad files or operations are handled as specified (error or warning)</span>
+<span class='chip'>warning</span><span>A W01–W09 condition fires or does not fire</span>
+<span class='chip'>smoke</span><span>Imports, screens or plots build/run without crashing</span>
+</div></section>
+</main></div><script>
+const q = document.getElementById('q');
+const chips = [...document.querySelectorAll('button[data-kind]')];
+function apply() {
+  const text = q.value.trim().toLowerCase();
+  const kinds = chips.filter(c => c.getAttribute('aria-pressed') === 'true').map(c => c.dataset.kind);
+  document.querySelectorAll('tr[data-row]').forEach(tr => {
+    const okText = !text || tr.dataset.text.includes(text);
+    const okKind = !kinds.length || kinds.includes(tr.dataset.kind);
+    tr.classList.toggle('hidden', !(okText && okKind));
+  });
+  document.querySelectorAll('section.topic').forEach(sec => {
+    const any = sec.querySelector('tr[data-row]:not(.hidden)');
+    sec.classList.toggle('hidden', !any);
+  });
+}
+q.addEventListener('input', apply);
+chips.forEach(c => c.addEventListener('click', () => {
+  c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+  apply();
+}));
+</script></body></html>

@@ -6,8 +6,17 @@ from typing import Any
 
 import pytest
 
+from tests.spec_items import KINDS
+
 ROOT = Path(__file__).resolve().parent.parent
 GOLDEN_PATH = ROOT / "profiles" / "golden.json"
+
+
+def pytest_configure(config: pytest.Config) -> None:
+    """Register the catalog markers (tests/spec_items.py); --strict-markers rejects typos."""
+    for name, description in KINDS.items():
+        config.addinivalue_line("markers", f"{name}: {description}")
+    config.addinivalue_line("markers", "spec(section, *items): SPEC items this test covers")
 
 
 @pytest.fixture(scope="session")
