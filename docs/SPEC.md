@@ -130,7 +130,7 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 | `enbw_lia` | Hz | Lock-in ENBW |
 | `i_0` | A | Average photocurrent |
 | `q_p`, `i_pk` | C, A | Charge per pulse, peak pulse current |
-| `f_n`, `z_n`, `att_n`, `v_n` | Hz, Ω, dB, V | Per-harmonic frequency, \|Z_f\|, attenuation re R, output amplitude |
+| `f_n`, `i_n`, `z_n`, `att_n`, `v_n` | Hz, A, Ω, dB, V | Per-harmonic frequency, line current 2·I₀, \|Z_f\|, attenuation re R, output amplitude |
 | `v_n_sum`, `v_n_rss` | V | Coherent sum and RSS of v_n |
 | `i_sig`, `v_sig` | A, V | Signal current and output amplitude at f₀ |
 | `i_sh`, `i_r`, `i_en`, `i_nep`, `i_elec`, `i_tot` | A/√Hz | Noise densities; i_elec = √(i_r²+i_en²+i_nep²) |
@@ -219,6 +219,8 @@ with group key and field keys). `Calc` declares: `name`, `key` (digit), `require
 `optional`, `outputs`, `plots`, `run(params) -> Result`.
 `Result` holds scalar outputs, per-power outputs (`{"p_min": ..., "p_max": ...}`), tables
 (harmonics), and warnings; it must be JSON-serializable (used by the plot subprocess and sweep).
+It also records the input `params` it was computed from. In JSON, non-finite floats (e.g. SNR =
+−inf when m = 0) are written as `{"$float": "-inf" | "inf" | "nan"}` so the file stays strict JSON.
 
 ### 6.1 Design from t_dwell (key `d`)
 
@@ -233,10 +235,12 @@ with group key and field keys). `Calc` declares: `name`, `key` (digit), `require
 
 Calcs with an optional input compute the dependent outputs/warnings only when it is set
 (e.g. W05 only if `en_moku` is set; `i_pk` and W08 only if `tau_p` is set).
+A calc also returns the outputs and warnings of the calcs it builds on ("Sizing +" etc.).
+Warnings by stage: Spectrum W08, W09 · Noise W05 · Budget W03, W04 · Lock-in W01, W02.
 
 ### 6.2 Analyze existing tank (key `a`)
 
-Single calc. Required: l_f, c_f, r_f. Optional: f_0 (enables W06), t_dwell + n_tau
+Single calc (key `1`, group `t` Tank). Required: l_f, c_f, r_f. Optional: f_0 (enables W06), t_dwell + n_tau
 (enable `settles`, W07). Outputs: f0_calc, q, tau_tank, bw_3db, b_eq, settles. Plot: Bode.
 
 ### 6.3 Sweep engine (core only in v1; UI later, launcher key `w`)
