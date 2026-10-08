@@ -43,7 +43,7 @@ srsfe/
 │   │   ├── noise.py           # noise densities, v_rms, SNR, lock-in ENBW
 │   │   ├── budget.py          # output occupancy
 │   │   ├── moku.py            # LSB, quantization noise
-│   │   ├── warnings.py        # Warning dataclass + checks
+│   │   ├── warnings.py        # DesignWarning dataclass + checks
 │   │   └── sweep.py           # generic sweep engine
 │   ├── tools/
 │   │   ├── base.py            # Tool, Calc, Result, registry
@@ -207,7 +207,7 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 
 Power "each": checked separately at P_min and P_max; the warning carries the power it fired at.
 
-Warnings carry `id`, `message`, `severity` ("warn" | "info"), `power` (None | "p_min" | "p_max"),
+Warnings (`DesignWarning`) carry `id`, `message`, `severity` ("warn" | "info"), `power` (None | "p_min" | "p_max"),
 and the names of the fields involved (used to put ⚠ next to result rows).
 
 ---

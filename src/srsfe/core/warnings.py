@@ -1,6 +1,6 @@
 """Design warnings W01–W09 (SPEC §5).
 
-One check per warning, each taking explicit values and returning a Warning or None.
+One check per warning, each taking explicit values and returning a DesignWarning or None.
 Per-power checks (W03, W04, W05) take the power label they were evaluated at.
 """
 
@@ -40,7 +40,7 @@ FREQ_RTOL = 0.01
 
 
 @dataclass(frozen=True)
-class Warning:  # noqa: A001 — name fixed by SPEC §2/§5
+class DesignWarning:
     id: str
     message: str
     severity: Severity
@@ -48,55 +48,55 @@ class Warning:  # noqa: A001 — name fixed by SPEC §2/§5
     fields: tuple[str, ...]
 
 
-def make(wid: str, power: Power | None = None) -> Warning:
+def make(wid: str, power: Power | None = None) -> DesignWarning:
     s = SPECS[wid]
-    return Warning(wid, s.message, s.severity, power, s.fields)
+    return DesignWarning(wid, s.message, s.severity, power, s.fields)
 
 
-def _if(cond: bool, wid: str, power: Power | None = None) -> Warning | None:
+def _if(cond: bool, wid: str, power: Power | None = None) -> DesignWarning | None:
     return make(wid, power) if cond else None
 
 
-def check_w01(tau_lia: float, t_dwell: float) -> Warning | None:
+def check_w01(tau_lia: float, t_dwell: float) -> DesignWarning | None:
     """τ_LIA > t_dwell."""
     return _if(tau_lia > t_dwell, "W01")
 
 
-def check_w02(enbw_lia: float, b_eq: float) -> Warning | None:
+def check_w02(enbw_lia: float, b_eq: float) -> DesignWarning | None:
     """ENBW > B_eq/5."""
     return _if(enbw_lia > b_eq / 5, "W02")
 
 
-def check_w03(occ_swing: float, power: Power) -> Warning | None:
+def check_w03(occ_swing: float, power: Power) -> DesignWarning | None:
     """occ_swing > 100 %."""
     return _if(occ_swing > 100, "W03", power)
 
 
-def check_w04(occ_moku: float, power: Power) -> Warning | None:
+def check_w04(occ_moku: float, power: Power) -> DesignWarning | None:
     """occ_moku > 100 %."""
     return _if(occ_moku > 100, "W04", power)
 
 
-def check_w05(v_dens: float, en_moku: float, power: Power) -> Warning | None:
+def check_w05(v_dens: float, en_moku: float, power: Power) -> DesignWarning | None:
     """v_dens < 3·e_n,Moku."""
     return _if(v_dens < 3 * en_moku, "W05", power)
 
 
-def check_w06(f0_calc: float, f_0: float) -> Warning | None:
+def check_w06(f0_calc: float, f_0: float) -> DesignWarning | None:
     """|f₀_calc − f_0|/f_0 > 0.01."""
     return _if(abs(f0_calc - f_0) / f_0 > FREQ_RTOL, "W06")
 
 
-def check_w07(settles: bool) -> Warning | None:
+def check_w07(settles: bool) -> DesignWarning | None:
     """Not settles (N_τ·τ_tank > t_dwell, with rounding slack; see tank.settles)."""
     return _if(not settles, "W07")
 
 
-def check_w08(tau_p: float, f_max: float) -> Warning | None:
+def check_w08(tau_p: float, f_max: float) -> DesignWarning | None:
     """τ_p > 1/(10·f_max)."""
     return _if(tau_p > 1 / (10 * f_max), "W08")
 
 
-def check_w09(f_0: float, f_rep: float) -> Warning | None:
+def check_w09(f_0: float, f_rep: float) -> DesignWarning | None:
     """|f_0 − f_rep/2|/f_0 > 0.01."""
     return _if(abs(f_0 - f_rep / 2) / f_0 > FREQ_RTOL, "W09")

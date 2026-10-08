@@ -30,7 +30,7 @@ class Section:
 
 
 def _warnings() -> dict[str, str]:
-    out = {"fields": "Warning carries id, message, severity, power, fields"}
+    out = {"fields": "DesignWarning carries id, message, severity, power, fields"}
     for i in range(1, 10):
         out[f"W0{i}:fires"] = f"W0{i} fires"
         out[f"W0{i}:silent"] = f"W0{i} does not fire"
