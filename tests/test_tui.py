@@ -10,7 +10,7 @@ from textual.widgets import DataTable, Input, OptionList
 from srsfe.core.params import Params
 from srsfe.core.profiles import ProfileStore
 from srsfe.tui.app import SrsfeApp
-from srsfe.tui.screens.dialogs import DeleteDialog, PromptDialog, UnsavedDialog
+from srsfe.tui.screens.dialogs import ConfirmDialog, DeleteDialog, PromptDialog, UnsavedDialog
 from srsfe.tui.screens.launcher import LauncherScreen
 from srsfe.tui.screens.profiles import ProfilesScreen
 from srsfe.tui.screens.tool_screen import ToolScreen
@@ -443,3 +443,27 @@ async def test_top_level_actions(pdir: Path) -> None:
         await pilot.press("escape")  # back to the tool screen: inputs show the loaded profile
         await pilot.pause()
         assert row(app, "r_f").input.value == "100k" and row(app, "en_moku").input.value == "30n"
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.1", "tool-screen", "dialogs")
+async def test_clear_all_inputs(pdir: Path) -> None:
+    """x asks first (n keeps everything); y unsets every input of the tool, marks the required
+    ones missing, clears results and dirties the profile without saving it."""
+    app = SrsfeApp(pdir, pdir / "plots")
+    async with app.run_test(size=(150, 50)) as pilot:
+        await open_golden(app, pilot)
+        await pilot.press("c", "x")
+        assert isinstance(app.screen, ConfirmDialog)
+        await pilot.press("n")
+        assert app.params.r_f == 100e3 and "q" in results(app)
+        await pilot.press("x", "y")
+        await pilot.pause()
+        tool_fields = [f for g in app.screen.tool.groups for f in g.fields]  # type: ignore[attr-defined]
+        assert all(getattr(app.params, f) is None for f in tool_fields)
+        assert row(app, "r_f").input.value == "" and row(app, "r_f").has_class("missing")
+        assert results(app) == [] and header(app).endswith("golden*")
+        assert ProfileStore(pdir).load("golden").params.r_f == 100e3  # disk untouched
+        await pilot.press("c")
+        await pilot.pause()
+        assert results(app) == []  # nothing runs with everything unset

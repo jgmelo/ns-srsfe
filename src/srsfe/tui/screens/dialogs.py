@@ -49,19 +49,19 @@ class UnsavedDialog(ModalScreen[UnsavedChoice]):
         self.dismiss("cancel")
 
 
-class DeleteDialog(ModalScreen[bool]):
-    """Delete profile <name>? [y] yes · [n] no."""
+class ConfirmDialog(ModalScreen[bool]):
+    """Yes/no question: [y] yes · [n] no (Esc = no)."""
 
-    DEFAULT_CSS = _CSS.format(name="DeleteDialog")
+    DEFAULT_CSS = _CSS.format(name="ConfirmDialog")
     BINDINGS = keymap.bindings(keymap.DELETE)
 
-    def __init__(self, profile: str) -> None:
+    def __init__(self, question: str) -> None:
         super().__init__()
-        self.profile = profile
+        self.question = question
 
     def compose(self) -> ComposeResult:
         with Vertical():
-            yield Label(Content(f"Delete profile '{self.profile}'? This cannot be undone."))
+            yield Label(Content(self.question))
             yield Label(keymap.hints(keymap.DELETE), classes="hint")
 
     def action_yes(self) -> None:
@@ -69,6 +69,16 @@ class DeleteDialog(ModalScreen[bool]):
 
     def action_no(self) -> None:
         self.dismiss(False)
+
+
+class DeleteDialog(ConfirmDialog):
+    """Delete profile <name>? [y] yes · [n] no."""
+
+    DEFAULT_CSS = _CSS.format(name="DeleteDialog")
+
+    def __init__(self, profile: str) -> None:
+        super().__init__(f"Delete profile '{profile}'? This cannot be undone.")
+        self.profile = profile
 
 
 class PromptDialog(ModalScreen[str | None]):

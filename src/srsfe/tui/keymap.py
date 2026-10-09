@@ -39,6 +39,7 @@ TOOL_TOP = (
     Key("s", "save", "Save"),
     Key("w", "save_as", "Save as"),
     Key("o", "profiles", "Profiles"),
+    Key("x", "clear", "Clear all"),
     Key("question_mark", "help", "Help"),
     Key("q", "quit", "Quit"),
 )

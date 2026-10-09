@@ -310,6 +310,8 @@ highlighted item.
   ⚠ on rows tied to a warning) above a warnings panel.
 - Calculate validates first; missing required fields → toast listing them, nothing runs.
 - Editing any input marks results stale (greyed) until recalculated.
+- `x` clears every input of the current tool to empty (unset) after a y/n confirmation;
+  results are cleared, the profile becomes dirty, nothing is saved.
 
 **Plot menu** — checkbox list of plots available for the current Result; show or save PNG
 to `./plots/<profile>_<plot>.png`.
@@ -342,7 +344,7 @@ Ctrl+S save · Ctrl+Q quit · Ctrl+P command palette.
 | Context | Keys |
 |---|---|
 | Launcher | `d` Design · `b` Buy · `a` Analyze · `w` Sweep (later) · `o` Profiles · `t` Settings · `q` quit |
-| Tool, top level | `1`–`5`,`0` calc tabs · `c` calculate · `p` plot menu · `v` focus results · `s` save · `w` save-as · `o` profiles · `?` help · `q` quit · group keys below |
+| Tool, top level | `1`–`5`,`0` calc tabs · `c` calculate · `p` plot menu · `v` focus results · `s` save · `w` save-as · `o` profiles · `x` clear all · `?` help · `q` quit · group keys below |
 | Design / Buy groups | `t` Tank · `l` Light · `n` Noise · `i` Lock-in · `m` Opamp/Moku · `f` Spectrum (single field → edits f_max directly) |
 | Tank fields (Design) | `r` r_f · `f` f_0 · `d` t_dwell · `n` n_tau · `q` q_mode |
 | Light fields | `i` p_min · `x` p_max · `r` resp · `f` f_rep · `w` tau_p · `m` m |
@@ -353,7 +355,7 @@ Ctrl+S save · Ctrl+Q quit · Ctrl+P command palette.
 | Plot menu | `b` Bode · `s` spectrum · `u` budget · `n` noise (toggle) · Enter show · `v` save PNG · Esc close |
 | Profiles | Enter/`l` load · `n` new (save-as) · `d` duplicate · `r` rename · `e` edit notes · `x` delete · Esc back |
 | Unsaved dialog | `s` save · `d` discard · `c`/Esc cancel |
-| Delete dialog | `y` yes · `n`/Esc no |
+| Delete / confirm dialogs | `y` yes · `n`/Esc no |
 
 Keys are declared next to the data they act on (field metadata, group, tool, screen).
 `test_keymap.py` asserts no collisions within any level, for every registered tool.

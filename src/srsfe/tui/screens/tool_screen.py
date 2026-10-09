@@ -19,7 +19,7 @@ from textual.widgets import Footer, Input, Static, Tab, Tabs
 from srsfe.core.params import FIELDS
 from srsfe.tools.base import Calc, CalcInputError, Result, Tool
 from srsfe.tui import keymap
-from srsfe.tui.screens.dialogs import PromptDialog
+from srsfe.tui.screens.dialogs import ConfirmDialog, PromptDialog
 from srsfe.tui.widgets.eng_input import FieldRow
 from srsfe.tui.widgets.field_group import FieldGroup
 from srsfe.tui.widgets.header import AppHeader
@@ -248,6 +248,25 @@ class ToolScreen(Screen[None]):
                 self.srsfe.save_as(name.strip())
 
         self.app.push_screen(PromptDialog("Save current inputs as new profile:"), done)
+
+    def action_clear(self) -> None:
+        """Unset every input of this tool (after confirmation); nothing is saved."""
+        names = [f for g in self.tool.groups for f in g.fields]
+
+        def done(yes: bool | None) -> None:
+            if not yes:
+                return
+            self.srsfe.set_params(self.srsfe.params.replace(**dict.fromkeys(names)))
+            for row in self.query(FieldRow):
+                row.set_value(None)
+            self.apply_field_classes()
+            self.results.clear()
+            self.show_result()
+            self.notify(f"Cleared {len(names)} inputs (not saved).")
+
+        self.app.push_screen(ConfirmDialog(
+            f"Clear all {len(names)} inputs of {self.tool.name}? The profile is not "
+            "changed on disk until you save."), done)
 
     def action_profiles(self) -> None:
         from srsfe.tui.screens.profiles import ProfilesScreen
