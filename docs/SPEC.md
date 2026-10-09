@@ -47,7 +47,8 @@ srsfe/
 │   │   └── sweep.py           # generic sweep engine
 │   ├── tools/
 │   │   ├── base.py            # Tool, Calc, Result, registry
-│   │   ├── design.py          # "Design from t_dwell"
+│   │   ├── design.py          # "Design from t_dwell" (DIY)
+│   │   ├── buy.py             # "Buy (vendor detector)"
 │   │   └── analyze.py         # "Analyze existing tank"
 │   ├── plots/
 │   │   ├── figures.py         # pure functions: Result -> matplotlib Figure
@@ -174,6 +175,8 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 - i_NEP = NEP·ℜ
 - i_tot = √(i_sh² + i_R² + i_en² + i_NEP²)
 - v_dens = R·i_tot, V_rms = v_dens·√B_eq
+- Buy tool (§6.4): i_tot = √(i_sh² + i_NEP²), i_elec = i_NEP; i_R and i_en are not modelled
+  (the vendor's electronics are inside its NEP). R is the vendor's transimpedance gain at f₀.
 
 ### 4.5 Lock-in
 - ENBW: n=1: 1/(4τ), n=2: 1/(8τ), n=3: 3/(32τ), n=4: 5/(64τ), τ = τ_LIA
@@ -242,6 +245,23 @@ Warnings by stage: Spectrum W08, W09 · Noise W05 · Budget W03, W04 · Lock-in 
 
 Single calc (key `1`, group `t` Tank). Required: l_f, c_f, r_f. Optional: f_0 (enables W06), t_dwell + n_tau
 (enable `settles`, W07). Outputs: f0_calc, q, tau_tank, bw_3db, b_eq, settles. Plot: Bode.
+
+### 6.4 Buy (vendor detector) (key `b`)
+
+A vendor builds the resonant front end to our specs; we only have its transimpedance gain
+at f₀ (entered as `r_f`) and its NEP. The tank shape (Q, τ_tank, BW₋₃dB, B_eq, harmonic
+attenuation) is estimated from t_dwell exactly as in Design; L and C are not reported.
+Noise is the shot noise of the light plus NEP·ℜ only (§4.4). Spectrum, signal, budget,
+lock-in, Moku and warnings are as in Design.
+
+Calcs `1`–`5`, `0` as in §6.1, except:
+
+| Key | Calc | Required | Optional |
+|---|---|---|---|
+| 4 | Noise | Sizing + p_min, p_max, resp, nep, m | en_moku, n_bits, v_range |
+
+(Budget, Lock-in and All inherit this Noise row.) Sizing outputs: q, tau_tank, bw_3db, b_eq.
+Noise outputs drop i_r and i_en. Groups as Design, but Noise holds only nep, k_crest.
 
 ### 6.3 Sweep engine (core only in v1; UI later, launcher key `w`)
 
@@ -321,12 +341,12 @@ Ctrl+S save · Ctrl+Q quit · Ctrl+P command palette.
 
 | Context | Keys |
 |---|---|
-| Launcher | `d` Design · `a` Analyze · `w` Sweep (later) · `o` Profiles · `t` Settings · `q` quit |
+| Launcher | `d` Design · `b` Buy · `a` Analyze · `w` Sweep (later) · `o` Profiles · `t` Settings · `q` quit |
 | Tool, top level | `1`–`5`,`0` calc tabs · `c` calculate · `p` plot menu · `v` focus results · `s` save · `w` save-as · `o` profiles · `?` help · `q` quit · group keys below |
-| Design groups | `t` Tank · `l` Light · `n` Noise · `i` Lock-in · `m` Opamp/Moku · `f` Spectrum (single field → edits f_max directly) |
+| Design / Buy groups | `t` Tank · `l` Light · `n` Noise · `i` Lock-in · `m` Opamp/Moku · `f` Spectrum (single field → edits f_max directly) |
 | Tank fields (Design) | `r` r_f · `f` f_0 · `d` t_dwell · `n` n_tau · `q` q_mode |
 | Light fields | `i` p_min · `x` p_max · `r` resp · `f` f_rep · `w` tau_p · `m` m |
-| Noise fields | `c` c_d · `e` en_opamp · `p` nep · `t` temp · `k` k_crest |
+| Noise fields | `c` c_d · `e` en_opamp · `p` nep · `t` temp · `k` k_crest (Buy: `p` nep · `k` k_crest) |
 | Lock-in fields | `t` tau_lia · `o` n_lia |
 | Opamp/Moku fields | `s` v_swing · `e` en_moku · `b` n_bits · `v` v_range |
 | Tank fields (Analyze) | `l` l_f · `c` c_f · `r` r_f · `f` f_0 · `d` t_dwell · `n` n_tau |

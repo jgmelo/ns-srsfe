@@ -50,7 +50,8 @@ async def test_starts_on_launcher_with_default_profile(pdir: Path) -> None:
         assert (pdir / "default.json").is_file() and app.params == Params()
         assert header(app) == "SRS-FE │ profile: default"
         prompts = [str(o.prompt) for o in app.screen.query_one(OptionList).options]
-        assert prompts[:2] == ["[d] Design from t_dwell", "[a] Analyze existing tank"]
+        assert prompts[:3] == ["[d] Design from t_dwell", "[b] Buy (vendor detector)",
+                               "[a] Analyze existing tank"]
         assert {"[o] Profiles", "[t] Settings", "[q] Quit"} <= set(prompts)
 
 
@@ -60,7 +61,8 @@ async def test_launcher_keys_open_screens(pdir: Path) -> None:
     """d / a open the tool screen, o opens Profiles, Esc returns to the launcher."""
     app = SrsfeApp(pdir)
     async with app.run_test() as pilot:
-        for key, kind in (("d", ToolScreen), ("a", ToolScreen), ("o", ProfilesScreen)):
+        for key, kind in (("d", ToolScreen), ("b", ToolScreen), ("a", ToolScreen),
+                          ("o", ProfilesScreen)):
             await pilot.press(key)
             assert isinstance(app.screen, kind)
             await pilot.press("escape")

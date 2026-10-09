@@ -180,9 +180,12 @@ def budget(result: Result) -> Figure:
 
 
 def noise(result: Result) -> Figure:
-    """Input-referred noise densities i_sh, i_R, i_en, i_NEP at P_min and P_max."""
+    """Input-referred noise densities i_sh, i_R, i_en, i_NEP at P_min and P_max
+    (only the sources the result models: Buy has i_sh and i_NEP)."""
     _need(result, "noise")
-    names = (("i_sh", "i_sh"), ("i_r", "i_R"), ("i_en", "i_en"), ("i_nep", "i_NEP"))
+    names = tuple((n, label) for n, label in
+                  (("i_sh", "i_sh"), ("i_r", "i_R"), ("i_en", "i_en"), ("i_nep", "i_NEP"))
+                  if n in result.per_power or n in result.scalars)  # Buy has no i_R, i_en
     fig, (ax,) = _figure(1, 4.6)
     x = np.arange(len(names))
     width = 0.36

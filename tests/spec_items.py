@@ -99,6 +99,13 @@ SECTIONS: list[Section] = [
         "outputs": "f0_calc, q, tau_tank, bw_3db, b_eq",
         "optional": "f_0 enables W06; t_dwell + n_tau enable settles, W07",
     }),
+    Section("§6.4", "Buy tool", {
+        "calcs": "Calcs 1–5, 0 with the Buy Noise inputs",
+        "tank": "Tank shape from t_dwell as in Design; no L, C",
+        "noise-model": "i_tot = √(i_sh² + i_NEP²); no i_R, i_en",
+        "same-as-design": "Spectrum, signal, budget, lock-in, warnings as in Design",
+        "groups": "Groups as Design; Noise holds nep, k_crest",
+    }),
     Section("§6.3", "Sweep engine", {
         "sweep": "One run per value, requested outputs collected",
         "per-power": "Per-power outputs expand to name@p_min / name@p_max",

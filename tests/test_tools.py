@@ -48,8 +48,9 @@ def _produced(r: Result) -> set[str]:
 @pytest.mark.api
 @pytest.mark.spec("§2", "tool-registry")
 def test_registry_and_register(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Design (d) and Analyze (a) are registered; a new tool is one register() call; keys unique."""
-    assert set(REGISTRY) == {"d", "a"}
+    """Design (d), Buy (b), Analyze (a) are registered in launcher order; a new tool is one
+    register() call; keys unique."""
+    assert list(REGISTRY) == ["d", "b", "a"]
     monkeypatch.setattr(base, "REGISTRY", dict(base.REGISTRY))
     extra = base.Tool("Extra", "x", "test tool", (), ())
     base.register(extra)

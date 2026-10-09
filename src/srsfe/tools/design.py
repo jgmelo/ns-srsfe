@@ -1,8 +1,12 @@
 """Design from t_dwell (SPEC §6.1): size the tank from the dwell time, then spectrum,
-noise, budget and lock-in. Each calc runs a set of stages; later stages reuse earlier ones."""
+noise, budget and lock-in. Each calc runs a set of stages; later stages reuse earlier ones.
+
+The same pipeline serves the Buy tool (tools/buy.py, SPEC §6.4) through a Variant that
+swaps the noise model and the per-stage input/output tables."""
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from srsfe.core import moku, noise, spectrum
@@ -49,6 +53,22 @@ DEPS = {
 ORDER = ("sizing", "spectrum", "noise", "budget", "lockin")
 
 
+
+
+@dataclass(frozen=True)
+class Variant:
+    """Per-tool tables for the shared pipeline."""
+
+    tool_key: str
+    req: dict[str, tuple[str, ...]]
+    opt: dict[str, tuple[str, ...]]
+    out: dict[str, tuple[str, ...]]
+    detector_noise: bool  # True: shot + NEP only (bought detector); False: full DIY model
+
+
+DIY = Variant(TOOL_KEY, REQ, OPT, OUT, detector_noise=False)
+
+
 def _stages(top: tuple[str, ...]) -> tuple[str, ...]:
     need = set(top)
     for s in top:
@@ -56,7 +76,9 @@ def _stages(top: tuple[str, ...]) -> tuple[str, ...]:
     return tuple(s for s in ORDER if s in need)
 
 
-def _compute(p: Params, stages: tuple[str, ...], calc_key: str, plots: tuple[str, ...]) -> Result:
+def _compute(
+    v: Variant, p: Params, stages: tuple[str, ...], calc_key: str, plots: tuple[str, ...]
+) -> Result:
     scalars: dict[str, Any] = {}
     per_power: dict[str, dict[str, Any]] = {}
     tables: dict[str, dict[str, dict[str, list[Any]]]] = {}
@@ -67,7 +89,7 @@ def _compute(p: Params, stages: tuple[str, ...], calc_key: str, plots: tuple[str
 
     assert p.r_f is not None and p.f_0 is not None and p.t_dwell is not None and p.n_tau is not None
     tank = tank_from_dwell(p.r_f, p.f_0, p.t_dwell, p.n_tau, p.q_mode or "settling")
-    for name in OUT["sizing"]:
+    for name in v.out["sizing"]:
         scalars[name] = getattr(tank, name)
 
     i_0: dict[str, float] = {}
@@ -102,8 +124,11 @@ def _compute(p: Params, stages: tuple[str, ...], calc_key: str, plots: tuple[str
     if "noise" in stages:
         for power in POWERS:
             s = spectrum.signal(i_0[power], p.m, p.r_f)  # type: ignore[arg-type]
-            d = noise.densities(i_0[power], p.r_f, p.f_0, p.c_d, p.en_opamp,  # type: ignore[arg-type]
-                                p.nep, p.resp, p.temp)  # type: ignore[arg-type]
+            if v.detector_noise:
+                d = noise.detector_densities(i_0[power], p.r_f, p.nep, p.resp)  # type: ignore[arg-type]
+            else:
+                d = noise.densities(i_0[power], p.r_f, p.f_0, p.c_d,  # type: ignore[arg-type]
+                                    p.en_opamp, p.nep, p.resp, p.temp)  # type: ignore[arg-type]
             vr = noise.v_rms(d.v_dens, tank.b_eq)
             v_sig[power], v_dens[power], v_rms[power] = s.v_sig, d.v_dens, vr
             put("i_sig", power, s.i_sig)
@@ -114,7 +139,8 @@ def _compute(p: Params, stages: tuple[str, ...], calc_key: str, plots: tuple[str
             put("v_rms", power, vr)
             put("snr", power, noise.snr_db(s.v_sig, vr))
             put("shot_clear", power, noise.shot_clear_db(d.i_sh, d.i_elec))
-            scalars.update(i_r=d.i_r, i_en=d.i_en, i_nep=d.i_nep, i_elec=d.i_elec)
+            scalars.update({k: getattr(d, k) for k in ("i_r", "i_en", "i_nep", "i_elec")
+                            if k in v.out["noise"]})
             if p.en_moku is not None:
                 warns.append(w.check_w05(d.v_dens, p.en_moku, power))  # type: ignore[arg-type]
         if p.n_bits is not None and p.v_range is not None:
@@ -144,27 +170,32 @@ def _compute(p: Params, stages: tuple[str, ...], calc_key: str, plots: tuple[str
 
     fired = sorted((x for x in warns if x is not None),
                    key=lambda x: (x.id, POWERS.index(x.power) if x.power else -1))
-    return Result(tool=TOOL_KEY, calc=calc_key, params=p.to_dict(), scalars=scalars,
+    return Result(tool=v.tool_key, calc=calc_key, params=p.to_dict(), scalars=scalars,
                   per_power=per_power, tables=tables, warnings=tuple(fired), plots=plots)
 
 
-def _calc(name: str, key: str, top: tuple[str, ...], plots: tuple[str, ...]) -> Calc:
+def _calc(v: Variant, name: str, key: str, top: tuple[str, ...], plots: tuple[str, ...]) -> Calc:
     stages = _stages(top)
-    required = unique_ordered(*(REQ[s] for s in stages))
-    optional = tuple(x for x in unique_ordered(*(OPT[s] for s in stages)) if x not in required)
-    outputs = unique_ordered(*(OUT[s] for s in stages))
+    required = unique_ordered(*(v.req[s] for s in stages))
+    optional = tuple(x for x in unique_ordered(*(v.opt[s] for s in stages)) if x not in required)
+    outputs = unique_ordered(*(v.out[s] for s in stages))
     return Calc(name, key, required, optional, outputs, plots,
-                compute=lambda p: _compute(p, stages, key, plots))
+                compute=lambda p: _compute(v, p, stages, key, plots))
 
 
-CALCS = (
-    _calc("Sizing", "1", ("sizing",), ("bode",)),
-    _calc("Spectrum", "2", ("spectrum",), ("spectrum",)),
-    _calc("Budget", "3", ("budget",), ("budget",)),
-    _calc("Noise", "4", ("noise",), ("noise",)),
-    _calc("Lock-in", "5", ("lockin",), ("noise",)),
-    _calc("All", "0", ORDER, ("bode", "spectrum", "budget", "noise")),
-)
+def make_calcs(v: Variant) -> tuple[Calc, ...]:
+    """Calcs 1–5 and 0 (SPEC §6.1 table) for a variant."""
+    return (
+        _calc(v, "Sizing", "1", ("sizing",), ("bode",)),
+        _calc(v, "Spectrum", "2", ("spectrum",), ("spectrum",)),
+        _calc(v, "Budget", "3", ("budget",), ("budget",)),
+        _calc(v, "Noise", "4", ("noise",), ("noise",)),
+        _calc(v, "Lock-in", "5", ("lockin",), ("noise",)),
+        _calc(v, "All", "0", ORDER, ("bode", "spectrum", "budget", "noise")),
+    )
+
+
+CALCS = make_calcs(DIY)
 
 GROUPS = (
     Group("Tank", "t", ("r_f", "f_0", "t_dwell", "n_tau", "q_mode")),

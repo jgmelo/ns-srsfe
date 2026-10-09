@@ -80,6 +80,17 @@ def densities(
     return NoiseDensities(i_sh, i_r, i_en, i_nep, i_elec, i_tot, v_dens=r * i_tot)
 
 
+def detector_densities(i_0: float, r: float, nep: float, resp: float) -> NoiseDensities:
+    """Bought detector (SPEC §6.4): shot noise of the light plus the vendor's NEP·ℜ.
+    The vendor's electronics are inside the NEP, so i_R and i_en are not modelled (0);
+    i_elec = i_NEP. `r` is the vendor's transimpedance gain at f₀."""
+    _require("r", r)
+    i_sh = shot_density(i_0)
+    i_nep = nep_density(nep, resp)
+    i_tot = math.sqrt(i_sh**2 + i_nep**2)
+    return NoiseDensities(i_sh, 0.0, 0.0, i_nep, i_elec=i_nep, i_tot=i_tot, v_dens=r * i_tot)
+
+
 def v_rms(v_dens: float, bandwidth: float) -> float:
     """Output rms noise v_dens·√B (B = B_eq for the tank, ENBW for the lock-in)."""
     _require("v_dens", v_dens, allow_zero=True)
