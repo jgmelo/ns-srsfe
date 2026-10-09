@@ -161,3 +161,10 @@ def test_p_min_le_p_max() -> None:
     assert set(errors) == {"p_min", "p_max"}
     # Only one set → no cross-field error.
     assert validate(Params(p_min=2e-3, p_max=None)) == {}
+
+
+@pytest.mark.validation
+@pytest.mark.spec("§3.1", "v-range")
+def test_choice_reason_is_readable() -> None:
+    """The reason lists the allowed values plainly: "must be one of 1, 10"."""
+    assert validate_value("v_range", 3.0) == "must be one of 1, 10"

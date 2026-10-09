@@ -34,7 +34,7 @@ class ToolScreen(Screen[None]):
     DEFAULT_CSS = """
     ToolScreen Tabs { height: 2; }
     ToolScreen #body { height: 1fr; }
-    ToolScreen #inputs { width: 58; border-right: solid $panel; }
+    ToolScreen #inputs { width: 66; border-right: solid $panel; }
     ToolScreen #right { width: 1fr; }
     ToolScreen #hints { height: auto; padding: 0 1; background: $panel; color: $text-muted; }
     """

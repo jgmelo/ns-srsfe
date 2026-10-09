@@ -161,7 +161,7 @@ def validate_value(name: str, value: FieldValue) -> str | None:
         if not meta.nonneg and value <= 0:
             return "must be > 0"
     if meta.choices is not None and value not in meta.choices:
-        opts = ", ".join(str(c) for c in meta.choices)
+        opts = ", ".join(f"{c:g}" if isinstance(c, float) else str(c) for c in meta.choices)
         return f"must be one of {opts}"
     return None
 

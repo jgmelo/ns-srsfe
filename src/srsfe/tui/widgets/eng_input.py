@@ -81,6 +81,7 @@ class FieldRow(Horizontal):
     FieldRow.missing Input, FieldRow.invalid Input { background: $error 35%; }
     FieldRow.missing .key { color: $error; }
     FieldRow.unused { opacity: 50%; }
+    FieldRow.unused.invalid { opacity: 100%; }
     FieldRow Input:focus { background: $accent 40%; }
     """
 
