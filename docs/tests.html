@@ -109,7 +109,7 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 }
 </style></head><body><div class='layout'>
 <nav><h1>SRS-FE test catalog</h1>
-<div class='meta'>7213e48 · 2026-10-09 13:42</div>
+<div class='meta'>bbfec74 · 2026-10-09 13:57</div>
 <ul><li><a href='#overview'>Overview</a></li>
 <li><a href='#spec'>SPEC coverage <span class='count'>151/153</span></a></li>
 <li><a href='#topics'>Topics</a></li>
@@ -118,7 +118,7 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li class='sub'><a href='#topic-keymap'>keymap<span class='count'>11</span></a></li>
 <li class='sub'><a href='#topic-moku'>moku<span class='count'>9</span></a></li>
 <li class='sub'><a href='#topic-noise'>noise<span class='count'>45</span></a></li>
-<li class='sub'><a href='#topic-params'>params<span class='count'>36</span></a></li>
+<li class='sub'><a href='#topic-params'>params<span class='count'>37</span></a></li>
 <li class='sub'><a href='#topic-plots'>plots<span class='count'>13</span></a></li>
 <li class='sub'><a href='#topic-profiles'>profiles<span class='count'>38</span></a></li>
 <li class='sub'><a href='#topic-scaffold'>scaffold<span class='count'>2</span></a></li>
@@ -146,8 +146,8 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <section id='overview'><h2>Overview</h2>
 <p class='lead'>Generated from pytest collection. A <em>function</em> is one <code>def test_…</code>; parametrized functions expand into several <em>cases</em>.</p>
 <div class='tiles'>
-<div class='tile'><div class='v'>180</div><div class='l'>test functions</div></div>
-<div class='tile'><div class='v'>426</div><div class='l'>test cases</div></div>
+<div class='tile'><div class='v'>181</div><div class='l'>test functions</div></div>
+<div class='tile'><div class='v'>427</div><div class='l'>test cases</div></div>
 <div class='tile'><div class='v'>17</div><div class='l'>topics (files)</div></div>
 <div class='tile'><div class='v'>151/153</div><div class='l'>SPEC items covered</div></div>
 <div class='tile'><div class='v'>0</div><div class='l'>failed cases (last run)</div></div>
@@ -223,13 +223,13 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <td class='empty'>·</td>
 <td class='empty'>·</td>
 <td style="background: rgba(var(--heat), 0.16)">4<span class='fn'>4 fn</span></td>
-<td style="background: rgba(var(--heat), 0.51)">28<span class='fn'>5 fn</span></td>
+<td style="background: rgba(var(--heat), 0.52)">29<span class='fn'>6 fn</span></td>
 <td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
 <td style="background: rgba(var(--heat), 0.14)">3<span class='fn'>3 fn</span></td>
 <td class='empty'>·</td>
 <td class='empty'>·</td>
 <td class='empty'>·</td>
-<td><b>36</b><span class='fn'>13 fn</span></td></tr>
+<td><b>37</b><span class='fn'>14 fn</span></td></tr>
 <tr><td><a href='#topic-plots'>plots</a></td>
 <td class='empty'>·</td>
 <td class='empty'>·</td>
@@ -355,13 +355,13 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <td>45<span class=fn>23 fn</span></td>
 <td>57<span class=fn>36 fn</span></td>
 <td>42<span class=fn>20 fn</span></td>
-<td>136<span class=fn>20 fn</span></td>
+<td>137<span class=fn>21 fn</span></td>
 <td>39<span class=fn>8 fn</span></td>
 <td>45<span class=fn>26 fn</span></td>
 <td>18<span class=fn>8 fn</span></td>
 <td>11<span class=fn>11 fn</span></td>
 <td>33<span class=fn>28 fn</span></td>
-<td>426<span class='fn'>180 fn</span></td></tr></tfoot></table></div>
+<td>427<span class='fn'>181 fn</span></td></tr></tfoot></table></div>
 </section>
 <section id='spec'><h2>SPEC coverage</h2>
 <p class='lead'>Items listed in <code>tests/spec_items.py</code> against the <code>@pytest.mark.spec(…)</code> markers. ✗ = no test yet.</p><div class='sections'>
@@ -383,7 +383,7 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>Numeric inputs &gt; 0</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a></span></li>
 <li><span class='yes'>✓</span><span>m ≥ 0</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
 <li><span class='yes'>✓</span><span>n_lia ∈ {1,2,3,4}</span><span class='tests'><a href='#t-noise-test_enbw_rejects_bad_order'>test_enbw_rejects_bad_order</a>, <a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
-<li><span class='yes'>✓</span><span>v_range ∈ {1, 10}</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
+<li><span class='yes'>✓</span><span>v_range ∈ {1, 10}</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a>, <a href='#t-params-test_choice_reason_is_readable'>test_choice_reason_is_readable</a></span></li>
 <li><span class='yes'>✓</span><span>n_bits integer</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
 <li><span class='yes'>✓</span><span>q_mode ∈ {&quot;settling&quot;, &quot;bandwidth&quot;}</span><span class='tests'><a href='#t-params-test_validate_value_rejects'>test_validate_value_rejects</a>, <a href='#t-params-test_validate_value_accepts'>test_validate_value_accepts</a></span></li>
 <li><span class='yes'>✓</span><span>p_min ≤ p_max</span><span class='tests'><a href='#t-params-test_p_min_le_p_max'>test_p_min_le_p_max</a></span></li>
@@ -657,7 +657,7 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <tr data-row data-kind='validation' data-text='test_rejects_bad_input non-positive/non-finite inputs raise valueerror (i₀, c_d, v_sig, i_sh may be 0). validation shot_density-args0 johnson_density-args1 johnson_density-args2 opamp_density-args3 opamp_density-args4 nep_density-args5 v_rms-args6 enbw_lia-args7 snr_db-args8 snr_db-args9 shot_clear_db-args10' id='t-noise-test_rejects_bad_input'><td><span class='dot passed' title='passed'></span><code>test_rejects_bad_input</code><span class='where'>tests/test_noise.py:218</span></td><td>Non-positive/non-finite inputs raise ValueError (I₀, C_d, V_sig, i_sh may be 0).</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><span class='where'>—</span></td><td><details><summary>11 cases</summary><ul><li class='mono'>shot_density-args0</li><li class='mono'>johnson_density-args1</li><li class='mono'>johnson_density-args2</li><li class='mono'>opamp_density-args3</li><li class='mono'>opamp_density-args4</li><li class='mono'>nep_density-args5</li><li class='mono'>v_rms-args6</li><li class='mono'>enbw_lia-args7</li><li class='mono'>snr_db-args8</li><li class='mono'>snr_db-args9</li><li class='mono'>shot_clear_db-args10</li></ul></details></td></tr>
 </tbody></table></div></section>
 <section class='topic' id='topic-params'><h2>params</h2>
-<p class='lead'><code>tests/test_params.py</code> · 13 functions · 36 cases — M1: Params fields, metadata and validation (SPEC §3.1).</p>
+<p class='lead'><code>tests/test_params.py</code> · 14 functions · 37 cases — M1: Params fields, metadata and validation (SPEC §3.1).</p>
 <div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
 <tr data-row data-kind='schema' data-text='test_fields_match_spec_order params has exactly the spec §3.1 fields, in table order. schema §3.1 fields' id='t-params-test_fields_match_spec_order'><td><span class='dot passed' title='passed'></span><code>test_fields_match_spec_order</code><span class='where'>tests/test_params.py:20</span></td><td>Params has exactly the SPEC §3.1 fields, in table order.</td><td><span class='chip' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</span></td><td><a href='#spec-§3.1'>§3.1 fields</a></td><td>1</td></tr>
 <tr data-row data-kind='schema' data-text='test_metadata_complete every field has a unit, group, symbol, description and a one-letter key. schema §3.1 metadata' id='t-params-test_metadata_complete'><td><span class='dot passed' title='passed'></span><code>test_metadata_complete</code><span class='where'>tests/test_params.py:28</span></td><td>Every field has a unit, group, symbol, description and a one-letter key.</td><td><span class='chip' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</span></td><td><a href='#spec-§3.1'>§3.1 metadata</a></td><td>1</td></tr>
@@ -672,6 +672,7 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <tr data-row data-kind='validation' data-text='test_validate_value_rejects out-of-range values get a reason: ≤ 0, non-finite, m &lt; 0, bad choices, non-integer. validation §3.1 positive, m-nonneg, n-lia, v-range, q-mode, n-bits r_f-0.0 r_f--1.0 f_max-inf temp-nan m--1e-06 n_lia-0 n_lia-5 v_range-2.0 q_mode-other n_bits-0 n_bits-12.5' id='t-params-test_validate_value_rejects'><td><span class='dot passed' title='passed'></span><code>test_validate_value_rejects</code><span class='where'>tests/test_params.py:126</span></td><td>Out-of-range values get a reason: ≤ 0, non-finite, m &lt; 0, bad choices, non-integer.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§3.1'>§3.1 positive, m-nonneg, n-lia, v-range, q-mode, n-bits</a></td><td><details><summary>11 cases</summary><ul><li class='mono'>r_f-0.0</li><li class='mono'>r_f--1.0</li><li class='mono'>f_max-inf</li><li class='mono'>temp-nan</li><li class='mono'>m--1e-06</li><li class='mono'>n_lia-0</li><li class='mono'>n_lia-5</li><li class='mono'>v_range-2.0</li><li class='mono'>q_mode-other</li><li class='mono'>n_bits-0</li><li class='mono'>n_bits-12.5</li></ul></details></td></tr>
 <tr data-row data-kind='validation' data-text='test_validate_value_accepts boundary and allowed values pass: m = 0, n_lia = 4, v_range 1/10, unset. validation §3.1 m-nonneg, n-lia, v-range, q-mode, n-bits m-0.0 n_lia-4 v_range-10 v_range-1.0 q_mode-bandwidth n_bits-16 l_f-none' id='t-params-test_validate_value_accepts'><td><span class='dot passed' title='passed'></span><code>test_validate_value_accepts</code><span class='where'>tests/test_params.py:141</span></td><td>Boundary and allowed values pass: m = 0, n_lia = 4, v_range 1/10, unset.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§3.1'>§3.1 m-nonneg, n-lia, v-range, q-mode, n-bits</a></td><td><details><summary>7 cases</summary><ul><li class='mono'>m-0.0</li><li class='mono'>n_lia-4</li><li class='mono'>v_range-10</li><li class='mono'>v_range-1.0</li><li class='mono'>q_mode-bandwidth</li><li class='mono'>n_bits-16</li><li class='mono'>l_f-None</li></ul></details></td></tr>
 <tr data-row data-kind='validation' data-text='test_p_min_le_p_max p_min &gt; p_max flags both fields; equal is fine; one unset skips the check. validation §3.1 p-order' id='t-params-test_p_min_le_p_max'><td><span class='dot passed' title='passed'></span><code>test_p_min_le_p_max</code><span class='where'>tests/test_params.py:155</span></td><td>p_min &gt; p_max flags both fields; equal is fine; one unset skips the check.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§3.1'>§3.1 p-order</a></td><td>1</td></tr>
+<tr data-row data-kind='validation' data-text='test_choice_reason_is_readable the reason lists the allowed values plainly: &quot;must be one of 1, 10&quot;. validation §3.1 v-range' id='t-params-test_choice_reason_is_readable'><td><span class='dot passed' title='passed'></span><code>test_choice_reason_is_readable</code><span class='where'>tests/test_params.py:166</span></td><td>The reason lists the allowed values plainly: &quot;must be one of 1, 10&quot;.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§3.1'>§3.1 v-range</a></td><td>1</td></tr>
 </tbody></table></div></section>
 <section class='topic' id='topic-plots'><h2>plots</h2>
 <p class='lead'><code>tests/test_plots.py</code> · 8 functions · 13 cases — M7: plot figures build without error (Agg backend) and the runner saves PNGs (SPEC §8.2).</p>
