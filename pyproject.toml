@@ -20,4 +20,5 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "--strict-markers"
 asyncio_mode = "auto"

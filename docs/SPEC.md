@@ -43,11 +43,12 @@ srsfe/
 │   │   ├── noise.py           # noise densities, v_rms, SNR, lock-in ENBW
 │   │   ├── budget.py          # output occupancy
 │   │   ├── moku.py            # LSB, quantization noise
-│   │   ├── warnings.py        # Warning dataclass + checks
+│   │   ├── warnings.py        # DesignWarning dataclass + checks
 │   │   └── sweep.py           # generic sweep engine
 │   ├── tools/
 │   │   ├── base.py            # Tool, Calc, Result, registry
-│   │   ├── design.py          # "Design from t_dwell"
+│   │   ├── design.py          # "Design from t_dwell" (DIY)
+│   │   ├── buy.py             # "Buy (vendor detector)"
 │   │   └── analyze.py         # "Analyze existing tank"
 │   ├── plots/
 │   │   ├── figures.py         # pure functions: Result -> matplotlib Figure
@@ -124,13 +125,13 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 |---|---|---|
 | `q` | – | Tank quality factor |
 | `l_f`, `c_f` | H, F | Tank L, C (derived in Design tool) |
-| `f0_calc` | Hz | Resonance from L, C (Analyze tool) |
+| `f0_calc` | Hz | Resonance from L, C (Analyze tool); `TankResult.f_res` |
 | `tau_tank` | s | Tank ring-down time constant |
 | `bw_3db`, `b_eq` | Hz | Tank −3 dB and noise-equivalent bandwidth |
 | `enbw_lia` | Hz | Lock-in ENBW |
 | `i_0` | A | Average photocurrent |
 | `q_p`, `i_pk` | C, A | Charge per pulse, peak pulse current |
-| `f_n`, `z_n`, `att_n`, `v_n` | Hz, Ω, dB, V | Per-harmonic frequency, \|Z_f\|, attenuation re R, output amplitude |
+| `f_n`, `i_n`, `z_n`, `att_n`, `v_n` | Hz, A, Ω, dB, V | Per-harmonic frequency, line current 2·I₀, \|Z_f\|, attenuation re R, output amplitude |
 | `v_n_sum`, `v_n_rss` | V | Coherent sum and RSS of v_n |
 | `i_sig`, `v_sig` | A, V | Signal current and output amplitude at f₀ |
 | `i_sh`, `i_r`, `i_en`, `i_nep`, `i_elec`, `i_tot` | A/√Hz | Noise densities; i_elec = √(i_r²+i_en²+i_nep²) |
@@ -140,7 +141,7 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 | `occ_swing`, `occ_moku` | % | Occupancy of opamp swing / Moku range |
 | `snr`, `snr_lia`, `shot_clear` | dB | SNR over B_eq, lock-in SNR, shot-noise clearance |
 | `lsb`, `v_q` | V | ADC LSB, quantization noise rms |
-| `settles` | bool | N_τ·τ_tank ≤ t_dwell (Analyze tool) |
+| `settles` | bool | N_τ·τ_tank ≤ t_dwell·(1 + 1e-9) (Analyze tool; slack absorbs float rounding only) |
 
 ---
 
@@ -153,12 +154,15 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 - From existing parts: f₀_calc = 1/(2π√(LC)), Q = R·√(C/L)
 - τ_tank = Q / (π·f₀)
 - Z_f(f) = R / [1 + jQ(f/f₀ − f₀/f)]
+- `TankResult.f_res` is the tank's own resonance, used in Z_f: f_res = f_0 (Design),
+  f_res = f₀_calc (Analyze). The input `f_0` is always the signal frequency.
 - BW₋₃dB = f₀/Q, B_eq = (π/2)·BW₋₃dB
 
 ### 4.2 Light and spectrum
 - I₀ = P·ℜ, q_p = I₀/f_rep, I_pk = q_p/τ_p
 - Lines: I₀ at DC (shorted by L — no output), 2·I₀ at fₙ = n·f_rep, m·I₀ at f₀
-- n = 1 … ⌊f_max/f_rep⌋
+- n = 1 … ⌊f_max/f_rep⌋ (floor taken on f_max/f_rep·(1 + 1e-9); slack absorbs float
+  rounding only, so f_max = k·f_rep includes harmonic k)
 - Vₙ = 2·I₀·|Z_f(fₙ)|, attₙ = 20·log₁₀(|Z_f(fₙ)|/R)
 
 ### 4.3 Signal
@@ -171,6 +175,8 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 - i_NEP = NEP·ℜ
 - i_tot = √(i_sh² + i_R² + i_en² + i_NEP²)
 - v_dens = R·i_tot, V_rms = v_dens·√B_eq
+- Buy tool (§6.4): i_tot = √(i_sh² + i_NEP²), i_elec = i_NEP; i_R and i_en are not modelled
+  (the vendor's electronics are inside its NEP). R is the vendor's transimpedance gain at f₀.
 
 ### 4.5 Lock-in
 - ENBW: n=1: 1/(4τ), n=2: 1/(8τ), n=3: 3/(32τ), n=4: 5/(64τ), τ = τ_LIA
@@ -190,19 +196,21 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 
 ## 5. Warnings
 
-| ID | Condition | Message |
-|---|---|---|
-| W01 | τ_LIA > t_dwell | Lock-in smears adjacent pixels |
-| W02 | ENBW > B_eq/5 | Tank, not lock-in, limits noise bandwidth |
-| W03 | occ_swing > 100 | Output exceeds opamp swing |
-| W04 | occ_moku > 100 | Output exceeds Moku input range |
-| W05 | v_dens < 3·e_n,Moku | Moku noise not negligible vs TIA output noise |
-| W06 | \|f₀_calc − f_0\|/f_0 > 0.01 | Tank resonance off signal frequency (Analyze) |
-| W07 | N_τ·τ_tank > t_dwell | Tank does not settle within dwell (Analyze) |
-| W08 | τ_p > 1/(10·f_max) | Impulse approximation questionable |
-| W09 | \|f_0 − f_rep/2\|/f_0 > 0.01 | Signal frequency is not f_rep/2 |
+| ID | Condition | Message | Severity | Power | Fields |
+|---|---|---|---|---|---|
+| W01 | τ_LIA > t_dwell | Lock-in smears adjacent pixels | warn | – | tau_lia, t_dwell |
+| W02 | ENBW > B_eq/5 | Tank, not lock-in, limits noise bandwidth | info | – | enbw_lia, b_eq |
+| W03 | occ_swing > 100 | Output exceeds opamp swing | warn | each | v_coh, occ_swing, v_swing |
+| W04 | occ_moku > 100 | Output exceeds Moku input range | warn | each | v_coh, occ_moku, v_range |
+| W05 | v_dens < 3·e_n,Moku | Moku noise not negligible vs TIA output noise | warn | each | v_dens, en_moku |
+| W06 | \|f₀_calc − f_0\|/f_0 > 0.01 | Tank resonance off signal frequency (Analyze) | warn | – | f0_calc, f_0 |
+| W07 | not `settles` (N_τ·τ_tank > t_dwell·(1 + 1e-9)) | Tank does not settle within dwell (Analyze) | warn | – | settles, tau_tank, n_tau, t_dwell |
+| W08 | τ_p > 1/(10·f_max) | Impulse approximation questionable | info | – | tau_p, f_max |
+| W09 | \|f_0 − f_rep/2\|/f_0 > 0.01 | Signal frequency is not f_rep/2 | warn | – | f_0, f_rep |
 
-Warnings carry `id`, `message`, `severity` ("warn" | "info"), `power` (None | "p_min" | "p_max"),
+Power "each": checked separately at P_min and P_max; the warning carries the power it fired at.
+
+Warnings (`DesignWarning`) carry `id`, `message`, `severity` ("warn" | "info"), `power` (None | "p_min" | "p_max"),
 and the names of the fields involved (used to put ⚠ next to result rows).
 
 ---
@@ -214,6 +222,8 @@ with group key and field keys). `Calc` declares: `name`, `key` (digit), `require
 `optional`, `outputs`, `plots`, `run(params) -> Result`.
 `Result` holds scalar outputs, per-power outputs (`{"p_min": ..., "p_max": ...}`), tables
 (harmonics), and warnings; it must be JSON-serializable (used by the plot subprocess and sweep).
+It also records the input `params` it was computed from. In JSON, non-finite floats (e.g. SNR =
+−inf when m = 0) are written as `{"$float": "-inf" | "inf" | "nan"}` so the file stays strict JSON.
 
 ### 6.1 Design from t_dwell (key `d`)
 
@@ -228,11 +238,30 @@ with group key and field keys). `Calc` declares: `name`, `key` (digit), `require
 
 Calcs with an optional input compute the dependent outputs/warnings only when it is set
 (e.g. W05 only if `en_moku` is set; `i_pk` and W08 only if `tau_p` is set).
+A calc also returns the outputs and warnings of the calcs it builds on ("Sizing +" etc.).
+Warnings by stage: Spectrum W08, W09 · Noise W05 · Budget W03, W04 · Lock-in W01, W02.
 
 ### 6.2 Analyze existing tank (key `a`)
 
-Single calc. Required: l_f, c_f, r_f. Optional: f_0 (enables W06), t_dwell + n_tau
+Single calc (key `1`, group `t` Tank). Required: l_f, c_f, r_f. Optional: f_0 (enables W06), t_dwell + n_tau
 (enable `settles`, W07). Outputs: f0_calc, q, tau_tank, bw_3db, b_eq, settles. Plot: Bode.
+
+### 6.4 Buy (vendor detector) (key `b`)
+
+A vendor builds the resonant front end to our specs; we only have its transimpedance gain
+at f₀ (entered as `r_f`) and its NEP. The tank shape (Q, τ_tank, BW₋₃dB, B_eq, harmonic
+attenuation) is estimated from t_dwell exactly as in Design; L and C are not reported.
+Noise is the shot noise of the light plus NEP·ℜ only (§4.4). Spectrum, signal, budget,
+lock-in, Moku and warnings are as in Design.
+
+Calcs `1`–`5`, `0` as in §6.1, except:
+
+| Key | Calc | Required | Optional |
+|---|---|---|---|
+| 4 | Noise | Sizing + p_min, p_max, resp, nep, m | en_moku, n_bits, v_range |
+
+(Budget, Lock-in and All inherit this Noise row.) Sizing outputs: q, tau_tank, bw_3db, b_eq.
+Noise outputs drop i_r and i_en. Groups as Design, but Noise holds only nep, k_crest.
 
 ### 6.3 Sweep engine (core only in v1; UI later, launcher key `w`)
 
@@ -255,8 +284,12 @@ with `field` replaced, collects the requested outputs (per-power outputs expand 
 - On load: unknown keys → warn and drop; missing keys → null; wrong type → error.
   `migrate(data)` upgrades older `schema_version`s.
 - One active profile at a time; app opens last-used profile, fallback `default.json`
-  (created from defaults if missing). Last-used name stored in a small settings file.
+  (created from defaults if missing). Last-used name stored in a small settings file:
+  `settings.json` with `profiles_dir` and `last_profile`, in `%APPDATA%\srsfe\` on Windows,
+  `$XDG_CONFIG_HOME/srsfe/` (default `~/.config/srsfe/`) elsewhere. A missing or unreadable
+  file means defaults (`profiles_dir` = `profiles`, relative to the working directory).
 - Dirty flag: header shows `profile: <name>*` with unsaved changes; switching/quitting prompts.
+- The active profile cannot be deleted (load another one first).
 
 ---
 
@@ -279,7 +312,10 @@ highlighted item.
 - Right: results table (columns P_min / P_max where applicable, engineering formatting,
   ⚠ on rows tied to a warning) above a warnings panel.
 - Calculate validates first; missing required fields → toast listing them, nothing runs.
-- Editing any input marks results stale (greyed) until recalculated.
+- Editing any input marks results stale (greyed, with a note in the warnings panel) until
+  recalculated; a result is stale when its recorded inputs differ from the current ones.
+- `x` clears every input of the current tool to empty (unset) after a y/n confirmation;
+  results are cleared, the profile becomes dirty, nothing is saved.
 
 **Plot menu** — checkbox list of plots available for the current Result; show or save PNG
 to `./plots/<profile>_<plot>.png`.
@@ -288,11 +324,18 @@ to `./plots/<profile>_<plot>.png`.
 
 **Dialogs** — unsaved changes; delete confirmation.
 
+**Settings** — profiles folder. Enter applies: asks about unsaved changes, creates the folder if
+needed and opens its last-used/default profile; saved to the settings file. Esc back.
+
+**Help** (F1, or `?` on the tool screen) — overlay listing the current screen's keys, built from
+the same key tables, plus the input notation. Esc or F1 closes.
+
 ### 8.2 Plots
 
 Pure functions in `plots/figures.py`: `Result -> Figure`. Displayed by spawning
-`python -m srsfe.plots.runner <result.json> <plot_name>` so matplotlib's GUI loop never
-blocks Textual. Plots:
+`python -m srsfe.plots.runner <result.json> <plot_name>...` so matplotlib's GUI loop never
+blocks Textual; with `--save DIR [--prefix <profile>_]` it writes `<prefix><plot>.png` instead of
+showing. Two quantities with different units get stacked panels, never a second y-axis. Plots:
 - **Bode**: |Z_f| (dB re 1 Ω) and phase vs log f, 1 MHz … f_max; mark f₀ and fₙ.
 - **Spectrum**: stems of Iₙ and Vₙ vs f, signal line at f₀; both powers.
 - **Budget**: stacked bar of ΣVₙ, V_sig, k_crest·V_rms at P_min and P_max with V_swing
@@ -310,19 +353,21 @@ Ctrl+S save · Ctrl+Q quit · Ctrl+P command palette.
 
 | Context | Keys |
 |---|---|
-| Launcher | `d` Design · `a` Analyze · `w` Sweep (later) · `o` Profiles · `t` Settings · `q` quit |
-| Tool, top level | `1`–`5`,`0` calc tabs · `c` calculate · `p` plot menu · `v` focus results · `s` save · `w` save-as · `o` profiles · `?` help · `q` quit · group keys below |
-| Design groups | `t` Tank · `l` Light · `n` Noise · `i` Lock-in · `m` Opamp/Moku · `f` Spectrum (single field → edits f_max directly) |
+| Launcher | `d` Design · `b` Buy · `a` Analyze · `w` Sweep (later) · `o` Profiles · `t` Settings · `q` quit |
+| Tool, top level | `1`–`5`,`0` calc tabs · `c` calculate · `p` plot menu · `v` focus results · `s` save · `w` save-as · `o` profiles · `x` clear all · `?` help · `q` quit · group keys below |
+| Design / Buy groups | `t` Tank · `l` Light · `n` Noise · `i` Lock-in · `m` Opamp/Moku · `f` Spectrum (single field → edits f_max directly) |
 | Tank fields (Design) | `r` r_f · `f` f_0 · `d` t_dwell · `n` n_tau · `q` q_mode |
 | Light fields | `i` p_min · `x` p_max · `r` resp · `f` f_rep · `w` tau_p · `m` m |
-| Noise fields | `c` c_d · `e` en_opamp · `p` nep · `t` temp · `k` k_crest |
+| Noise fields | `c` c_d · `e` en_opamp · `p` nep · `t` temp · `k` k_crest (Buy: `p` nep · `k` k_crest) |
 | Lock-in fields | `t` tau_lia · `o` n_lia |
 | Opamp/Moku fields | `s` v_swing · `e` en_moku · `b` n_bits · `v` v_range |
 | Tank fields (Analyze) | `l` l_f · `c` c_f · `r` r_f · `f` f_0 · `d` t_dwell · `n` n_tau |
 | Plot menu | `b` Bode · `s` spectrum · `u` budget · `n` noise (toggle) · Enter show · `v` save PNG · Esc close |
 | Profiles | Enter/`l` load · `n` new (save-as) · `d` duplicate · `r` rename · `e` edit notes · `x` delete · Esc back |
 | Unsaved dialog | `s` save · `d` discard · `c`/Esc cancel |
-| Delete dialog | `y` yes · `n`/Esc no |
+| Delete / confirm dialogs | `y` yes · `n`/Esc no |
+| Settings | Enter apply · Esc back |
+| Help overlay | Esc/F1 close |
 
 Keys are declared next to the data they act on (field metadata, group, tool, screen).
 `test_keymap.py` asserts no collisions within any level, for every registered tool.
@@ -392,4 +437,4 @@ dB values: absolute tolerance 0.01 dB.
 
 Inputs l_f = 63.3257e-6 H, c_f = 1e-12 F, r_f = 100e3 Ω, f_0 = 20e6, t_dwell = 1e-6, n_tau = 5
 → f0_calc = 20.000e6 Hz, q = 12.566, tau_tank = 200e-9 s, settles = True (equality within
-tolerance counts as settling), no W06/W07.
+the 1e-9 rounding slack counts as settling), no W06/W07.
