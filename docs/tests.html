@@ -109,12 +109,13 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 }
 </style></head><body><div class='layout'>
 <nav><h1>SRS-FE test catalog</h1>
-<div class='meta'>c933496 · 2026-10-14 19:19</div>
+<div class='meta'>813393a · 2026-10-14 21:55</div>
 <ul><li><a href='#overview'>Overview</a></li>
-<li><a href='#spec'>SPEC coverage <span class='count'>155/155</span></a></li>
+<li><a href='#spec'>SPEC coverage <span class='count'>162/162</span></a></li>
 <li><a href='#topics'>Topics</a></li>
 <li class='sub'><a href='#topic-budget'>budget<span class='count'>12</span></a></li>
 <li class='sub'><a href='#topic-buy'>buy<span class='count'>15</span></a></li>
+<li class='sub'><a href='#topic-designmap'>designmap<span class='count'>23</span></a></li>
 <li class='sub'><a href='#topic-keymap'>keymap<span class='count'>13</span></a></li>
 <li class='sub'><a href='#topic-moku'>moku<span class='count'>9</span></a></li>
 <li class='sub'><a href='#topic-noise'>noise<span class='count'>45</span></a></li>
@@ -147,10 +148,10 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <section id='overview'><h2>Overview</h2>
 <p class='lead'>Generated from pytest collection. A <em>function</em> is one <code>def test_…</code>; parametrized functions expand into several <em>cases</em>.</p>
 <div class='tiles'>
-<div class='tile'><div class='v'>190</div><div class='l'>test functions</div></div>
-<div class='tile'><div class='v'>442</div><div class='l'>test cases</div></div>
-<div class='tile'><div class='v'>18</div><div class='l'>topics (files)</div></div>
-<div class='tile'><div class='v'>155/155</div><div class='l'>SPEC items covered</div></div>
+<div class='tile'><div class='v'>203</div><div class='l'>test functions</div></div>
+<div class='tile'><div class='v'>465</div><div class='l'>test cases</div></div>
+<div class='tile'><div class='v'>19</div><div class='l'>topics (files)</div></div>
+<div class='tile'><div class='v'>162/162</div><div class='l'>SPEC items covered</div></div>
 <div class='tile'><div class='v'>0</div><div class='l'>failed cases (last run)</div></div>
 </div>
 <h3>Cases by topic and kind</h3><p class='lead'>Cell: cases (functions). Empty columns show kinds no test exercises yet.</p>
@@ -187,6 +188,17 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
 <td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
 <td><b>15</b><span class='fn'>9 fn</span></td></tr>
+<tr><td><a href='#topic-designmap'>designmap</a></td>
+<td class='empty'>·</td>
+<td style="background: rgba(var(--heat), 0.25)">10<span class='fn'>7 fn</span></td>
+<td style="background: rgba(var(--heat), 0.14)">3<span class='fn'>3 fn</span></td>
+<td style="background: rgba(var(--heat), 0.23)">9<span class='fn'>2 fn</span></td>
+<td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td class='empty'>·</td>
+<td><b>23</b><span class='fn'>13 fn</span></td></tr>
 <tr><td><a href='#topic-keymap'>keymap</a></td>
 <td class='empty'>·</td>
 <td class='empty'>·</td>
@@ -365,15 +377,15 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <td><b>48</b><span class='fn'>6 fn</span></td></tr>
 </tbody><tfoot><tr><td>Total</td>
 <td>45<span class=fn>23 fn</span></td>
-<td>57<span class=fn>36 fn</span></td>
-<td>44<span class=fn>20 fn</span></td>
-<td>137<span class=fn>21 fn</span></td>
-<td>40<span class=fn>9 fn</span></td>
+<td>67<span class=fn>43 fn</span></td>
+<td>47<span class=fn>23 fn</span></td>
+<td>146<span class=fn>23 fn</span></td>
+<td>41<span class=fn>10 fn</span></td>
 <td>46<span class=fn>27 fn</span></td>
 <td>23<span class=fn>9 fn</span></td>
 <td>11<span class=fn>11 fn</span></td>
 <td>39<span class=fn>34 fn</span></td>
-<td>442<span class='fn'>190 fn</span></td></tr></tfoot></table></div>
+<td>465<span class='fn'>203 fn</span></td></tr></tfoot></table></div>
 </section>
 <section id='spec'><h2>SPEC coverage</h2>
 <p class='lead'>Items listed in <code>tests/spec_items.py</code> against the <code>@pytest.mark.spec(…)</code> markers. ✗ = no test yet.</p><div class='sections'>
@@ -506,6 +518,16 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>Input Params not mutated</span><span class='tests'><a href='#t-sweep-test_sweep_does_not_mutate'>test_sweep_does_not_mutate</a></span></li>
 </ul>
 </div>
+<div class='card' id='spec-§6.5'><header><h3>§6.5 Design-space map</h3><span class='frac'>7/7</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
+<li><span class='yes'>✓</span><span>Map settings: defaults, validation, fallback on bad values</span><span class='tests'><a href='#t-designmap-test_settings_defaults'>test_settings_defaults</a>, <a href='#t-designmap-test_settings_validation'>test_settings_validation</a>, <a href='#t-designmap-test_settings_dict_round_trip_and_fallback'>test_settings_dict_round_trip_and_fallback</a>, <a href='#t-designmap-test_compute_refuses_bad_settings_or_inputs'>test_compute_refuses_bad_settings_or_inputs</a></span></li>
+<li><span class='yes'>✓</span><span>Grid over log t_dwell × log P runs the base tool&#x27;s Budget calc</span><span class='tests'><a href='#t-designmap-test_map_result_layout'>test_map_result_layout</a>, <a href='#t-designmap-test_grid_matches_direct_runs'>test_grid_matches_direct_runs</a>, <a href='#t-designmap-test_map_physics'>test_map_physics</a>, <a href='#t-designmap-test_map_buy_base'>test_map_buy_base</a></span></li>
+<li><span class='yes'>✓</span><span>Missing/invalid profile inputs reported, nothing runs</span><span class='tests'><a href='#t-designmap-test_compute_refuses_bad_settings_or_inputs'>test_compute_refuses_bad_settings_or_inputs</a></span></li>
+<li><span class='yes'>✓</span><span>Slices along t_dwell at the profile&#x27;s P_min and P_max</span><span class='tests'><a href='#t-designmap-test_slices_at_profile_powers'>test_slices_at_profile_powers</a></span></li>
+<li><span class='yes'>✓</span><span>Boundary table rows and t_snr / t_ovl / t_safe / snr_design</span><span class='tests'><a href='#t-designmap-test_table_rows'>test_table_rows</a>, <a href='#t-designmap-test_boundaries_hit_their_limits'>test_boundaries_hit_their_limits</a>, <a href='#t-designmap-test_boundaries_edges'>test_boundaries_edges</a></span></li>
+<li><span class='yes'>✓</span><span>Crossings interpolated; None if never; t_lo if met at the edge</span><span class='tests'><a href='#t-designmap-test_first_crossing'>test_first_crossing</a>, <a href='#t-designmap-test_boundaries_hit_their_limits'>test_boundaries_hit_their_limits</a>, <a href='#t-designmap-test_boundaries_edges'>test_boundaries_edges</a></span></li>
+<li><span class='yes'>✓</span><span>Map Result round-trips through JSON</span><span class='tests'><a href='#t-designmap-test_map_result_layout'>test_map_result_layout</a></span></li>
+</ul>
+</div>
 <div class='card' id='spec-§7'><header><h3>§7 Profiles</h3><span class='frac'>16/16</span></header><div class='bar'><span style='width:100%'></span></div><ul class='items'>
 <li><span class='yes'>✓</span><span>File format (schema_version, name, notes, created, modified, params)</span><span class='tests'><a href='#t-profiles-test_golden_file_loads'>test_golden_file_loads</a>, <a href='#t-profiles-test_file_contains_inputs_only_with_nulls'>test_file_contains_inputs_only_with_nulls</a>, <a href='#t-profiles-test_malformed_document'>test_malformed_document</a>, <a href='#t-profiles-test_invalid_json'>test_invalid_json</a></span></li>
 <li><span class='yes'>✓</span><span>Stores inputs only, never derived values</span><span class='tests'><a href='#t-profiles-test_file_contains_inputs_only_with_nulls'>test_file_contains_inputs_only_with_nulls</a></span></li>
@@ -633,6 +655,25 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <tr data-row data-kind='warning' data-text='test_buy_warnings_as_design golden inputs: buy fires the same budget/lock-in warnings as design. warning §6.4 same-as-design' id='t-buy-test_buy_warnings_as_design'><td><span class='dot passed' title='passed'></span><code>test_buy_warnings_as_design</code><span class='where'>tests/test_buy.py:110</span></td><td>Golden inputs: Buy fires the same budget/lock-in warnings as Design.</td><td><span class='chip' title='A W01–W09 condition fires or does not fire'>warning</span></td><td><a href='#spec-§6.4'>§6.4 same-as-design</a></td><td>1</td></tr>
 <tr data-row data-kind='round_trip' data-text='test_buy_result_json a buy result survives json and records tool &quot;b&quot;. round_trip §6 result-json' id='t-buy-test_buy_result_json'><td><span class='dot passed' title='passed'></span><code>test_buy_result_json</code><span class='where'>tests/test_buy.py:119</span></td><td>A Buy result survives JSON and records tool &quot;b&quot;.</td><td><span class='chip' title='save → load or format → parse gives back the same thing'>round_trip</span></td><td><a href='#spec-§6'>§6 result-json</a></td><td>1</td></tr>
 <tr data-row data-kind='smoke' data-text='test_buy_plots_build all four plots build for buy; the noise plot shows only i_sh and i_nep. smoke §8.2 noise, bode' id='t-buy-test_buy_plots_build'><td><span class='dot passed' title='passed'></span><code>test_buy_plots_build</code><span class='where'>tests/test_buy.py:127</span></td><td>All four plots build for Buy; the noise plot shows only i_sh and i_NEP.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.2'>§8.2 noise, bode</a></td><td>1</td></tr>
+</tbody></table></div></section>
+<section class='topic' id='topic-designmap'><h2>designmap</h2>
+<p class='lead'><code>tests/test_designmap.py</code> · 13 functions · 23 cases — M11: design-space map computation (SPEC §6.5).</p>
+<div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
+<tr data-row data-kind='schema' data-text='test_settings_defaults defaults: design base, 100 ns–100 µs, 1 µw–10 mw, 41 points, target 10 db; valid. schema §6.5 settings' id='t-designmap-test_settings_defaults'><td><span class='dot passed' title='passed'></span><code>test_settings_defaults</code><span class='where'>tests/test_designmap.py:41</span></td><td>Defaults: Design base, 100 ns–100 µs, 1 µW–10 mW, 41 points, target 10 dB; valid.</td><td><span class='chip' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</span></td><td><a href='#spec-§6.5'>§6.5 settings</a></td><td>1</td></tr>
+<tr data-row data-kind='validation' data-text='test_settings_validation bad base, non-positive or inverted ranges, n outside 5…201, non-finite target. validation §6.5 settings change0-base change1-t_lo change2-t_hi change3-p_lo change4-p_hi change5-n change6-n change7-target' id='t-designmap-test_settings_validation'><td><span class='dot passed' title='passed'></span><code>test_settings_validation</code><span class='where'>tests/test_designmap.py:51</span></td><td>Bad base, non-positive or inverted ranges, n outside 5…201, non-finite target.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§6.5'>§6.5 settings</a></td><td><details><summary>8 cases</summary><ul><li class='mono'>change0-base</li><li class='mono'>change1-t_lo</li><li class='mono'>change2-t_hi</li><li class='mono'>change3-p_lo</li><li class='mono'>change4-p_hi</li><li class='mono'>change5-n</li><li class='mono'>change6-n</li><li class='mono'>change7-target</li></ul></details></td></tr>
+<tr data-row data-kind='round_trip' data-text='test_settings_dict_round_trip_and_fallback to_dict/from_dict round-trips; wrong types or missing keys fall back to defaults. round_trip §6.5 settings' id='t-designmap-test_settings_dict_round_trip_and_fallback'><td><span class='dot passed' title='passed'></span><code>test_settings_dict_round_trip_and_fallback</code><span class='where'>tests/test_designmap.py:64</span></td><td>to_dict/from_dict round-trips; wrong types or missing keys fall back to defaults.</td><td><span class='chip' title='save → load or format → parse gives back the same thing'>round_trip</span></td><td><a href='#spec-§6.5'>§6.5 settings</a></td><td>1</td></tr>
+<tr data-row data-kind='validation' data-text='test_compute_refuses_bad_settings_or_inputs invalid settings raise mapsettingserror; a missing profile input raises calcinputerror. validation §6.5 settings, inputs' id='t-designmap-test_compute_refuses_bad_settings_or_inputs'><td><span class='dot passed' title='passed'></span><code>test_compute_refuses_bad_settings_or_inputs</code><span class='where'>tests/test_designmap.py:75</span></td><td>Invalid settings raise MapSettingsError; a missing profile input raises CalcInputError.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§6.5'>§6.5 settings, inputs</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_first_crossing log-linear interpolation; t[0] if already met; none if never; falling direction. formula §6.5 crossings' id='t-designmap-test_first_crossing'><td><span class='dot passed' title='passed'></span><code>test_first_crossing</code><span class='where'>tests/test_designmap.py:89</span></td><td>Log-linear interpolation; t[0] if already met; None if never; falling direction.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§6.5'>§6.5 crossings</a></td><td>1</td></tr>
+<tr data-row data-kind='schema' data-text='test_map_result_layout tool w, log-spaced axes from the settings, n×n grids, plot &#x27;map&#x27;, json round trip. schema §6.5 grid, result-json' id='t-designmap-test_map_result_layout'><td><span class='dot passed' title='passed'></span><code>test_map_result_layout</code><span class='where'>tests/test_designmap.py:104</span></td><td>Tool w, log-spaced axes from the settings, n×n grids, plot &#x27;map&#x27;, JSON round trip.</td><td><span class='chip' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</span></td><td><a href='#spec-§6.5'>§6.5 grid, result-json</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_grid_matches_direct_runs grid cell (power i, t_dwell j) equals the budget calc run directly at that point. formula §6.5 grid 0-0 4-4 8-2 3-7' id='t-designmap-test_grid_matches_direct_runs'><td><span class='dot passed' title='passed'></span><code>test_grid_matches_direct_runs</code><span class='where'>tests/test_designmap.py:119</span></td><td>Grid cell (power i, t_dwell j) equals the Budget calc run directly at that point.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§6.5'>§6.5 grid</a></td><td><details><summary>4 cases</summary><ul><li class='mono'>0-0</li><li class='mono'>4-4</li><li class='mono'>8-2</li><li class='mono'>3-7</li></ul></details></td></tr>
+<tr data-row data-kind='formula' data-text='test_map_physics snr rises 10 db per decade of t_dwell (b_eq ∝ 1/t_dwell); shot_clear is independent of
+t_dwell and rises 10 db per decade of power. formula §6.5 grid' id='t-designmap-test_map_physics'><td><span class='dot passed' title='passed'></span><code>test_map_physics</code><span class='where'>tests/test_designmap.py:132</span></td><td>snr rises 10 dB per decade of t_dwell (B_eq ∝ 1/t_dwell); shot_clear is independent of
+t_dwell and rises 10 dB per decade of power.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§6.5'>§6.5 grid</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_map_buy_base the buy base runs without diy-only inputs and matches buy&#x27;s budget calc. formula §6.5 grid' id='t-designmap-test_map_buy_base'><td><span class='dot passed' title='passed'></span><code>test_map_buy_base</code><span class='where'>tests/test_designmap.py:144</span></td><td>The Buy base runs without DIY-only inputs and matches Buy&#x27;s Budget calc.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§6.5'>§6.5 grid</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_slices_at_profile_powers slices run along the same t_dwell points at the profile&#x27;s p_min and p_max. formula §6.5 slices' id='t-designmap-test_slices_at_profile_powers'><td><span class='dot passed' title='passed'></span><code>test_slices_at_profile_powers</code><span class='where'>tests/test_designmap.py:157</span></td><td>Slices run along the same t_dwell points at the profile&#x27;s P_min and P_max.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§6.5'>§6.5 slices</a></td><td>1</td></tr>
+<tr data-row data-kind='schema' data-text='test_table_rows rows: p_min, p_max, then each decade inside [p_lo, p_hi] not equal to either. schema §6.5 boundaries' id='t-designmap-test_table_rows'><td><span class='dot passed' title='passed'></span><code>test_table_rows</code><span class='where'>tests/test_designmap.py:169</span></td><td>Rows: P_min, P_max, then each decade inside [p_lo, p_hi] not equal to either.</td><td><span class='chip' title='Data layout matches SPEC: fields, order, defaults, metadata, file format'>schema</span></td><td><a href='#spec-§6.5'>§6.5 boundaries</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_boundaries_hit_their_limits at t_snr the snr equals the target; at t_ovl occupancy is 100 %; t_safe is the larger. formula §6.5 boundaries, crossings' id='t-designmap-test_boundaries_hit_their_limits'><td><span class='dot passed' title='passed'></span><code>test_boundaries_hit_their_limits</code><span class='where'>tests/test_designmap.py:179</span></td><td>At t_snr the snr equals the target; at t_ovl occupancy is 100 %; t_safe is the larger.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§6.5'>§6.5 boundaries, crossings</a></td><td>1</td></tr>
+<tr data-row data-kind='formula' data-text='test_boundaries_edges unreachable target → none (and t_safe none); target met at t_lo → t_lo. formula §6.5 crossings, boundaries' id='t-designmap-test_boundaries_edges'><td><span class='dot passed' title='passed'></span><code>test_boundaries_edges</code><span class='where'>tests/test_designmap.py:198</span></td><td>Unreachable target → None (and t_safe None); target met at t_lo → t_lo.</td><td><span class='chip' title='Checks a SPEC §4 formula or rule on other inputs (limits, identities, modes)'>formula</span></td><td><a href='#spec-§6.5'>§6.5 crossings, boundaries</a></td><td>1</td></tr>
 </tbody></table></div></section>
 <section class='topic' id='topic-keymap'><h2>keymap</h2>
 <p class='lead'><code>tests/test_keymap.py</code> · 4 functions · 13 cases — M9: key map — no collisions within any focus level, for every registered tool (SPEC §8.3).</p>
