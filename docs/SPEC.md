@@ -263,11 +263,47 @@ Calcs `1`–`5`, `0` as in §6.1, except:
 (Budget, Lock-in and All inherit this Noise row.) Sizing outputs: q, tau_tank, bw_3db, b_eq.
 Noise outputs drop i_r and i_en. Groups as Design, but Noise holds only nep, k_crest.
 
-### 6.3 Sweep engine (core only in v1; UI later, launcher key `w`)
+### 6.3 Sweep engine (core; used by the Map tool, §6.5)
 
 `sweep(calc, params, field, values, outputs) -> list[dict]` — runs the calc once per value
 with `field` replaced, collects the requested outputs (per-power outputs expand to
 `<name>@p_min`, `<name>@p_max`). Must not mutate the input `Params`.
+
+### 6.5 Design-space map (launcher key `w`)
+
+A map of plain `snr` (TIA output, over B_eq) against pixel dwell time and optical power, with
+the limits that bound a usable design. Axes are fixed in v1: x = `t_dwell`, y = optical power P.
+
+**Map settings** (stored in the settings file, §7, key `map`; not in profiles):
+
+| Name | Unit | Default | Rule |
+|---|---|---|---|
+| `base` | – | `d` | base tool: `d` Design or `b` Buy |
+| `t_lo`, `t_hi` | s | 100e-9, 100e-6 | 0 < t_lo < t_hi |
+| `p_lo`, `p_hi` | W | 1e-6, 10e-3 | 0 < p_lo < p_hi |
+| `n` | – | 41 | grid points per axis, integer 5…201 |
+| `target` | dB | 10 | SNR target (higher is better) |
+
+**Computation.** Both axes are log-spaced with `n` points. Each grid point runs the base tool's
+Budget calc (key `3`) on the active profile with `t_dwell` = t and `p_min` = `p_max` = P.
+Missing or invalid profile inputs used by that calc (other than t_dwell, p_min, p_max) are
+reported and nothing runs. Per point the map keeps `snr`, occupancy = max(occ_swing, occ_moku)
+and `shot_clear`.
+
+**Result** (tool `w`): the grid; slices of snr and occupancy along t_dwell (same `n` points)
+at the profile's P_min and P_max; and a boundary table with one row per power P — the
+profile's P_min and P_max, then every decade 10^k W inside [p_lo, p_hi] — and columns:
+
+| Column | Meaning |
+|---|---|
+| `t_snr` | smallest t_dwell in range with snr ≥ target |
+| `t_ovl` | smallest t_dwell in range with occupancy ≤ 100 % (no overload) |
+| `t_safe` | max(t_snr, t_ovl): smallest t_dwell that meets the target without overload |
+| `snr_design` | snr at the profile's t_dwell and this P |
+
+Crossings are interpolated between grid points, linearly in (log t, dB) for snr and in
+(log t, log occupancy) for occupancy. A limit never reached in range is `None` ("—"); a limit
+already met at t_lo is reported as t_lo (shown "≤ t_lo"). `t_safe` is `None` if either is.
 
 ---
 
@@ -285,7 +321,7 @@ with `field` replaced, collects the requested outputs (per-power outputs expand 
   `migrate(data)` upgrades older `schema_version`s.
 - One active profile at a time; app opens last-used profile, fallback `default.json`
   (created from defaults if missing). Last-used name stored in a small settings file:
-  `settings.json` with `profiles_dir` and `last_profile`, in `%APPDATA%\srsfe\` on Windows,
+  `settings.json` with `profiles_dir`, `last_profile` and `map` (§6.5), in `%APPDATA%\srsfe\` on Windows,
   `$XDG_CONFIG_HOME/srsfe/` (default `~/.config/srsfe/`) elsewhere. A missing or unreadable
   file means defaults (`profiles_dir` = `profiles`, relative to the working directory).
 - Dirty flag: header shows `profile: <name>*` with unsaved changes; switching/quitting prompts.
@@ -327,6 +363,11 @@ to `./plots/<profile>_<plot>.png`.
 **Settings** — profiles folder. Enter applies: asks about unsaved changes, creates the folder if
 needed and opens its last-used/default profile; saved to the settings file. Esc back.
 
+**Map** — settings fields (`[key] name · value · unit`), `c` compute, a boundary-table view
+(columns P, t_snr, t_ovl, t_safe, snr_design), `p` plot (opens the Map plot via the runner, or
+`v` saves `./plots/<profile>_map.png`). Editing a setting greys the table until recomputed.
+Settings are saved to the settings file on compute.
+
 **Help** (F1, or `?` on the tool screen) — overlay listing the current screen's keys, built from
 the same key tables, plus the input notation. Esc or F1 closes.
 
@@ -341,6 +382,12 @@ showing. Two quantities with different units get stacked panels, never a second 
 - **Budget**: stacked bar of ΣVₙ, V_sig, k_crest·V_rms at P_min and P_max with V_swing
   and V_range/2 reference lines.
 - **Noise**: bar of i_sh, i_R, i_en, i_NEP at both powers.
+- **Map** (Map tool only): top panel — filled SNR contours on log t_dwell × log P with colours
+  true to the colour bar; bold target contour with a light dot pattern on the below-target side;
+  thin iso-SNR lines every 10 dB; overload region (occupancy > 100 %) hatched, its edge dashed;
+  shot_clear = 0 dB boundary dash-dot; the profile's design points (t_dwell, P_min) ○ and
+  (t_dwell, P_max) □. Bottom panel — snr vs t_dwell slices at P_min and P_max with the target
+  line; overloaded stretches of a slice drawn dashed.
 
 ### 8.3 Key map
 
@@ -353,7 +400,7 @@ Ctrl+S save · Ctrl+Q quit · Ctrl+P command palette.
 
 | Context | Keys |
 |---|---|
-| Launcher | `d` Design · `b` Buy · `a` Analyze · `w` Sweep (later) · `o` Profiles · `t` Settings · `q` quit |
+| Launcher | `d` Design · `b` Buy · `a` Analyze · `w` Map · `o` Profiles · `t` Settings · `q` quit |
 | Tool, top level | `1`–`5`,`0` calc tabs · `c` calculate · `p` plot menu · `v` focus results · `s` save · `w` save-as · `o` profiles · `x` clear all · `?` help · `q` quit · group keys below |
 | Design / Buy groups | `t` Tank · `l` Light · `n` Noise · `i` Lock-in · `m` Opamp/Moku · `f` Spectrum (single field → edits f_max directly) |
 | Tank fields (Design) | `r` r_f · `f` f_0 · `d` t_dwell · `n` n_tau · `q` q_mode |
@@ -367,6 +414,7 @@ Ctrl+S save · Ctrl+Q quit · Ctrl+P command palette.
 | Unsaved dialog | `s` save · `d` discard · `c`/Esc cancel |
 | Delete / confirm dialogs | `y` yes · `n`/Esc no |
 | Settings | Enter apply · Esc back |
+| Map | `c` compute · `p` plot · `v` save PNG · `m` base tool (d/b) · `i` t_lo · `x` t_hi · `l` p_lo · `h` p_hi · `n` points · `g` target · `?` help · Esc back |
 | Help overlay | Esc/F1 close |
 
 Keys are declared next to the data they act on (field metadata, group, tool, screen).
