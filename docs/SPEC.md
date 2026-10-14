@@ -292,7 +292,8 @@ and `shot_clear`.
 
 **Result** (tool `w`): the grid; slices of snr and occupancy along t_dwell (same `n` points)
 at the profile's P_min and P_max; and a boundary table with one row per power P — the
-profile's P_min and P_max, then every decade 10^k W inside [p_lo, p_hi] — and columns:
+profile's P_min and P_max, then every decade 10^k W inside [p_lo, p_hi] that is not already one
+of them — and columns:
 
 | Column | Meaning |
 |---|---|

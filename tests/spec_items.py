@@ -111,6 +111,15 @@ SECTIONS: list[Section] = [
         "per-power": "Per-power outputs expand to name@p_min / name@p_max",
         "no-mutate": "Input Params not mutated",
     }),
+    Section("§6.5", "Design-space map", {
+        "settings": "Map settings: defaults, validation, fallback on bad values",
+        "grid": "Grid over log t_dwell × log P runs the base tool's Budget calc",
+        "inputs": "Missing/invalid profile inputs reported, nothing runs",
+        "slices": "Slices along t_dwell at the profile's P_min and P_max",
+        "boundaries": "Boundary table rows and t_snr / t_ovl / t_safe / snr_design",
+        "crossings": "Crossings interpolated; None if never; t_lo if met at the edge",
+        "result-json": "Map Result round-trips through JSON",
+    }),
     Section("§7", "Profiles", {
         "file-format": "File format (schema_version, name, notes, created, modified, params)",
         "inputs-only": "Stores inputs only, never derived values",
