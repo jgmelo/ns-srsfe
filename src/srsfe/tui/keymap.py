@@ -84,6 +84,13 @@ DELETE = (
 
 PROMPT = (Key("escape", "cancel", "Cancel"),)
 
+SETTINGS = (
+    Key("enter", "apply", "Apply"),
+    Key("escape", "back", "Back"),
+)
+
+HELP = (Key("escape", "close", "Close"),)
+
 BACK = (Key("escape", "back", "Back"),)
 
 

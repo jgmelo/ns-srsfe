@@ -4,9 +4,10 @@ import sys
 
 
 def main() -> int:
+    from srsfe.tui import settings
     from srsfe.tui.app import SrsfeApp
 
-    SrsfeApp().run()
+    SrsfeApp(settings_path=settings.default_path()).run()
     return 0
 
 

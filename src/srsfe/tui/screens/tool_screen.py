@@ -20,6 +20,7 @@ from srsfe.core.params import FIELDS
 from srsfe.tools.base import Calc, CalcInputError, Result, Tool
 from srsfe.tui import keymap
 from srsfe.tui.screens.dialogs import ConfirmDialog, PromptDialog
+from srsfe.tui.screens.help import Section, keys_section
 from srsfe.tui.widgets.eng_input import FieldRow
 from srsfe.tui.widgets.field_group import FieldGroup
 from srsfe.tui.widgets.header import AppHeader
@@ -76,6 +77,7 @@ class ToolScreen(Screen[None]):
         for row in self.query(FieldRow):
             row.set_value(getattr(self.srsfe.params, row.field_name))
         self.apply_field_classes()
+        self.refresh_stale()
 
     # -- state -----------------------------------------------------------------------------
 
@@ -108,7 +110,19 @@ class ToolScreen(Screen[None]):
     def show_result(self) -> None:
         result = self.results.get(self.calc.key)
         self.query_one(ResultsTable).show(self.calc, result)
-        self.query_one(WarningsPanel).show(result)
+        self.refresh_stale()
+
+    def is_stale(self) -> bool:
+        """The shown result was computed from inputs that have changed since (SPEC §8.1)."""
+        result = self.results.get(self.calc.key)
+        return result is not None and result.params != self.srsfe.params.to_dict()
+
+    def refresh_stale(self) -> None:
+        stale = self.is_stale()
+        self.query_one(ResultsTable).set_class(stale, "stale")
+        panel = self.query_one(WarningsPanel)
+        panel.set_class(stale, "stale")
+        panel.show(self.results.get(self.calc.key), stale=stale)
 
     def update_hints(self) -> None:
         focused = self.focused
@@ -202,6 +216,7 @@ class ToolScreen(Screen[None]):
     def on_field_row_edited(self, event: FieldRow.Edited) -> None:
         self.srsfe.set_params(self.srsfe.params.replace(**{event.name: event.value}))
         self.apply_field_classes()
+        self.refresh_stale()
 
     # -- actions ---------------------------------------------------------------------------
 
@@ -272,6 +287,19 @@ class ToolScreen(Screen[None]):
         from srsfe.tui.screens.profiles import ProfilesScreen
 
         self.app.push_screen(ProfilesScreen())
+
+    def help_sections(self) -> list[Section]:
+        from srsfe.core.params import FIELDS
+
+        out: list[Section] = [
+            ("Calculations", [(c.key, c.name) for c in self.tool.calcs]),
+            keys_section("Actions", keymap.TOOL_TOP),
+            ("Groups (then the field key edits it)", [(g.key, g.name) for g in self.tool.groups]),
+        ]
+        out += [(f"{g.name} fields", [(FIELDS[f].key, f"{f} — {FIELDS[f].description}")
+                                      for f in g.fields]) for g in self.tool.groups]
+        out.append(("Editing", [("Enter", "Finish editing"), ("Esc", "Finish / up one level")]))
+        return out
 
     async def action_help(self) -> None:
         await self.app.run_action("help")

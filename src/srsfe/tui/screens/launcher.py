@@ -12,6 +12,7 @@ from textual.widgets.option_list import Option
 
 from srsfe.tools import REGISTRY
 from srsfe.tui import keymap
+from srsfe.tui.screens.help import Section, keys_section
 from srsfe.tui.widgets.header import AppHeader
 
 DESCRIPTIONS = {
@@ -19,7 +20,7 @@ DESCRIPTIONS = {
              "The sweep engine exists; its screen comes in a later version.",
     "profiles": "Load, create, duplicate, rename, annotate or delete profiles "
                 "(one JSON file per profile).",
-    "settings": "Profiles folder and other preferences.",
+    "settings": "Profiles folder (one JSON file per profile).",
     "quit": "Leave SRS-FE (asks first if the profile has unsaved changes).",
 }
 
@@ -79,7 +80,13 @@ class LauncherScreen(Screen[None]):
         self.app.push_screen(ProfilesScreen())
 
     def action_settings(self) -> None:
-        self.app.notify("Settings screen arrives in M10.")
+        from srsfe.tui.screens.settings_screen import SettingsScreen
+
+        self.app.push_screen(SettingsScreen())
+
+    def help_sections(self) -> list[Section]:
+        tools = [(t.key, t.name) for t in REGISTRY.values()]
+        return [("Launcher", tools + keys_section("", keymap.LAUNCHER)[1])]
 
     def action_sweep(self) -> None:
         self.app.notify("Sweep has no screen yet (core engine only in v1).")

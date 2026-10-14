@@ -13,6 +13,7 @@ from textual.widgets import DataTable, Footer
 from srsfe.core.profiles import ProfileError
 from srsfe.tui import keymap
 from srsfe.tui.screens.dialogs import DeleteDialog, PromptDialog
+from srsfe.tui.screens.help import Section, keys_section
 from srsfe.tui.widgets.header import AppHeader
 
 if TYPE_CHECKING:
@@ -124,6 +125,9 @@ class ProfilesScreen(Screen[None]):
 
     def action_back(self) -> None:
         self.app.pop_screen()
+
+    def help_sections(self) -> list[Section]:
+        return [keys_section("Profiles", keymap.PROFILES)]
 
     def _try(self, op: object) -> bool:
         try:

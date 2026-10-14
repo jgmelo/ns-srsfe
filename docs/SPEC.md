@@ -284,7 +284,10 @@ with `field` replaced, collects the requested outputs (per-power outputs expand 
 - On load: unknown keys → warn and drop; missing keys → null; wrong type → error.
   `migrate(data)` upgrades older `schema_version`s.
 - One active profile at a time; app opens last-used profile, fallback `default.json`
-  (created from defaults if missing). Last-used name stored in a small settings file.
+  (created from defaults if missing). Last-used name stored in a small settings file:
+  `settings.json` with `profiles_dir` and `last_profile`, in `%APPDATA%\srsfe\` on Windows,
+  `$XDG_CONFIG_HOME/srsfe/` (default `~/.config/srsfe/`) elsewhere. A missing or unreadable
+  file means defaults (`profiles_dir` = `profiles`, relative to the working directory).
 - Dirty flag: header shows `profile: <name>*` with unsaved changes; switching/quitting prompts.
 - The active profile cannot be deleted (load another one first).
 
@@ -309,7 +312,8 @@ highlighted item.
 - Right: results table (columns P_min / P_max where applicable, engineering formatting,
   ⚠ on rows tied to a warning) above a warnings panel.
 - Calculate validates first; missing required fields → toast listing them, nothing runs.
-- Editing any input marks results stale (greyed) until recalculated.
+- Editing any input marks results stale (greyed, with a note in the warnings panel) until
+  recalculated; a result is stale when its recorded inputs differ from the current ones.
 - `x` clears every input of the current tool to empty (unset) after a y/n confirmation;
   results are cleared, the profile becomes dirty, nothing is saved.
 
@@ -319,6 +323,12 @@ to `./plots/<profile>_<plot>.png`.
 **Profiles** — table: name, modified, notes.
 
 **Dialogs** — unsaved changes; delete confirmation.
+
+**Settings** — profiles folder. Enter applies: asks about unsaved changes, creates the folder if
+needed and opens its last-used/default profile; saved to the settings file. Esc back.
+
+**Help** (F1, or `?` on the tool screen) — overlay listing the current screen's keys, built from
+the same key tables, plus the input notation. Esc or F1 closes.
 
 ### 8.2 Plots
 
@@ -356,6 +366,8 @@ Ctrl+S save · Ctrl+Q quit · Ctrl+P command palette.
 | Profiles | Enter/`l` load · `n` new (save-as) · `d` duplicate · `r` rename · `e` edit notes · `x` delete · Esc back |
 | Unsaved dialog | `s` save · `d` discard · `c`/Esc cancel |
 | Delete / confirm dialogs | `y` yes · `n`/Esc no |
+| Settings | Enter apply · Esc back |
+| Help overlay | Esc/F1 close |
 
 Keys are declared next to the data they act on (field metadata, group, tool, screen).
 `test_keymap.py` asserts no collisions within any level, for every registered tool.

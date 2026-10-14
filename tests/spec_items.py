@@ -132,6 +132,8 @@ SECTIONS: list[Section] = [
         "eng-invalid": "Invalid input → reason",
         "eng-format": "Engineering formatting of results",
         "calc-validates": "Calculate validates first",
+        "settings": "Settings screen: profiles folder",
+        "help": "F1 / ? help overlay with the current screen's keys",
         "stale": "Editing inputs marks results stale",
     }),
     Section("§8.2", "Plots", {

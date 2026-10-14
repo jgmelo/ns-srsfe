@@ -467,3 +467,119 @@ async def test_clear_all_inputs(pdir: Path) -> None:
         await pilot.press("c")
         await pilot.pause()
         assert results(app) == []  # nothing runs with everything unset
+
+
+# -- M10: last-used profile, settings, help, stale results --------------------------------
+
+from srsfe.tui import settings as user_settings  # noqa: E402
+from srsfe.tui.screens.help import HelpScreen  # noqa: E402
+from srsfe.tui.screens.settings_screen import SettingsScreen  # noqa: E402
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§7", "last-used")
+async def test_opens_last_used_profile(pdir: Path, tmp_path: Path) -> None:
+    """The app opens the last-used profile and records each newly loaded one."""
+    cfg = tmp_path / "settings.json"
+    user_settings.save(user_settings.Settings(str(pdir), "golden"), cfg)
+    app = SrsfeApp(plots_dir=pdir / "plots", settings_path=cfg)
+    async with app.run_test() as pilot:
+        await pilot.pause()
+        assert app.profile_name == "golden" and app.store.directory == pdir
+        assert app.save_as("mine")
+        await pilot.pause()
+    assert user_settings.load(cfg).last_profile == "mine"
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§7", "last-used", "default-profile")
+async def test_missing_last_profile_falls_back_to_default(pdir: Path, tmp_path: Path) -> None:
+    """A last-used profile that no longer exists falls back to default.json."""
+    cfg = tmp_path / "settings.json"
+    user_settings.save(user_settings.Settings(str(pdir), "gone"), cfg)
+    app = SrsfeApp(settings_path=cfg)
+    async with app.run_test() as pilot:
+        await pilot.pause()
+        assert app.profile_name == "default" and (pdir / "default.json").is_file()
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.1", "settings")
+async def test_settings_screen_changes_profiles_folder(pdir: Path, tmp_path: Path) -> None:
+    """t opens Settings; Enter switches the profiles folder (created, default opened, saved)."""
+    cfg = tmp_path / "settings.json"
+    new = tmp_path / "other"
+    app = SrsfeApp(pdir, settings_path=cfg)
+    async with app.run_test() as pilot:
+        await pilot.press("t")
+        assert isinstance(app.screen, SettingsScreen)
+        app.screen.query_one(Input).value = str(new)
+        await pilot.press("enter")
+        await pilot.pause()
+        assert app.store.directory == new and (new / "default.json").is_file()
+        assert app.profile_name == "default"
+        await pilot.press("escape")
+        assert isinstance(app.screen, LauncherScreen)
+    assert user_settings.load(cfg) == user_settings.Settings(str(new), "default")
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.1", "settings", "dialogs")
+async def test_settings_change_asks_about_unsaved(pdir: Path, tmp_path: Path) -> None:
+    """Switching folders with unsaved changes asks first; cancel keeps the current folder."""
+    app = SrsfeApp(pdir)
+    async with app.run_test() as pilot:
+        app.set_params(app.params.replace(r_f=1.0))
+        await pilot.press("t")
+        app.screen.query_one(Input).value = str(tmp_path / "x")
+        await pilot.press("enter")
+        assert isinstance(app.screen, UnsavedDialog)
+        await pilot.press("c")
+        assert app.store.directory == pdir and app.dirty
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.1", "help")
+async def test_help_overlay(pdir: Path) -> None:
+    """F1 shows the current screen's keys from the key tables; F1 / Esc close; ? on tools."""
+    app = SrsfeApp(pdir)
+    async with app.run_test(size=(150, 50)) as pilot:
+        await pilot.press("f1")
+        assert isinstance(app.screen, HelpScreen)
+        text = app.screen.text
+        assert "Design from t_dwell" in text and "Profiles" in text and "Calculate" in text
+        await pilot.press("f1")
+        assert isinstance(app.screen, LauncherScreen)
+        await open_golden(app, pilot)
+        await pilot.press("question_mark")
+        assert isinstance(app.screen, HelpScreen)
+        text = app.screen.text
+        assert "Tank fields" in text and "t_dwell — Pixel dwell time; sets Q" in text
+        assert "Clear all" in text and "engineering notation" in text
+        await pilot.press("escape")
+        assert isinstance(app.screen, ToolScreen)
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.1", "stale")
+async def test_editing_marks_results_stale(pdir: Path) -> None:
+    """After calculating, any input edit greys the results until recalculated."""
+    app = SrsfeApp(pdir, pdir / "plots")
+    async with app.run_test(size=(150, 50)) as pilot:
+        await open_golden(app, pilot)
+        await pilot.press("c")
+        await pilot.pause()
+        table = app.screen.query_one(ResultsTable)
+        panel = app.screen.query_one(WarningsPanel)
+        assert not table.has_class("stale")
+        await pilot.press("t", "r")
+        await type_text(pilot, "47k")
+        await pilot.press("escape", "escape")
+        await pilot.pause()
+        assert table.has_class("stale") and "press c or F5" in str(panel.render())
+        await pilot.press("c")
+        await pilot.pause()
+        assert not table.has_class("stale") and "press c" not in str(panel.render())
+        await pilot.press("2")  # a calc with no result yet is never stale
+        await pilot.pause()
+        assert not table.has_class("stale")
