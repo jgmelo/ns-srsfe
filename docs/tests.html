@@ -109,7 +109,7 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 }
 </style></head><body><div class='layout'>
 <nav><h1>SRS-FE test catalog</h1>
-<div class='meta'>0e479d3 · 2026-10-15 02:08</div>
+<div class='meta'>a9c1382 · 2026-10-15 02:11</div>
 <ul><li><a href='#overview'>Overview</a></li>
 <li><a href='#spec'>SPEC coverage <span class='count'>163/163</span></a></li>
 <li><a href='#topics'>Topics</a></li>
@@ -120,7 +120,7 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li class='sub'><a href='#topic-moku'>moku<span class='count'>9</span></a></li>
 <li class='sub'><a href='#topic-noise'>noise<span class='count'>45</span></a></li>
 <li class='sub'><a href='#topic-params'>params<span class='count'>37</span></a></li>
-<li class='sub'><a href='#topic-plots'>plots<span class='count'>21</span></a></li>
+<li class='sub'><a href='#topic-plots'>plots<span class='count'>23</span></a></li>
 <li class='sub'><a href='#topic-profiles'>profiles<span class='count'>38</span></a></li>
 <li class='sub'><a href='#topic-scaffold'>scaffold<span class='count'>2</span></a></li>
 <li class='sub'><a href='#topic-settings'>settings<span class='count'>7</span></a></li>
@@ -148,8 +148,8 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <section id='overview'><h2>Overview</h2>
 <p class='lead'>Generated from pytest collection. A <em>function</em> is one <code>def test_…</code>; parametrized functions expand into several <em>cases</em>.</p>
 <div class='tiles'>
-<div class='tile'><div class='v'>207</div><div class='l'>test functions</div></div>
-<div class='tile'><div class='v'>473</div><div class='l'>test cases</div></div>
+<div class='tile'><div class='v'>208</div><div class='l'>test functions</div></div>
+<div class='tile'><div class='v'>475</div><div class='l'>test cases</div></div>
 <div class='tile'><div class='v'>19</div><div class='l'>topics (files)</div></div>
 <div class='tile'><div class='v'>163/163</div><div class='l'>SPEC items covered</div></div>
 <div class='tile'><div class='v'>0</div><div class='l'>failed cases (last run)</div></div>
@@ -252,8 +252,8 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <td class='empty'>·</td>
 <td style="background: rgba(var(--heat), 0.11)">1<span class='fn'>1 fn</span></td>
 <td class='empty'>·</td>
-<td style="background: rgba(var(--heat), 0.36)">18<span class='fn'>9 fn</span></td>
-<td><b>21</b><span class='fn'>12 fn</span></td></tr>
+<td style="background: rgba(var(--heat), 0.39)">20<span class='fn'>10 fn</span></td>
+<td><b>23</b><span class='fn'>13 fn</span></td></tr>
 <tr><td><a href='#topic-profiles'>profiles</a></td>
 <td class='empty'>·</td>
 <td class='empty'>·</td>
@@ -384,8 +384,8 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <td>46<span class=fn>27 fn</span></td>
 <td>23<span class=fn>9 fn</span></td>
 <td>11<span class=fn>11 fn</span></td>
-<td>47<span class=fn>38 fn</span></td>
-<td>473<span class='fn'>207 fn</span></td></tr></tfoot></table></div>
+<td>49<span class=fn>39 fn</span></td>
+<td>475<span class='fn'>208 fn</span></td></tr></tfoot></table></div>
 </section>
 <section id='spec'><h2>SPEC coverage</h2>
 <p class='lead'>Items listed in <code>tests/spec_items.py</code> against the <code>@pytest.mark.spec(…)</code> markers. ✗ = no test yet.</p><div class='sections'>
@@ -567,7 +567,7 @@ details ul { margin: 4px 0 0; padding-left: 16px; max-height: 220px; overflow-y:
 <li><span class='yes'>✓</span><span>Spectrum</span><span class='tests'><a href='#t-plots-test_figures_build'>test_figures_build</a>, <a href='#t-plots-test_single_calc_figures'>test_single_calc_figures</a></span></li>
 <li><span class='yes'>✓</span><span>Budget</span><span class='tests'><a href='#t-plots-test_figures_build'>test_figures_build</a></span></li>
 <li><span class='yes'>✓</span><span>Noise</span><span class='tests'><a href='#t-buy-test_buy_plots_build'>test_buy_plots_build</a>, <a href='#t-plots-test_figures_build'>test_figures_build</a>, <a href='#t-plots-test_single_calc_figures'>test_single_calc_figures</a></span></li>
-<li><span class='yes'>✓</span><span>Map: SNR map with target, overload, shot boundary, design points; slices</span><span class='tests'><a href='#t-plots-test_map_figure_builds'>test_map_figure_builds</a>, <a href='#t-plots-test_map_figure_edge_cases'>test_map_figure_edge_cases</a>, <a href='#t-plots-test_map_figure_buy_and_availability'>test_map_figure_buy_and_availability</a>, <a href='#t-plots-test_runner_saves_map'>test_runner_saves_map</a></span></li>
+<li><span class='yes'>✓</span><span>Map: SNR map with target, overload, shot boundary, design points; slices</span><span class='tests'><a href='#t-plots-test_map_figure_builds'>test_map_figure_builds</a>, <a href='#t-plots-test_map_figure_edge_cases'>test_map_figure_edge_cases</a>, <a href='#t-plots-test_map_figure_buy_and_availability'>test_map_figure_buy_and_availability</a>, <a href='#t-plots-test_runner_saves_map'>test_runner_saves_map</a>, <a href='#t-plots-test_map_legend_when_target_out_of_range'>test_map_legend_when_target_out_of_range</a></span></li>
 <li><span class='yes'>✓</span><span>Subprocess runner renders from serialized Result</span><span class='tests'><a href='#t-plots-test_runner_saves_pngs'>test_runner_saves_pngs</a>, <a href='#t-plots-test_runner_as_subprocess'>test_runner_as_subprocess</a>, <a href='#t-plots-test_runner_saves_map'>test_runner_saves_map</a></span></li>
 </ul>
 </div>
@@ -731,7 +731,7 @@ t_dwell and rises 10 dB per decade of power.</td><td><span class='chip' title='C
 <tr data-row data-kind='validation' data-text='test_choice_reason_is_readable the reason lists the allowed values plainly: &quot;must be one of 1, 10&quot;. validation §3.1 v-range' id='t-params-test_choice_reason_is_readable'><td><span class='dot passed' title='passed'></span><code>test_choice_reason_is_readable</code><span class='where'>tests/test_params.py:166</span></td><td>The reason lists the allowed values plainly: &quot;must be one of 1, 10&quot;.</td><td><span class='chip' title='Accepts good input / rejects bad input'>validation</span></td><td><a href='#spec-§3.1'>§3.1 v-range</a></td><td>1</td></tr>
 </tbody></table></div></section>
 <section class='topic' id='topic-plots'><h2>plots</h2>
-<p class='lead'><code>tests/test_plots.py</code> · 12 functions · 21 cases — M7: plot figures build without error (Agg backend) and the runner saves PNGs (SPEC §8.2).</p>
+<p class='lead'><code>tests/test_plots.py</code> · 13 functions · 23 cases — M7: plot figures build without error (Agg backend) and the runner saves PNGs (SPEC §8.2).</p>
 <div class='scroll'><table class='tests-table'><thead><tr><th>Test</th><th>What it checks</th><th>Kind</th><th>SPEC</th><th>Cases</th></tr></thead><tbody>
 <tr data-row data-kind='smoke' data-text='test_figures_build each plot builds a figure from the golden design/all result, with its panels. smoke §8.2 bode, spectrum, budget, noise bode spectrum budget noise' id='t-plots-test_figures_build'><td><span class='dot passed' title='passed'></span><code>test_figures_build</code><span class='where'>tests/test_plots.py:29</span></td><td>Each plot builds a Figure from the golden Design/All result, with its panels.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.2'>§8.2 bode, spectrum, budget, noise</a></td><td><details><summary>4 cases</summary><ul><li class='mono'>bode</li><li class='mono'>spectrum</li><li class='mono'>budget</li><li class='mono'>noise</li></ul></details></td></tr>
 <tr data-row data-kind='smoke' data-text='test_bode_for_analyze bode builds for an analyze result (no harmonics table, resonance from f0_calc). smoke §8.2 bode' id='t-plots-test_bode_for_analyze'><td><span class='dot passed' title='passed'></span><code>test_bode_for_analyze</code><span class='where'>tests/test_plots.py:40</span></td><td>Bode builds for an Analyze result (no harmonics table, resonance from f0_calc).</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.2'>§8.2 bode</a></td><td>1</td></tr>
@@ -745,6 +745,9 @@ t_dwell and rises 10 dB per decade of power.</td><td><span class='chip' title='C
 <tr data-row data-kind='smoke' data-text='test_map_figure_edge_cases missing contours (no crossing, all −inf, no overload, no design point) do not break it. smoke §8.2 map case0 case1 case2 case3 case4' id='t-plots-test_map_figure_edge_cases'><td><span class='dot passed' title='passed'></span><code>test_map_figure_edge_cases</code><span class='where'>tests/test_plots.py:150</span></td><td>Missing contours (no crossing, all −inf, no overload, no design point) do not break it.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.2'>§8.2 map</a></td><td><details><summary>5 cases</summary><ul><li class='mono'>case0</li><li class='mono'>case1</li><li class='mono'>case2</li><li class='mono'>case3</li><li class='mono'>case4</li></ul></details></td></tr>
 <tr data-row data-kind='smoke' data-text='test_map_figure_buy_and_availability the buy base builds too; tool results without a map refuse the map plot. smoke §8.2 map' id='t-plots-test_map_figure_buy_and_availability'><td><span class='dot passed' title='passed'></span><code>test_map_figure_buy_and_availability</code><span class='where'>tests/test_plots.py:165</span></td><td>The Buy base builds too; tool results without a map refuse the map plot.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.2'>§8.2 map</a></td><td>1</td></tr>
 <tr data-row data-kind='smoke' data-text='test_runner_saves_map the runner renders a serialized map result to &lt;prefix&gt;map.png. smoke §8.2 map, runner' id='t-plots-test_runner_saves_map'><td><span class='dot passed' title='passed'></span><code>test_runner_saves_map</code><span class='where'>tests/test_plots.py:175</span></td><td>The runner renders a serialized map Result to &lt;prefix&gt;map.png.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.2'>§8.2 map, runner</a></td><td>1</td></tr>
+<tr data-row data-kind='smoke' data-text='test_map_legend_when_target_out_of_range a target outside the map&#x27;s snr range is stated in the legend instead of drawn;
+&#x27;nowhere&#x27; dots the whole map as below target. smoke §8.2 map 300.0-nowhere -500.0-everywhere' id='t-plots-test_map_legend_when_target_out_of_range'><td><span class='dot passed' title='passed'></span><code>test_map_legend_when_target_out_of_range</code><span class='where'>tests/test_plots.py:185</span></td><td>A target outside the map&#x27;s SNR range is stated in the legend instead of drawn;
+&#x27;nowhere&#x27; dots the whole map as below target.</td><td><span class='chip' title='Imports, screens or plots build/run without crashing'>smoke</span></td><td><a href='#spec-§8.2'>§8.2 map</a></td><td><details><summary>2 cases</summary><ul><li class='mono'>300.0-nowhere</li><li class='mono'>-500.0-everywhere</li></ul></details></td></tr>
 </tbody></table></div></section>
 <section class='topic' id='topic-profiles'><h2>profiles</h2>
 <p class='lead'><code>tests/test_profiles.py</code> · 21 functions · 38 cases — M1: profile store — round trip, load rules and migration (SPEC §7).</p>
