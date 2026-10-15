@@ -147,6 +147,7 @@ SECTIONS: list[Section] = [
     }),
     Section("§8.2", "Plots", {
         "bode": "Bode", "spectrum": "Spectrum", "budget": "Budget", "noise": "Noise",
+        "map": "Map: SNR map with target, overload, shot boundary, design points; slices",
         "runner": "Subprocess runner renders from serialized Result",
     }),
     Section("§8.3", "Key map", {
