@@ -10,6 +10,7 @@ from textual.reactive import reactive
 
 from srsfe.core.params import Params
 from srsfe.core.profiles import DEFAULT_PROFILE, Profile, ProfileError, ProfileStore
+from srsfe.tools.designmap import MapSettings
 from srsfe.tui import keymap
 from srsfe.tui import settings as user_settings
 from srsfe.tui.screens.dialogs import UnsavedChoice, UnsavedDialog
@@ -71,11 +72,24 @@ class SrsfeApp(App[None]):
     def _remember(self) -> None:
         """Persist the active profile as last-used (SPEC §7)."""
         self.settings.last_profile = self.profile_name
+        self._persist_settings()
+
+    def _persist_settings(self) -> None:
         if self.settings_path is not None:
             try:
                 user_settings.save(self.settings, self.settings_path)
             except OSError as exc:
                 self.notify(f"settings not saved: {exc}", severity="warning")
+
+    @property
+    def map_settings(self) -> MapSettings:
+        """Map settings from the settings file (defaults for missing or bad values)."""
+        return MapSettings.from_dict(self.settings.map)
+
+    def set_map_settings(self, ms: MapSettings) -> None:
+        """Store Map settings in the settings file (SPEC §6.5: saved on compute)."""
+        self.settings.map = ms.to_dict()
+        self._persist_settings()
 
     def open_start_profile(self) -> None:
         """Last-used profile if it still exists, else default.json (created if missing)."""

@@ -16,6 +16,7 @@ STATIC_LEVELS = {
     "delete dialog": [k.key for k in keymap.DELETE],
     "plot menu": list(PLOT_KEYS.values()) + [k.key for k in keymap.PLOT_MENU],
     "settings": [k.key for k in keymap.SETTINGS],
+    "map": [k for k, _ in keymap.map_level()] + ["escape"],
     "help": [k.key for k in keymap.HELP],
     "global": [k.key for k in keymap.GLOBAL],
 }

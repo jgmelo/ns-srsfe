@@ -132,6 +132,7 @@ SECTIONS: list[Section] = [
         "migrate": "migrate() upgrades older schema_versions",
         "default-profile": "default.json created from defaults if missing",
         "last-used": "App opens the last-used profile",
+        "map-settings": "Settings file keeps the Map settings (saved on compute)",
         "dirty-flag": "Dirty flag in header; prompt on switch/quit",
     }),
     Section("§8.1", "TUI screens and inputs", {
@@ -144,6 +145,7 @@ SECTIONS: list[Section] = [
         "settings": "Settings screen: profiles folder",
         "help": "F1 / ? help overlay with the current screen's keys",
         "stale": "Editing inputs marks results stale",
+        "map-screen": "Map screen: settings, compute, boundary table, plot / save PNG",
     }),
     Section("§8.2", "Plots", {
         "bode": "Bode", "spectrum": "Spectrum", "budget": "Budget", "noise": "Noise",

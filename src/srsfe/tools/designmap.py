@@ -14,6 +14,7 @@ from typing import Any
 import numpy as np
 
 from srsfe.core.params import Params
+from srsfe.core.units import parse_eng
 from srsfe.tools.base import Calc, CalcInputError, Result, Tool
 
 TOOL_KEY = "w"
@@ -56,6 +57,37 @@ class MapSettings:
                 v = float(v) if ok else v
             values[f.name] = v if ok else ref
         return cls(**values)
+
+
+@dataclass(frozen=True)
+class SettingMeta:
+    """Key (Map screen, SPEC §8.3), unit and description of one map setting."""
+
+    key: str
+    unit: str
+    description: str
+
+
+SETTING_META: dict[str, SettingMeta] = {
+    "base": SettingMeta("m", "–", "Base tool: d Design or b Buy (m toggles)"),
+    "t_lo": SettingMeta("i", "s", "Shortest dwell time on the map"),
+    "t_hi": SettingMeta("x", "s", "Longest dwell time on the map"),
+    "p_lo": SettingMeta("l", "W", "Lowest optical power on the map"),
+    "p_hi": SettingMeta("h", "W", "Highest optical power on the map"),
+    "n": SettingMeta("n", "–", f"Grid points per axis, {N_RANGE[0]}…{N_RANGE[1]}"),
+    "target": SettingMeta("g", "dB", "SNR target (higher is better)"),
+}
+
+
+def parse_setting(name: str, text: str) -> float | int:
+    """Text in engineering notation → SI value for a numeric setting. ValueError with a
+    reason for unparseable text or a non-integer n (range checks are validate()'s)."""
+    v = parse_eng(text.strip(), SETTING_META[name].unit)
+    if name == "n":
+        if not float(v).is_integer():
+            raise ValueError("must be an integer")
+        return int(v)
+    return v
 
 
 def validate(s: MapSettings) -> dict[str, str]:

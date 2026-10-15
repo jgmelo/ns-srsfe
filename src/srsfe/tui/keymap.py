@@ -53,7 +53,7 @@ PLOT_MENU = (
 
 # Launcher (tool keys come from the registry: Tool.key).
 LAUNCHER = (
-    Key("w", "sweep", "Sweep (later)"),
+    Key("w", "map", "Map"),
     Key("o", "profiles", "Profiles"),
     Key("t", "settings", "Settings"),
     Key("q", "quit", "Quit"),
@@ -86,6 +86,15 @@ PROMPT = (Key("escape", "cancel", "Cancel"),)
 
 SETTINGS = (
     Key("enter", "apply", "Apply"),
+    Key("escape", "back", "Back"),
+)
+
+# Map screen (setting keys come from tools.designmap.SETTING_META).
+MAP = (
+    Key("c", "compute", "Compute"),
+    Key("p", "plot", "Plot"),
+    Key("v", "save_png", "Save PNG"),
+    Key("question_mark", "help", "Help"),
     Key("escape", "back", "Back"),
 )
 
@@ -127,3 +136,12 @@ def tool_levels(tool: Tool) -> dict[str, list[tuple[str, str]]]:
     for g in tool.groups:
         levels[f"group:{g.key}"] = [(FIELDS[f].key, f"field:{f}") for f in g.fields]
     return levels
+
+
+def map_level() -> list[tuple[str, str]]:
+    """Map screen keys as (key, target): "setting:<name>" or "action:<name>" (Esc is
+    handled by the screen). Used by the screen to dispatch and by test_keymap.py."""
+    from srsfe.tools.designmap import SETTING_META
+
+    out = [(m.key, f"setting:{name}") for name, m in SETTING_META.items()]
+    return out + [(k.key, f"action:{k.action}") for k in MAP if k.key != "escape"]
