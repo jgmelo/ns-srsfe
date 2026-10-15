@@ -267,14 +267,22 @@ def designmap(result: Result) -> Figure:
             lines = ax.contour(T, P, snr, levels=iso, colors=SURFACE, linewidths=0.6,
                                linestyles="solid")
             ax.clabel(lines, fmt="%d", fontsize=7, colors=SURFACE)
+        vmin, vmax = float(np.nanmin(snr)), float(np.nanmax(snr))
         if _within(target, snr):
+            ax.contour(T, P, snr, levels=[target], colors=INK, linewidths=2.6)
+            handles.append(Line2D([], [], color=INK, lw=2.6,
+                                  label=f"SNR = {target:g} dB (target)"))
+        else:
+            where = "everywhere" if target <= vmin else "nowhere"
+            handles.append(Line2D([], [], color="none",
+                                  label=f"target {target:g} dB met {where} in range"))
+        if target > vmin:
             # Below-target side: dots only, colours stay true to the colour bar.
-            below = ax.contourf(T, P, snr, levels=[np.nanmin(snr) - 1, target],
+            below = ax.contourf(T, P, snr, levels=[vmin - 1, min(target, vmax + 1)],
                                 colors="none", hatches=["."])
             below.set_edgecolor(HATCH)
-            ax.contour(T, P, snr, levels=[target], colors=INK, linewidths=2.6)
-        handles += [Line2D([], [], color=INK, lw=2.6, label=f"SNR = {target:g} dB (target)"),
-                    Patch(facecolor="none", edgecolor=INK_2, hatch=".", label="below target")]
+            handles.append(Patch(facecolor="none", edgecolor=INK_2, hatch=".",
+                                 label="below target"))
     if _within(100.0, occ):
         over = ax.contourf(T, P, occ, levels=[100.0, float(np.nanmax(occ)) + 1],
                            colors="none", hatches=["//"])

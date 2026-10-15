@@ -180,3 +180,17 @@ def test_runner_saves_map(golden_params: dict[str, Any], tmp_path: Path) -> None
     src.write_text(_map(golden_params).to_json(), encoding="utf-8")
     assert runner.main([str(src), "map", "--save", str(tmp_path), "--prefix", "golden_"]) == 0
     assert (tmp_path / "golden_map.png").read_bytes()[:8] == b"\x89PNG\r\n\x1a\n"
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.2", "map")
+@pytest.mark.parametrize(("target", "text"), [(300.0, "nowhere"), (-500.0, "everywhere")])
+def test_map_legend_when_target_out_of_range(
+    golden_params: dict[str, Any], target: float, text: str
+) -> None:
+    """A target outside the map's SNR range is stated in the legend instead of drawn;
+    'nowhere' dots the whole map as below target."""
+    fig = figures.make(_map(golden_params, settings=MapSettings(n=7, target=target)), "map")
+    labels = [t.get_text() for t in fig.axes[0].get_legend().get_texts()]
+    assert f"target {target:g} dB met {text} in range" in labels
+    assert ("below target" in labels) is (text == "nowhere")
