@@ -5,6 +5,7 @@ from typing import Any
 
 import pytest
 
+from srsfe.core.moku import lsb, quantization_density, quantization_noise
 from srsfe.core.noise import (
     NoiseDensities,
     densities,
@@ -15,6 +16,7 @@ from srsfe.core.noise import (
     shot_clear_db,
     shot_density,
     snr_db,
+    total_density,
     v_rms,
 )
 from srsfe.core.spectrum import photocurrent, signal
@@ -33,6 +35,11 @@ def golden_tank(golden_params: dict[str, Any]) -> TankResult:
 def _dens(g: dict[str, Any], power: str) -> NoiseDensities:
     return densities(photocurrent(g[power], g["resp"]), g["r_f"], g["f_0"], g["c_d"],
                      g["en_opamp"], g["nep"], g["resp"], g["temp"])
+
+
+def _dens_tot(g: dict[str, Any], power: str) -> float:
+    e_q = quantization_density(quantization_noise(lsb(g["v_range"], g["n_bits"])), g["f_s"])
+    return total_density(_dens(g, power).v_dens, g["en_moku"], e_q)
 
 
 def _v_sig(g: dict[str, Any], power: str) -> float:
@@ -102,9 +109,9 @@ def test_golden_enbw(golden_params: dict[str, Any], n_lia: int) -> None:
 @pytest.mark.parametrize("n_lia", [1, 2, 3, 4])
 @pytest.mark.parametrize("power", POWERS)
 def test_golden_snr_lia(golden_params: dict[str, Any], power: str, n_lia: int) -> None:
-    """Lock-in SNR (V_rms over ENBW) for orders 1–4 at both powers matches SPEC §9.2."""
+    """Lock-in SNR (TIA + Moku noise over ENBW) for orders 1–4 at both powers matches §9.2."""
     g = golden_params
-    noise = v_rms(_dens(g, power).v_dens, enbw_lia(g["tau_lia"], n_lia))
+    noise = v_rms(_dens_tot(g, power), enbw_lia(g["tau_lia"], n_lia))
     assert snr_db(_v_sig(g, power), noise) == pytest.approx(golden.SNR_LIA[n_lia][power],
                                                             abs=golden.DB_ABS)
 
@@ -229,3 +236,24 @@ def test_rejects_bad_input(func: Any, args: tuple[Any, ...]) -> None:
     """Non-positive/non-finite inputs raise ValueError (I₀, C_d, V_sig, i_sh may be 0)."""
     with pytest.raises(ValueError):
         func(*args)
+
+
+@pytest.mark.golden
+@pytest.mark.spec("§9.2", "v_dens_tot")
+@pytest.mark.spec("§4.5", "v-dens-tot")
+@pytest.mark.parametrize("power", POWERS)
+def test_golden_v_dens_tot(golden_params: dict[str, Any], power: str) -> None:
+    """Noise density at the lock-in input (TIA output + e_n,Moku + e_q) matches SPEC §9.2."""
+    assert _dens_tot(golden_params, power) == pytest.approx(golden.V_DENS_TOT[power],
+                                                            rel=golden.REL)
+
+
+@pytest.mark.formula
+@pytest.mark.spec("§4.5", "v-dens-tot")
+def test_total_density_adds_in_quadrature() -> None:
+    """Terms add as powers; unset Moku terms (0) leave v_dens unchanged; negatives rejected."""
+    assert total_density(3e-9, 4e-9) == pytest.approx(5e-9, rel=1e-12)
+    assert total_density(3e-9, 0.0, 4e-9) == pytest.approx(5e-9, rel=1e-12)
+    assert total_density(7e-9) == 7e-9
+    with pytest.raises(ValueError):
+        total_density(1e-9, -1e-9)

@@ -29,18 +29,18 @@ REQ = {
 OPT = {
     "sizing": ("q_mode",),
     "spectrum": ("tau_p",),
-    "noise": ("en_moku", "n_bits", "v_range"),
+    "noise": ("en_moku", "n_bits", "v_range", "f_s"),
     "budget": (),
-    "lockin": (),
+    "lockin": ("en_moku", "n_bits", "v_range", "f_s"),
 }
 OUT = {
     "sizing": ("q", "l_f", "c_f", "tau_tank", "bw_3db", "b_eq"),
     "spectrum": ("i_0", "q_p", "i_pk", "f_n", "i_n", "z_n", "att_n", "v_n", "v_n_sum",
                  "v_n_rss"),
     "noise": ("i_0", "i_sig", "v_sig", "i_sh", "i_r", "i_en", "i_nep", "i_elec", "i_tot",
-              "v_dens", "v_rms", "snr", "shot_clear", "lsb", "v_q"),
+              "v_dens", "v_rms", "snr", "shot_clear", "lsb", "v_q", "e_q"),
     "budget": ("v_coh", "occ_swing", "occ_moku"),
-    "lockin": ("enbw_lia", "v_rms_lia", "snr_lia"),
+    "lockin": ("enbw_lia", "v_dens_tot", "v_rms_lia", "snr_lia"),
 }
 # Stage → the stages it builds on ("Sizing +", "Spectrum + Noise +", …).
 DEPS = {
@@ -146,6 +146,8 @@ def _compute(
         if p.n_bits is not None and p.v_range is not None:
             scalars["lsb"] = moku.lsb(p.v_range, p.n_bits)
             scalars["v_q"] = moku.quantization_noise(scalars["lsb"])
+            if p.f_s is not None:
+                scalars["e_q"] = moku.quantization_density(scalars["v_q"], p.f_s)
 
     if "budget" in stages:
         for power in POWERS:
@@ -161,8 +163,14 @@ def _compute(
         assert p.tau_lia is not None and p.n_lia is not None
         enbw = noise.enbw_lia(p.tau_lia, p.n_lia)
         scalars["enbw_lia"] = enbw
+        # The Moku adds its own noise after the tank; each term counts only when its inputs
+        # are set (SPEC §6.1).
+        en_moku = p.en_moku if p.en_moku is not None else 0.0
+        e_q = scalars.get("e_q", 0.0)
         for power in POWERS:
-            vr_lia = noise.v_rms(v_dens[power], enbw)
+            dens_tot = noise.total_density(v_dens[power], en_moku, e_q)
+            put("v_dens_tot", power, dens_tot)
+            vr_lia = noise.v_rms(dens_tot, enbw)
             put("v_rms_lia", power, vr_lia)
             put("snr_lia", power, noise.snr_db(v_sig[power], vr_lia))
         warns.append(w.check_w01(p.tau_lia, p.t_dwell))
@@ -202,7 +210,7 @@ GROUPS = (
     Group("Light", "l", ("p_min", "p_max", "resp", "f_rep", "tau_p", "m")),
     Group("Noise", "n", ("c_d", "en_opamp", "nep", "temp", "k_crest")),
     Group("Lock-in", "i", ("tau_lia", "n_lia")),
-    Group("Opamp/Moku", "m", ("v_swing", "en_moku", "n_bits", "v_range")),
+    Group("Opamp/Moku", "m", ("v_swing", "en_moku", "n_bits", "v_range", "f_s")),
     Group("Spectrum", "f", ("f_max",)),
 )
 

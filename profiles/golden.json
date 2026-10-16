@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "name": "golden",
   "notes": "Golden test case, SPEC section 9. Do not edit.",
   "created": "2026-10-07T00:00:00",
@@ -29,6 +29,7 @@
     "en_moku": 3e-08,
     "n_bits": 12,
     "v_range": 1.0,
+    "f_s": 500000000.0,
     "f_max": 200000000.0
   }
 }

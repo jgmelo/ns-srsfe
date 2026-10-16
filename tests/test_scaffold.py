@@ -21,6 +21,6 @@ def test_package_imports() -> None:
 @pytest.mark.spec("§9", "profile")
 def test_golden_profile_loads(golden_profile: dict[str, Any]) -> None:
     """The conftest fixture reads profiles/golden.json."""
-    assert golden_profile["schema_version"] == 1
+    assert golden_profile["schema_version"] == 2
     assert golden_profile["name"] == "golden"
     assert golden_profile["params"]["r_f"] == 100e3

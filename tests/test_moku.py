@@ -6,7 +6,7 @@ from typing import Any
 import numpy as np
 import pytest
 
-from srsfe.core.moku import lsb, quantization_noise
+from srsfe.core.moku import lsb, quantization_density, quantization_noise
 from tests import golden
 
 
@@ -48,3 +48,25 @@ def test_rejects_bad_input(func: Any, args: tuple[Any, ...]) -> None:
     """Non-positive range, non-integer or < 1 bits and non-positive LSB raise ValueError."""
     with pytest.raises(ValueError):
         func(*args)
+
+
+@pytest.mark.golden
+@pytest.mark.spec("§9.1", "e_q")
+@pytest.mark.spec("§4.7", "e-q")
+def test_golden_e_q(golden_params: dict[str, Any]) -> None:
+    """V_q spread over the Nyquist band of 500 MS/s gives the SPEC §9.1 density."""
+    g = golden_params
+    v_q = quantization_noise(lsb(g["v_range"], g["n_bits"]))
+    assert quantization_density(v_q, g["f_s"]) == pytest.approx(golden.E_Q, rel=golden.REL)
+
+
+@pytest.mark.formula
+@pytest.mark.spec("§4.7", "e-q")
+def test_e_q_power_fills_nyquist_band() -> None:
+    """e_q² integrated over 0…f_s/2 gives back V_q²; doubling f_s lowers e_q by √2."""
+    v_q, f_s = 70e-6, 500e6
+    assert quantization_density(v_q, f_s) ** 2 * (f_s / 2) == pytest.approx(v_q**2, rel=1e-12)
+    assert quantization_density(v_q, 2 * f_s) == pytest.approx(
+        quantization_density(v_q, f_s) / math.sqrt(2), rel=1e-12)
+    with pytest.raises(ValueError):
+        quantization_density(v_q, 0.0)

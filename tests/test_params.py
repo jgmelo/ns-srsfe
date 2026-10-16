@@ -12,7 +12,7 @@ SPEC_ORDER = [
     "p_min", "p_max", "resp", "f_rep", "tau_p", "m",
     "c_d", "en_opamp", "nep", "temp", "k_crest",
     "tau_lia", "n_lia",
-    "v_swing", "en_moku", "n_bits", "v_range",
+    "v_swing", "en_moku", "n_bits", "v_range", "f_s",
     "f_max",
 ]
 

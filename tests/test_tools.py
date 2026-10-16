@@ -24,10 +24,10 @@ LOCKIN = NOISE | {"tau_lia", "n_lia"}
 DESIGN_TABLE = {
     "1": ("Sizing", SIZING, {"q_mode"}, ("bode",)),
     "2": ("Spectrum", SPECTRUM, {"q_mode", "tau_p"}, ("spectrum",)),
-    "3": ("Budget", BUDGET, {"q_mode", "tau_p", "en_moku", "n_bits"}, ("budget",)),
-    "4": ("Noise", NOISE, {"q_mode", "en_moku", "n_bits", "v_range"}, ("noise",)),
-    "5": ("Lock-in", LOCKIN, {"q_mode", "en_moku", "n_bits", "v_range"}, ("noise",)),
-    "0": ("All", BUDGET | LOCKIN, {"q_mode", "tau_p", "en_moku", "n_bits"},
+    "3": ("Budget", BUDGET, {"q_mode", "tau_p", "en_moku", "n_bits", "f_s"}, ("budget",)),
+    "4": ("Noise", NOISE, {"q_mode", "en_moku", "n_bits", "v_range", "f_s"}, ("noise",)),
+    "5": ("Lock-in", LOCKIN, {"q_mode", "en_moku", "n_bits", "v_range", "f_s"}, ("noise",)),
+    "0": ("All", BUDGET | LOCKIN, {"q_mode", "tau_p", "en_moku", "n_bits", "f_s"},
           ("bode", "spectrum", "budget", "noise")),
 }
 
@@ -274,3 +274,25 @@ def test_result_json_non_finite(gp: Params) -> None:
     assert "Infinity" not in text and '{"$float": "-inf"}' in text
     back = Result.from_json(text)
     assert back.get("snr_lia", "p_max") == -math.inf and back == r
+
+
+@pytest.mark.formula
+@pytest.mark.spec("§6.1", "optional-gating", "lockin")
+@pytest.mark.spec("§4.5", "v-dens-tot")
+def test_lockin_moku_terms_gated_by_their_inputs(gp: Params) -> None:
+    """v_dens_tot adds e_n,Moku only with en_moku and e_q only with n_bits, v_range, f_s;
+    with none of them snr_lia is the TIA-only lock-in SNR."""
+    lockin = DESIGN.calc("5")
+    bare = lockin.run(gp.replace(en_moku=None, f_s=None))
+    assert "e_q" not in bare.scalars
+    for power in POWERS:
+        assert bare.get("v_dens_tot", power) == bare.get("v_dens", power)
+    only_q = lockin.run(gp.replace(en_moku=None))
+    full = lockin.run(gp)
+    for power in POWERS:
+        v = full.get("v_dens", power)
+        assert only_q.get("v_dens_tot", power) == pytest.approx(
+            math.hypot(v, golden.E_Q), rel=golden.REL)
+        assert full.get("v_dens_tot", power) == pytest.approx(golden.V_DENS_TOT[power],
+                                                              rel=golden.REL)
+        assert full.get("snr_lia", power) < only_q.get("snr_lia", power) < bare.get("snr_lia", power)

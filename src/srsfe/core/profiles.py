@@ -1,7 +1,7 @@
 """JSON profile store (SPEC §7). The only module in core/ that does file I/O.
 
 A profile file stores inputs only:
-    {"schema_version": 1, "name": ..., "notes": ..., "created": ISO-8601,
+    {"schema_version": 2, "name": ..., "notes": ..., "created": ISO-8601,
      "modified": ISO-8601, "params": {...}}
 """
 
@@ -19,11 +19,20 @@ from typing import Any
 
 from srsfe.core.params import FIELDS, Params
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 DEFAULT_PROFILE = "default"
 
+
+def _v1_to_v2(doc: dict[str, Any]) -> dict[str, Any]:
+    """v2 added the Moku sample rate f_s; older profiles get the default 500 MS/s."""
+    params = doc.get("params")
+    if isinstance(params, dict) and "f_s" not in params:
+        doc = {**doc, "params": {**params, "f_s": 500e6}}
+    return doc
+
+
 # MIGRATIONS[n] upgrades a document from schema_version n to n + 1.
-MIGRATIONS: dict[int, Callable[[dict[str, Any]], dict[str, Any]]] = {}
+MIGRATIONS: dict[int, Callable[[dict[str, Any]], dict[str, Any]]] = {1: _v1_to_v2}
 
 _NAME_RE = re.compile(r"^[\w][\w .-]*$")
 

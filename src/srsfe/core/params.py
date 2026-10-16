@@ -85,6 +85,7 @@ class Params:
     v_range: float | None = _f(
         1.0, "V_range", "Vpp", "Opamp/Moku", "v", "Moku input range (1 or 10 only)", choices=(1.0, 10.0),
     )
+    f_s: float | None = _f(500e6, "f_s", "S/s", "Opamp/Moku", "f", "Moku ADC sample rate")
     # Spectrum
     f_max: float | None = _f(200e6, "f_max", "Hz", "Spectrum", "f", "Highest harmonic frequency included")
 

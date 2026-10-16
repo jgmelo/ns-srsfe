@@ -1,4 +1,4 @@
-"""Moku ADC quantization (SPEC §4.7)."""
+"""Moku ADC quantization: LSB, rms noise and its density (SPEC §4.7)."""
 
 from __future__ import annotations
 
@@ -19,3 +19,12 @@ def quantization_noise(lsb_v: float) -> float:
     if not (isinstance(lsb_v, (int, float)) and math.isfinite(lsb_v) and lsb_v > 0):
         raise ValueError(f"lsb must be a finite number > 0, got {lsb_v!r}")
     return lsb_v / math.sqrt(12)
+
+
+def quantization_density(v_q: float, f_s: float) -> float:
+    """e_q = V_q / √(f_s/2): V_q spread evenly over the Nyquist band 0…f_s/2 (V/√Hz).
+    Assumes a white quantization error (signal plus noise spanning many LSBs)."""
+    for name, value in (("v_q", v_q), ("f_s", f_s)):
+        if not (isinstance(value, (int, float)) and math.isfinite(value) and value > 0):
+            raise ValueError(f"{name} must be a finite number > 0, got {value!r}")
+    return v_q / math.sqrt(f_s / 2)

@@ -31,7 +31,7 @@ def _write(store: ProfileStore, name: str, doc: Any) -> None:
 
 
 def _doc(params: dict[str, Any], **extra: Any) -> dict[str, Any]:
-    return {"schema_version": 1, "name": "x", "notes": "", "created": "", "modified": "",
+    return {"schema_version": SCHEMA_VERSION, "name": "x", "notes": "", "created": "", "modified": "",
             "params": params, **extra}
 
 
@@ -141,6 +141,18 @@ def test_migrate_current_is_noop() -> None:
     """A current-version document passes through migrate() unchanged."""
     doc = _doc({"r_f": 1.0})
     assert migrate(doc) == doc
+
+
+@pytest.mark.api
+@pytest.mark.spec("§7", "migrate", "migrate-v2")
+def test_v1_profile_gets_default_f_s(store: ProfileStore) -> None:
+    """A v1 file (no f_s) loads with f_s = 500 MS/s; an f_s already present is kept."""
+    old = _doc({"r_f": 1e3})
+    old["schema_version"] = 1
+    _write(store, "old", old)
+    assert store.load("old").params.f_s == 500e6
+    old["params"]["f_s"] = 125e6
+    assert migrate(old)["params"]["f_s"] == 125e6 and migrate(old)["schema_version"] == 2
 
 
 @pytest.mark.errors

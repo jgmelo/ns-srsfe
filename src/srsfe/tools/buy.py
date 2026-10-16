@@ -22,7 +22,7 @@ BUY = Variant(
         **OUT,
         "sizing": ("q", "tau_tank", "bw_3db", "b_eq"),
         "noise": ("i_0", "i_sig", "v_sig", "i_sh", "i_nep", "i_elec", "i_tot", "v_dens",
-                  "v_rms", "snr", "shot_clear", "lsb", "v_q"),
+                  "v_rms", "snr", "shot_clear", "lsb", "v_q", "e_q"),
     },
     detector_noise=True,
 )
@@ -32,7 +32,7 @@ GROUPS = (
     Group("Light", "l", ("p_min", "p_max", "resp", "f_rep", "tau_p", "m")),
     Group("Noise", "n", ("nep", "k_crest")),
     Group("Lock-in", "i", ("tau_lia", "n_lia")),
-    Group("Opamp/Moku", "m", ("v_swing", "en_moku", "n_bits", "v_range")),
+    Group("Opamp/Moku", "m", ("v_swing", "en_moku", "n_bits", "v_range", "f_s")),
     Group("Spectrum", "f", ("f_max",)),
 )
 

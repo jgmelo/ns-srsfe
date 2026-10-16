@@ -45,6 +45,7 @@ I_NEP = 4.2600e-15  # A/√Hz
 I_ELEC = 1.9279e-12  # A/√Hz
 LSB = 244.14e-6  # V
 V_Q = 70.477e-6  # V
+E_Q = 4.4574e-9  # V/√Hz (f_s = 500 MS/s)
 
 # §9.2 noise / SNR
 I_SH = {"p_min": 4.3848e-12, "p_max": 1.3866e-11}  # A/√Hz
@@ -52,11 +53,12 @@ I_TOT = {"p_min": 4.7899e-12, "p_max": 1.3999e-11}  # A/√Hz
 V_DENS = {"p_min": 479.0e-9, "p_max": 1.3999e-6}  # V/√Hz
 V_RMS = {"p_min": 757.34e-6, "p_max": 2.2135e-3}  # V
 SNR = {"p_min": -25.033, "p_max": -14.349}  # dB
+V_DENS_TOT = {"p_min": 479.95e-9, "p_max": 1.4002e-6}  # V/√Hz
 SNR_LIA = {  # dB, by n_lia
-    1: {"p_min": -22.023, "p_max": -11.338},
-    2: {"p_min": -19.013, "p_max": -8.328},
-    3: {"p_min": -17.763, "p_max": -7.079},
-    4: {"p_min": -16.971, "p_max": -6.287},
+    1: {"p_min": -22.040, "p_max": -11.341},
+    2: {"p_min": -19.030, "p_max": -8.330},
+    3: {"p_min": -17.781, "p_max": -7.081},
+    4: {"p_min": -16.989, "p_max": -6.289},
 }
 SHOT_CLEAR = {"p_min": 7.137, "p_max": 17.137}  # dB
 

@@ -114,6 +114,7 @@ srsfe/
 | `en_moku` | e_n,Moku | V/√Hz | 30e-9 | Opamp/Moku | e | Moku input voltage noise |
 | `n_bits` | N_bits | bit | 12 | Opamp/Moku | b | Moku ADC resolution |
 | `v_range` | V_range | Vpp | 1.0 | Opamp/Moku | v | Moku input range (1 or 10 only) |
+| `f_s` | f_s | S/s | 500e6 | Opamp/Moku | f | Moku ADC sample rate |
 | `f_max` | f_max | Hz | 200e6 | Spectrum | f | Highest harmonic frequency included |
 
 Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_range` ∈ {1, 10};
@@ -136,11 +137,13 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 | `i_sig`, `v_sig` | A, V | Signal current and output amplitude at f₀ |
 | `i_sh`, `i_r`, `i_en`, `i_nep`, `i_elec`, `i_tot` | A/√Hz | Noise densities; i_elec = √(i_r²+i_en²+i_nep²) |
 | `v_dens` | V/√Hz | Output noise density R·i_tot |
-| `v_rms`, `v_rms_lia` | V | Output rms noise over B_eq and over ENBW |
+| `v_dens_tot` | V/√Hz | Noise density at the lock-in input: v_dens plus the Moku's noise |
+| `v_rms`, `v_rms_lia` | V | Output rms noise over B_eq; lock-in rms noise (v_dens_tot over ENBW) |
 | `v_coh` | V | Worst-case coherent output peak |
 | `occ_swing`, `occ_moku` | % | Occupancy of opamp swing / Moku range |
 | `snr`, `snr_lia`, `shot_clear` | dB | SNR over B_eq, lock-in SNR, shot-noise clearance |
 | `lsb`, `v_q` | V | ADC LSB, quantization noise rms |
+| `e_q` | V/√Hz | Quantization noise density |
 | `settles` | bool | N_τ·τ_tank ≤ t_dwell·(1 + 1e-9) (Analyze tool; slack absorbs float rounding only) |
 
 ---
@@ -180,7 +183,10 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 
 ### 4.5 Lock-in
 - ENBW: n=1: 1/(4τ), n=2: 1/(8τ), n=3: 3/(32τ), n=4: 5/(64τ), τ = τ_LIA
-- V_rms,LIA = v_dens·√ENBW
+- v_dens_tot = √(v_dens² + e_n,Moku² + e_q²): the Moku adds its input noise and quantization
+  noise after the tank, so they are not tank-filtered; the lock-in's ENBW is what limits them.
+  A term is 0 when its inputs are unset (§6.1).
+- V_rms,LIA = v_dens_tot·√ENBW
 
 ### 4.6 Budget and SNR
 - V_coh = ΣVₙ + V_sig + k_crest·V_rms
@@ -191,6 +197,8 @@ Validation: all numeric inputs > 0 except `m` ≥ 0; `n_lia` ∈ {1,2,3,4}; `v_r
 
 ### 4.7 Moku
 - LSB = V_range / 2^N_bits, V_q = LSB/√12
+- e_q = V_q / √(f_s/2): V_q spread evenly over the Nyquist band 0…f_s/2 (white quantization
+  error, i.e. signal plus noise spanning many LSBs)
 
 ---
 
@@ -232,12 +240,14 @@ It also records the input `params` it was computed from. In JSON, non-finite flo
 | 1 | Sizing | r_f, f_0, t_dwell, n_tau | q_mode | Bode |
 | 2 | Spectrum | Sizing + p_min, p_max, resp, f_rep, f_max | tau_p | Spectrum stems |
 | 3 | Budget | Spectrum + Noise + k_crest, v_swing, v_range | – | Budget bar |
-| 4 | Noise | Sizing + p_min, p_max, resp, c_d, en_opamp, nep, temp, m | en_moku, n_bits, v_range | Noise contributions |
-| 5 | Lock-in | Noise + tau_lia, n_lia | – | Noise contributions |
+| 4 | Noise | Sizing + p_min, p_max, resp, c_d, en_opamp, nep, temp, m | en_moku, n_bits, v_range, f_s | Noise contributions |
+| 5 | Lock-in | Noise + tau_lia, n_lia | en_moku, n_bits, v_range, f_s | Noise contributions |
 | 0 | All | union of the above | – | all |
 
 Calcs with an optional input compute the dependent outputs/warnings only when it is set
-(e.g. W05 only if `en_moku` is set; `i_pk` and W08 only if `tau_p` is set).
+(e.g. W05 only if `en_moku` is set; `i_pk` and W08 only if `tau_p` is set; `e_q` only if
+`n_bits`, `v_range` and `f_s` are set). In `v_dens_tot` (Lock-in) e_n,Moku counts only if
+`en_moku` is set and e_q only if it was computed.
 A calc also returns the outputs and warnings of the calcs it builds on ("Sizing +" etc.).
 Warnings by stage: Spectrum W08, W09 · Noise W05 · Budget W03, W04 · Lock-in W01, W02.
 
@@ -258,7 +268,7 @@ Calcs `1`–`5`, `0` as in §6.1, except:
 
 | Key | Calc | Required | Optional |
 |---|---|---|---|
-| 4 | Noise | Sizing + p_min, p_max, resp, nep, m | en_moku, n_bits, v_range |
+| 4 | Noise | Sizing + p_min, p_max, resp, nep, m | en_moku, n_bits, v_range, f_s |
 
 (Budget, Lock-in and All inherit this Noise row.) Sizing outputs: q, tau_tank, bw_3db, b_eq.
 Noise outputs drop i_r and i_en. Groups as Design, but Noise holds only nep, k_crest.
@@ -314,12 +324,13 @@ already met at t_lo is reported as t_lo (shown "≤ t_lo"). `t_safe` is `None` i
 - Stores **inputs only** (never derived values). Unset fields stored as `null`.
 - File format:
   ```json
-  {"schema_version": 1, "name": "golden", "notes": "...",
+  {"schema_version": 2, "name": "golden", "notes": "...",
    "created": "ISO-8601", "modified": "ISO-8601", "params": {...}}
   ```
 - API: `list()`, `load(name)`, `save(params, name)`, `save_as`, `duplicate`, `rename`, `delete`.
 - On load: unknown keys → warn and drop; missing keys → null; wrong type → error.
-  `migrate(data)` upgrades older `schema_version`s.
+  `migrate(data)` upgrades older `schema_version`s. v1 → v2: adds `f_s` = 500e6 (Moku sample
+  rate) when missing.
 - One active profile at a time; app opens last-used profile, fallback `default.json`
   (created from defaults if missing). Last-used name stored in a small settings file:
   `settings.json` with `profiles_dir`, `last_profile` and `map` (§6.5), in `%APPDATA%\srsfe\` on Windows,
@@ -408,7 +419,7 @@ Ctrl+S save · Ctrl+Q quit · Ctrl+P command palette.
 | Light fields | `i` p_min · `x` p_max · `r` resp · `f` f_rep · `w` tau_p · `m` m |
 | Noise fields | `c` c_d · `e` en_opamp · `p` nep · `t` temp · `k` k_crest (Buy: `p` nep · `k` k_crest) |
 | Lock-in fields | `t` tau_lia · `o` n_lia |
-| Opamp/Moku fields | `s` v_swing · `e` en_moku · `b` n_bits · `v` v_range |
+| Opamp/Moku fields | `s` v_swing · `e` en_moku · `b` n_bits · `v` v_range · `f` f_s |
 | Tank fields (Analyze) | `l` l_f · `c` c_f · `r` r_f · `f` f_0 · `d` t_dwell · `n` n_tau |
 | Plot menu | `b` Bode · `s` spectrum · `u` budget · `n` noise (toggle) · Enter show · `v` save PNG · Esc close |
 | Profiles | Enter/`l` load · `n` new (save-as) · `d` duplicate · `r` rename · `e` edit notes · `x` delete · Esc back |
@@ -447,6 +458,7 @@ Profile `profiles/golden.json`. Relative tolerance 1e-3 (`pytest.approx(rel=1e-3
 | i_elec | 1.9279e-12 A/√Hz |
 | lsb | 244.14e-6 V |
 | v_q | 70.477e-6 V |
+| e_q (f_s = 500 MS/s) | 4.4574e-9 V/√Hz |
 
 ### 9.2 Per-power values
 
@@ -464,14 +476,15 @@ Profile `profiles/golden.json`. Relative tolerance 1e-3 (`pytest.approx(rel=1e-3
 | i_tot | 4.7899e-12 A/√Hz | 1.3999e-11 A/√Hz |
 | v_dens | 479.0e-9 V/√Hz | 1.3999e-6 V/√Hz |
 | v_rms | 757.34e-6 V | 2.2135e-3 V |
+| v_dens_tot | 479.95e-9 V/√Hz | 1.4002e-6 V/√Hz |
 | v_coh | 1.2740 V | 12.724 V |
 | occ_swing | 63.70 % | 636.2 % |
 | occ_moku | 254.8 % | 2545 % |
 | snr | −25.033 dB | −14.349 dB |
-| snr_lia (n=1) | −22.023 dB | −11.338 dB |
-| snr_lia (n=2) | −19.013 dB | −8.328 dB |
-| snr_lia (n=3) | −17.763 dB | −7.079 dB |
-| snr_lia (n=4) | −16.971 dB | −6.287 dB |
+| snr_lia (n=1) | −22.040 dB | −11.341 dB |
+| snr_lia (n=2) | −19.030 dB | −8.330 dB |
+| snr_lia (n=3) | −17.781 dB | −7.081 dB |
+| snr_lia (n=4) | −16.989 dB | −6.289 dB |
 | shot_clear | +7.137 dB | +17.137 dB |
 
 dB values: absolute tolerance 0.01 dB.

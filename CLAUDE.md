@@ -57,6 +57,10 @@ Design calculator (Textual TUI) for the resonant TIA front end of an SRS photode
 - **M12** `map` plot (both panels) in `plots/figures.py`; runner support.
 - **M13** Map screen: settings fields + persistence, compute, boundary table, plot/save,
   help, key map + collision test; launcher `w`.
+- **M14** Moku noise in the lock-in SNR: input `f_s` (schema v2 + migration), `e_q`,
+  `v_dens_tot`, `snr_lia` over the total noise; golden values updated.
+- **M15** Lock-in SNR on the Map: `quantity` (snr / snr_lia) and `k_lia` settings,
+  τ_LIA = k_lia·t_dwell per point; plot, table and screen follow the quantity.
 
 ## Don't
 - Don't store derived values in profiles.

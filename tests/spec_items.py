@@ -81,12 +81,16 @@ SECTIONS: list[Section] = [
         "i-sh": "i_sh", "i-r": "i_R", "i-en": "i_en", "i-nep": "i_NEP",
         "i-tot": "i_tot and i_elec", "v-rms": "v_dens and V_rms",
     }),
-    Section("§4.5", "Lock-in", {"enbw": "ENBW for n = 1…4", "v-rms-lia": "V_rms,LIA"}),
+    Section("§4.5", "Lock-in", {
+        "enbw": "ENBW for n = 1…4",
+        "v-dens-tot": "v_dens_tot = √(v_dens² + e_n,Moku² + e_q²)",
+        "v-rms-lia": "V_rms,LIA = v_dens_tot·√ENBW",
+    }),
     Section("§4.6", "Budget and SNR", {
         "v-coh": "V_coh", "occupancy": "occ_swing, occ_moku",
         "snr": "SNR and SNR_LIA", "shot-clear": "shot_clear",
     }),
-    Section("§4.7", "Moku", {"lsb": "LSB and V_q"}),
+    Section("§4.7", "Moku", {"lsb": "LSB and V_q", "e-q": "e_q = V_q/√(f_s/2)"}),
     Section("§5", "Warnings", _warnings()),
     Section("§6", "Tools: Result", {"result-json": "Result is JSON-serializable (round trip)"}),
     Section("§6.1", "Design tool", {
@@ -130,6 +134,7 @@ SECTIONS: list[Section] = [
         "missing-keys": "Missing keys → null",
         "wrong-type": "Wrong type → error",
         "migrate": "migrate() upgrades older schema_versions",
+        "migrate-v2": "v1 → v2 adds f_s = 500e6 when missing",
         "default-profile": "default.json created from defaults if missing",
         "last-used": "App opens the last-used profile",
         "map-settings": "Settings file keeps the Map settings (saved on compute)",
@@ -159,11 +164,11 @@ SECTIONS: list[Section] = [
     Section("§9", "Golden profile", {"profile": "profiles/golden.json loads and is valid"}),
     Section("§9.1", "Golden scalar values", _named(
         "q", "l_f", "c_f", "tau_tank", "bw_3db", "b_eq", "f_n", "z_n", "att_n", "enbw_lia",
-        "i_r", "i_en", "i_nep", "i_elec", "lsb", "v_q",
+        "i_r", "i_en", "i_nep", "i_elec", "lsb", "v_q", "e_q",
     )),
     Section("§9.2", "Golden per-power values", _named(
         "i_0", "q_p", "i_pk", "v_n", "v_n_sum", "v_n_rss", "i_sig", "v_sig", "i_sh", "i_tot",
-        "v_dens", "v_rms", "v_coh", "occ_swing", "occ_moku", "snr", "snr_lia", "shot_clear",
+        "v_dens", "v_rms", "v_dens_tot", "v_coh", "occ_swing", "occ_moku", "snr", "snr_lia", "shot_clear",
     )),
     Section("§9.3", "Golden expected warnings", {
         "w02": "W02 fires for n_lia 1, 2; not 3, 4",

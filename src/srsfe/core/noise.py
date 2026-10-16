@@ -98,6 +98,15 @@ def v_rms(v_dens: float, bandwidth: float) -> float:
     return v_dens * math.sqrt(bandwidth)
 
 
+def total_density(v_dens: float, en_moku: float = 0.0, e_q: float = 0.0) -> float:
+    """v_dens_tot = √(v_dens² + e_n,Moku² + e_q²): noise density at the lock-in input.
+    The Moku's noise is added after the tank, so it is not tank-filtered (SPEC §4.5)."""
+    _require("v_dens", v_dens, allow_zero=True)
+    _require("en_moku", en_moku, allow_zero=True)
+    _require("e_q", e_q, allow_zero=True)
+    return math.sqrt(v_dens**2 + en_moku**2 + e_q**2)
+
+
 def enbw_lia(tau_lia: float, n_lia: int) -> float:
     """Lock-in noise-equivalent bandwidth for filter order 1–4 (SPEC §4.5)."""
     _require("tau_lia", tau_lia)

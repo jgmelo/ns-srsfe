@@ -51,7 +51,8 @@ OUTPUTS: dict[str, tuple[str, str]] = {
     "v_dens": ("V/√Hz", "Output noise density R·i_tot"),
     "v_rms": ("V", "Output rms noise over B_eq"),
     "enbw_lia": ("Hz", "Lock-in ENBW"),
-    "v_rms_lia": ("V", "Output rms noise over ENBW"),
+    "v_dens_tot": ("V/√Hz", "Noise density at the lock-in input (TIA + Moku)"),
+    "v_rms_lia": ("V", "Lock-in rms noise: v_dens_tot over ENBW"),
     "v_coh": ("V", "Worst-case coherent output peak"),
     "occ_swing": ("%", "Occupancy of opamp swing"),
     "occ_moku": ("%", "Occupancy of Moku range"),
@@ -60,6 +61,7 @@ OUTPUTS: dict[str, tuple[str, str]] = {
     "shot_clear": ("dB", "Shot-noise clearance over electronic noise"),
     "lsb": ("V", "ADC LSB"),
     "v_q": ("V", "Quantization noise rms"),
+    "e_q": ("V/√Hz", "Quantization noise density over f_s/2"),
 }
 # Outputs that live in the per-power "harmonics" table rather than scalars/per_power.
 HARMONIC_COLUMNS = ("f_n", "i_n", "z_n", "att_n", "v_n")
