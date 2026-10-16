@@ -5,8 +5,9 @@ plt.show()); plots/runner.py decides whether to show or save them.
 
 Colors follow one rule per job: P_min / P_max are the same two categorical hues in every
 figure; Budget stacks use categorical slots 1–3 in fixed order; text and reference lines
-stay in neutral ink. Different units never share an axis (Bode and Spectrum use two
-stacked panels instead of a second y-scale).
+stay in neutral ink; the Map uses one sequential blue ramp for SNR magnitude. Different
+units never share an axis (Bode, Spectrum and Map use stacked panels instead of a second
+y-scale).
 """
 
 from __future__ import annotations
@@ -14,6 +15,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 import numpy as np
+from matplotlib.artist import Artist
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.ticker import EngFormatter
@@ -207,8 +209,143 @@ def noise(result: Result) -> Figure:
     return fig
 
 
+# -- Map (design-space map, SPEC §6.5) ---------------------------------------------------
+
+# Sequential blue ramp (one hue, light → dark) for SNR magnitude.
+MAP_RAMP = ("#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b")
+OVERLOAD = "#e34948"
+HATCH = (0.04, 0.04, 0.04, 0.45)  # translucent ink for hatch patterns
+
+
+def _finite(a: np.ndarray) -> np.ndarray:
+    """−inf (m = 0) and nan become nan so contouring ignores them."""
+    return np.where(np.isfinite(a), a, np.nan)
+
+
+def _within(level: float, a: np.ndarray) -> bool:
+    finite = a[np.isfinite(a)]
+    return finite.size > 0 and float(finite.min()) < level < float(finite.max())
+
+
+def designmap(result: Result) -> Figure:
+    """Top: SNR over log t_dwell × log P with target, iso-SNR lines, overload and shot/
+    electronic boundaries and the profile's design points. Bottom: SNR vs t_dwell slices at
+    the profile's P_min and P_max, overloaded stretches dashed."""
+    from matplotlib.colors import BoundaryNorm, LinearSegmentedColormap
+    from matplotlib.lines import Line2D
+    from matplotlib.patches import Patch
+
+    _need(result, "map")
+    m = result.tables["map"]
+    t = np.array(m["axes"]["t_dwell"])
+    p = np.array(m["axes"]["power"])
+    snr = _finite(np.array(m["grid"]["snr"], dtype=float))
+    occ = np.array(m["grid"]["occ"], dtype=float)
+    clear = _finite(np.array(m["grid"]["shot_clear"], dtype=float))
+    target = float(result.scalars["target"])
+    T, P = np.meshgrid(t, p)
+
+    fig = Figure(figsize=(9, 8.2), facecolor=SURFACE, layout="constrained")
+    ax, ax2 = fig.subplots(2, 1, sharex=True, gridspec_kw={"height_ratios": [3, 1.5]})
+    for a in (ax, ax2):
+        a.set_facecolor(SURFACE)
+        a.tick_params(colors=INK_2, labelcolor=INK)
+        for side in ("top", "right"):
+            a.spines[side].set_visible(False)
+
+    handles: list[Artist] = []
+    if np.isfinite(snr).any():
+        lo = np.floor(np.nanmin(snr) / 5) * 5
+        hi = np.ceil(np.nanmax(snr) / 5) * 5 + (5 if np.nanmax(snr) % 5 == 0 else 0)
+        levels = np.arange(lo, max(hi, lo + 5) + 0.1, 5)
+        cmap = LinearSegmentedColormap.from_list("snr", MAP_RAMP)
+        cf = ax.contourf(T, P, snr, levels=levels, cmap=cmap,
+                         norm=BoundaryNorm(levels, cmap.N))
+        fig.colorbar(cf, ax=ax, label="SNR over B_eq [dB]", pad=0.01)
+        iso = [v for v in np.arange(np.ceil(lo / 10) * 10, hi + 0.1, 10) if _within(v, snr)]
+        if iso:
+            lines = ax.contour(T, P, snr, levels=iso, colors=SURFACE, linewidths=0.6,
+                               linestyles="solid")
+            ax.clabel(lines, fmt="%d", fontsize=7, colors=SURFACE)
+        vmin, vmax = float(np.nanmin(snr)), float(np.nanmax(snr))
+        if _within(target, snr):
+            ax.contour(T, P, snr, levels=[target], colors=INK, linewidths=2.6)
+            handles.append(Line2D([], [], color=INK, lw=2.6,
+                                  label=f"SNR = {target:g} dB (target)"))
+        else:
+            where = "everywhere" if target <= vmin else "nowhere"
+            handles.append(Line2D([], [], color="none",
+                                  label=f"target {target:g} dB met {where} in range"))
+        if target > vmin:
+            # Below-target side: dots only, colours stay true to the colour bar.
+            below = ax.contourf(T, P, snr, levels=[vmin - 1, min(target, vmax + 1)],
+                                colors="none", hatches=["."])
+            below.set_edgecolor(HATCH)
+            handles.append(Patch(facecolor="none", edgecolor=INK_2, hatch=".",
+                                 label="below target"))
+    if _within(100.0, occ):
+        over = ax.contourf(T, P, occ, levels=[100.0, float(np.nanmax(occ)) + 1],
+                           colors="none", hatches=["//"])
+        over.set_edgecolor(HATCH)
+        ax.contour(T, P, occ, levels=[100.0], colors=OVERLOAD, linewidths=2, linestyles="--")
+    if (occ > 100).any():
+        handles += [Line2D([], [], color=OVERLOAD, lw=2, ls="--",
+                           label="overload: opamp swing or Moku range"),
+                    Patch(facecolor="none", edgecolor=INK_2, hatch="//", label="overloaded")]
+    if _within(0.0, clear):
+        ax.contour(T, P, clear, levels=[0.0], colors=INK, linewidths=1.8, linestyles="-.")
+        handles.append(Line2D([], [], color=INK, lw=1.8, ls="-.",
+                              label="shot noise = electronic noise"))
+    t_design = result.params.get("t_dwell")
+    for name in POWERS:
+        power = result.params.get(name)
+        if t_design is not None and power is not None:
+            ax.plot([t_design], [power], POWER_MARKER[name], color="#eda100", ms=10,
+                    mec=INK, mew=1.2)
+            handles.append(Line2D([], [], marker=POWER_MARKER[name], ls="", color="#eda100",
+                                  mec=INK, ms=8, label=f"profile {POWER_LABEL[name]}"))
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xlim(t[0], t[-1])
+    ax.set_ylim(p[0], p[-1])
+    ax.yaxis.set_major_formatter(EngFormatter(unit="W"))
+    ax.set_ylabel("optical power P on photodiode", color=INK)
+    ax.legend(handles=handles, loc="lower right", fontsize=8, framealpha=0.92,
+              facecolor=SURFACE)
+
+    # Slices at the profile's powers; overloaded stretches dashed.
+    sl = result.tables["slices"]
+    ts = np.array(sl["t_dwell"]["values"])
+    ax2.grid(True, color=GRID, linewidth=0.8)
+    for name in POWERS:
+        if name not in sl:
+            continue
+        y = _finite(np.array(sl[name]["snr"], dtype=float))
+        over = np.array(sl[name]["occ"], dtype=float) > 100
+        ok_y = np.where(over, np.nan, y)
+        # Overloaded stretches drawn dashed; extend by one point so the two styles meet.
+        over_y = np.where(over | np.roll(over, 1) | np.roll(over, -1), y, np.nan)
+        power = sl[name]["power"][0]
+        ax2.plot(ts, ok_y, color=POWER_COLOR[name], lw=2,
+                 label=f"{POWER_LABEL[name]} = {format_eng(power, 'W', 3)}")
+        ax2.plot(ts, over_y, color=POWER_COLOR[name], lw=2, ls="--")
+    ax2.axhline(target, color=INK, lw=1.5, ls="--")
+    ax2.annotate(f"target {target:g} dB", (1, target), xycoords=("axes fraction", "data"),
+                 xytext=(-4, 4), textcoords="offset points", ha="right", color=INK, fontsize=9)
+    ax2.set_ylabel("SNR [dB]", color=INK)
+    ax2.set_xlabel("pixel dwell time t_dwell  (dashed: overloaded)", color=INK)
+    ax2.xaxis.set_major_formatter(EngFormatter(unit="s"))
+    ax2.legend(frameon=False, labelcolor=INK, fontsize=9, loc="lower right")
+
+    base = {"d": "Design", "b": "Buy"}.get(str(result.scalars.get("base")), "?")
+    r_f = result.params.get("r_f")
+    gain = f", R = {format_eng(r_f, 'Ω', 3)}" if r_f is not None else ""
+    _title(fig, f"Design-space map — {base}{gain}", result)
+    return fig
+
+
 FIGURES: dict[str, Callable[[Result], Figure]] = {
-    "bode": bode, "spectrum": spectrum, "budget": budget, "noise": noise,
+    "bode": bode, "spectrum": spectrum, "budget": budget, "noise": noise, "map": designmap,
 }
 
 

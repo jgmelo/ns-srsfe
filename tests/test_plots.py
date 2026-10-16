@@ -122,3 +122,75 @@ def _env() -> dict[str, str]:
     import os
 
     return dict(os.environ)
+
+
+# -- M12: design-space map plot ---------------------------------------------------------------
+
+from srsfe.tools.designmap import MapSettings, compute  # noqa: E402
+
+
+def _map(golden_params: dict[str, Any], base: str = "d", **changes: Any) -> Result:
+    settings = changes.pop("settings", MapSettings(base=base, n=9))
+    params = Params.from_dict(golden_params).replace(**changes)
+    return compute(REGISTRY[base], params, settings)
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.2", "map")
+def test_map_figure_builds(golden_params: dict[str, Any]) -> None:
+    """The map plot renders with the map panel, its colour bar and the slices panel."""
+    fig = figures.make(_map(golden_params, r_f=10e3, settings=MapSettings(n=9, target=0)), "map")
+    assert len(fig.axes) == 3
+    fig.canvas.draw()
+    labels = [t.get_text() for t in fig.axes[0].get_legend().get_texts()]
+    assert {"SNR = 0 dB (target)", "overloaded", "shot noise = electronic noise",
+            "profile P_min", "profile P_max"} <= set(labels)
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.2", "map")
+@pytest.mark.parametrize(
+    "case",
+    [{"settings": MapSettings(n=7, target=300.0)},   # target never reached
+     {"settings": MapSettings(n=7, target=-500.0)},  # target met everywhere
+     {"m": 0.0},                                      # SNR = −inf everywhere
+     {"r_f": 10.0},                                   # never overloads
+     {"t_dwell": None}],                              # no design point to mark
+)
+def test_map_figure_edge_cases(golden_params: dict[str, Any], case: dict[str, Any]) -> None:
+    """Missing contours (no crossing, all −inf, no overload, no design point) do not break it."""
+    figures.make(_map(golden_params, **case), "map").canvas.draw()
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.2", "map")
+def test_map_figure_buy_and_availability(golden_params: dict[str, Any]) -> None:
+    """The Buy base builds too; tool results without a map refuse the map plot."""
+    figures.make(_map(golden_params, "b", c_d=None, en_opamp=None, temp=None), "map").canvas.draw()
+    design = REGISTRY["d"].calc("0").run(Params.from_dict(golden_params))
+    with pytest.raises(ValueError):
+        figures.make(design, "map")
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.2", "map", "runner")
+def test_runner_saves_map(golden_params: dict[str, Any], tmp_path: Path) -> None:
+    """The runner renders a serialized map Result to <prefix>map.png."""
+    src = tmp_path / "map.json"
+    src.write_text(_map(golden_params).to_json(), encoding="utf-8")
+    assert runner.main([str(src), "map", "--save", str(tmp_path), "--prefix", "golden_"]) == 0
+    assert (tmp_path / "golden_map.png").read_bytes()[:8] == b"\x89PNG\r\n\x1a\n"
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.2", "map")
+@pytest.mark.parametrize(("target", "text"), [(300.0, "nowhere"), (-500.0, "everywhere")])
+def test_map_legend_when_target_out_of_range(
+    golden_params: dict[str, Any], target: float, text: str
+) -> None:
+    """A target outside the map's SNR range is stated in the legend instead of drawn;
+    'nowhere' dots the whole map as below target."""
+    fig = figures.make(_map(golden_params, settings=MapSettings(n=7, target=target)), "map")
+    labels = [t.get_text() for t in fig.axes[0].get_legend().get_texts()]
+    assert f"target {target:g} dB met {text} in range" in labels
+    assert ("below target" in labels) is (text == "nowhere")

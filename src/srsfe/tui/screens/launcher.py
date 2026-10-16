@@ -16,8 +16,9 @@ from srsfe.tui.screens.help import Section, keys_section
 from srsfe.tui.widgets.header import AppHeader
 
 DESCRIPTIONS = {
-    "sweep": "Sweep one input over a list of values and tabulate outputs. "
-             "The sweep engine exists; its screen comes in a later version.",
+    "map": "Design-space map: SNR over t_dwell × optical power for the active profile, "
+           "with the SNR target, overload and shot-noise limits, and a table of the "
+           "shortest safe dwell time per power. Base tool Design or Buy.",
     "profiles": "Load, create, duplicate, rename, annotate or delete profiles "
                 "(one JSON file per profile).",
     "settings": "Profiles folder (one JSON file per profile).",
@@ -40,8 +41,7 @@ class LauncherScreen(Screen[None]):
         yield AppHeader()
         options = [Option(keymap.hint(t.key, t.name), id=f"tool:{t.key}") for t in REGISTRY.values()]
         options += [
-            Option(keymap.hint(k.key, k.label), id=k.action, disabled=k.action == "sweep")
-            for k in keymap.LAUNCHER
+            Option(keymap.hint(k.key, k.label), id=k.action) for k in keymap.LAUNCHER
         ]
         with Horizontal():
             yield OptionList(*options, id="menu")
@@ -88,8 +88,10 @@ class LauncherScreen(Screen[None]):
         tools = [(t.key, t.name) for t in REGISTRY.values()]
         return [("Launcher", tools + keys_section("", keymap.LAUNCHER)[1])]
 
-    def action_sweep(self) -> None:
-        self.app.notify("Sweep has no screen yet (core engine only in v1).")
+    def action_map(self) -> None:
+        from srsfe.tui.screens.map_screen import MapScreen
+
+        self.app.push_screen(MapScreen())
 
     async def action_quit(self) -> None:
         await self.app.run_action("quit")

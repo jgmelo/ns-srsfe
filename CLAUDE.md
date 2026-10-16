@@ -52,6 +52,11 @@ Design calculator (Textual TUI) for the resonant TIA front end of an SRS photode
 - **M9** Generic tool screen: groups, field highlighting, eng inputs, results table,
   warnings panel, plot menu, full key map + collision test.
 - **M10** Polish: F1 help overlay, settings screen, last-used profile, stale-result greying.
+- **M11** Map computation (`tools/designmap.py`): settings + validation, grid over
+  t_dwell × P through the base tool, slices, boundary table, Result JSON round-trip.
+- **M12** `map` plot (both panels) in `plots/figures.py`; runner support.
+- **M13** Map screen: settings fields + persistence, compute, boundary table, plot/save,
+  help, key map + collision test; launcher `w`.
 
 ## Don't
 - Don't store derived values in profiles.

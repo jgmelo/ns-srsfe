@@ -111,6 +111,15 @@ SECTIONS: list[Section] = [
         "per-power": "Per-power outputs expand to name@p_min / name@p_max",
         "no-mutate": "Input Params not mutated",
     }),
+    Section("§6.5", "Design-space map", {
+        "settings": "Map settings: defaults, validation, fallback on bad values",
+        "grid": "Grid over log t_dwell × log P runs the base tool's Budget calc",
+        "inputs": "Missing/invalid profile inputs reported, nothing runs",
+        "slices": "Slices along t_dwell at the profile's P_min and P_max",
+        "boundaries": "Boundary table rows and t_snr / t_ovl / t_safe / snr_design",
+        "crossings": "Crossings interpolated; None if never; t_lo if met at the edge",
+        "result-json": "Map Result round-trips through JSON",
+    }),
     Section("§7", "Profiles", {
         "file-format": "File format (schema_version, name, notes, created, modified, params)",
         "inputs-only": "Stores inputs only, never derived values",
@@ -123,6 +132,7 @@ SECTIONS: list[Section] = [
         "migrate": "migrate() upgrades older schema_versions",
         "default-profile": "default.json created from defaults if missing",
         "last-used": "App opens the last-used profile",
+        "map-settings": "Settings file keeps the Map settings (saved on compute)",
         "dirty-flag": "Dirty flag in header; prompt on switch/quit",
     }),
     Section("§8.1", "TUI screens and inputs", {
@@ -135,9 +145,11 @@ SECTIONS: list[Section] = [
         "settings": "Settings screen: profiles folder",
         "help": "F1 / ? help overlay with the current screen's keys",
         "stale": "Editing inputs marks results stale",
+        "map-screen": "Map screen: settings, compute, boundary table, plot / save PNG",
     }),
     Section("§8.2", "Plots", {
         "bode": "Bode", "spectrum": "Spectrum", "budget": "Budget", "noise": "Noise",
+        "map": "Map: SNR map with target, overload, shot boundary, design points; slices",
         "runner": "Subprocess runner renders from serialized Result",
     }),
     Section("§8.3", "Key map", {
