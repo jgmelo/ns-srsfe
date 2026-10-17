@@ -41,10 +41,11 @@ def _point(gp: Params, t: float, p: float, base: str = "d") -> Result:
 @pytest.mark.schema
 @pytest.mark.spec("§6.5", "settings")
 def test_settings_defaults() -> None:
-    """Defaults: Design base, 100 ns–100 µs, 1 µW–10 mW, 41 points, target 10 dB; valid."""
+    """Defaults: Design base, 100 ns–100 µs, 1 µW–10 mW, 41 points, target 10 dB, plain snr,
+    k_lia 0.2; valid."""
     s = MapSettings()
-    assert (s.base, s.t_lo, s.t_hi, s.p_lo, s.p_hi, s.n, s.target) == (
-        "d", 100e-9, 100e-6, 1e-6, 10e-3, 41, 10.0)
+    assert (s.base, s.t_lo, s.t_hi, s.p_lo, s.p_hi, s.n, s.target, s.quantity, s.k_lia) == (
+        "d", 100e-9, 100e-6, 1e-6, 10e-3, 41, 10.0, "snr", 0.2)
     assert validate(s) == {}
 
 
@@ -54,10 +55,12 @@ def test_settings_defaults() -> None:
     ("change", "field"),
     [({"base": "a"}, "base"), ({"t_lo": 0.0}, "t_lo"), ({"t_hi": 50e-9}, "t_hi"),
      ({"p_lo": -1.0}, "p_lo"), ({"p_hi": 1e-6}, "p_hi"), ({"n": 4}, "n"), ({"n": 202}, "n"),
-     ({"target": math.inf}, "target")],
+     ({"target": math.inf}, "target"), ({"quantity": "snr_moku"}, "quantity"),
+     ({"k_lia": 0.0}, "k_lia"), ({"k_lia": 1.5}, "k_lia"), ({"k_lia": math.nan}, "k_lia")],
 )
 def test_settings_validation(change: dict[str, Any], field: str) -> None:
-    """Bad base, non-positive or inverted ranges, n outside 5…201, non-finite target."""
+    """Bad base or quantity, non-positive or inverted ranges, n outside 5…201, non-finite
+    target, k_lia outside (0, 1]."""
     assert field in validate(MapSettings(**{**MapSettings().to_dict(), **change}))
 
 
@@ -65,7 +68,8 @@ def test_settings_validation(change: dict[str, Any], field: str) -> None:
 @pytest.mark.spec("§6.5", "settings")
 def test_settings_dict_round_trip_and_fallback() -> None:
     """to_dict/from_dict round-trips; wrong types or missing keys fall back to defaults."""
-    s = MapSettings(base="b", t_lo=1e-7, t_hi=1e-5, p_lo=1e-5, p_hi=1e-2, n=21, target=3.0)
+    s = MapSettings(base="b", t_lo=1e-7, t_hi=1e-5, p_lo=1e-5, p_hi=1e-2, n=21, target=3.0,
+                    quantity="snr_lia", k_lia=0.5)
     assert MapSettings.from_dict(s.to_dict()) == s
     bad = MapSettings.from_dict({"base": 3, "n": 12.5, "target": "x", "t_lo": 2e-7, "extra": 1})
     assert bad == MapSettings(t_lo=2e-7)
@@ -203,3 +207,64 @@ def test_boundaries_edges(gp: Params) -> None:
     assert all(v is None for v in never["t_snr"]) and all(v is None for v in never["t_safe"])
     always = compute(DESIGN, gp, MapSettings(n=5, target=-500.0)).tables["boundaries"]["rows"]
     assert all(v == pytest.approx(100e-9) for v in always["t_snr"])
+
+
+# -- lock-in quantity (M15) ----------------------------------------------------------------
+
+
+LIA = MapSettings(n=9, quantity="snr_lia", k_lia=0.2)
+
+
+@pytest.mark.golden
+@pytest.mark.spec("§6.5", "lockin", "boundaries")
+@pytest.mark.spec("§9.2", "snr_lia")
+def test_lockin_map_design_point_is_golden(gp: Params) -> None:
+    """With k_lia = 0.2 the design point's τ_LIA is the golden 200 ns, so snr_design at the
+    profile powers is the golden snr_lia (n_lia = 1)."""
+    from tests import golden
+
+    r = compute(DESIGN, gp, LIA)
+    rows = r.tables["boundaries"]["rows"]
+    assert r.scalars["quantity"] == "snr_lia" and r.scalars["k_lia"] == 0.2
+    for k, power in enumerate(("p_min", "p_max")):
+        assert rows["snr_design"][k] == pytest.approx(golden.SNR_LIA[1][power],
+                                                      abs=golden.DB_ABS)
+
+
+@pytest.mark.formula
+@pytest.mark.spec("§6.5", "lockin", "grid")
+@pytest.mark.parametrize(("i", "j"), [(0, 0), (4, 6), (8, 8)])
+def test_lockin_grid_follows_t_dwell(gp: Params, i: int, j: int) -> None:
+    """Each point is the All calc's snr_lia with τ_LIA = k_lia·t; occupancy as for snr."""
+    r = compute(DESIGN, gp, LIA)
+    t = r.tables["map"]["axes"]["t_dwell"][j]
+    p = r.tables["map"]["axes"]["power"][i]
+    direct = DESIGN.calc("0").run(gp.replace(t_dwell=t, p_min=p, p_max=p, tau_lia=0.2 * t))
+    assert r.tables["map"]["grid"]["snr"][i][j] == pytest.approx(direct.get("snr_lia", "p_min"))
+    plain = compute(DESIGN, gp, MapSettings(n=9))
+    assert r.tables["map"]["grid"]["occ"][i][j] == pytest.approx(
+        plain.tables["map"]["grid"]["occ"][i][j])
+
+
+@pytest.mark.formula
+@pytest.mark.spec("§6.5", "lockin")
+def test_lockin_map_scales_with_k_lia(gp: Params) -> None:
+    """A longer lock-in (larger k_lia) narrows ENBW: +10·log10(k2/k1) dB while the Moku and
+    TIA densities stay put; 10 dB per decade of t_dwell as for snr."""
+    a = np.array(compute(DESIGN, gp, LIA).tables["map"]["grid"]["snr"])
+    b = np.array(compute(DESIGN, gp, MapSettings(n=9, quantity="snr_lia", k_lia=0.8))
+                 .tables["map"]["grid"]["snr"])
+    assert np.allclose(b - a, 10 * math.log10(4), atol=1e-6)
+    assert np.allclose(np.diff(a[:, ::4], axis=1), 10 * 3 / 2, atol=1e-6)  # 1.5 decades
+
+
+@pytest.mark.validation
+@pytest.mark.spec("§6.5", "lockin", "inputs")
+def test_lockin_map_needs_n_lia_not_tau_lia(gp: Params) -> None:
+    """snr_lia needs the profile's n_lia; its tau_lia is replaced by k_lia·t, so unset is fine.
+    The plain snr map needs neither."""
+    compute(DESIGN, gp.replace(tau_lia=None), LIA)
+    compute(DESIGN, gp.replace(n_lia=None), SMALL)
+    with pytest.raises(CalcInputError) as exc:
+        compute(DESIGN, gp.replace(n_lia=None), LIA)
+    assert exc.value.missing == ["n_lia"]

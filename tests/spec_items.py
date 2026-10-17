@@ -123,6 +123,7 @@ SECTIONS: list[Section] = [
         "boundaries": "Boundary table rows and t_snr / t_ovl / t_safe / snr_design",
         "crossings": "Crossings interpolated; None if never; t_lo if met at the edge",
         "result-json": "Map Result round-trips through JSON",
+        "lockin": "quantity snr_lia: τ_LIA = k_lia·t_dwell per point, All calc, n_lia from profile",
     }),
     Section("§7", "Profiles", {
         "file-format": "File format (schema_version, name, notes, created, modified, params)",

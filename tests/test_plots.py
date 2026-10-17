@@ -164,6 +164,21 @@ def test_map_figure_edge_cases(golden_params: dict[str, Any], case: dict[str, An
 
 @pytest.mark.smoke
 @pytest.mark.spec("§8.2", "map")
+@pytest.mark.spec("§6.5", "lockin")
+def test_map_figure_lockin_labels(golden_params: dict[str, Any]) -> None:
+    """A snr_lia map labels its colour bar, target and slices SNR_LIA and names τ_LIA."""
+    settings = MapSettings(n=9, target=0, quantity="snr_lia", k_lia=0.2)
+    fig = figures.make(_map(golden_params, settings=settings), "map")
+    fig.canvas.draw()
+    assert "SNR_LIA over ENBW" in fig.axes[2].get_ylabel()
+    assert fig.axes[1].get_ylabel().startswith("SNR_LIA")
+    labels = [t.get_text() for t in fig.axes[0].get_legend().get_texts()]
+    assert "SNR_LIA = 0 dB (target)" in labels
+    assert "τ = 0.2·t_dwell" in fig._suptitle.get_text()  # type: ignore[union-attr]
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.2", "map")
 def test_map_figure_buy_and_availability(golden_params: dict[str, Any]) -> None:
     """The Buy base builds too; tool results without a map refuse the map plot."""
     figures.make(_map(golden_params, "b", c_d=None, en_opamp=None, temp=None), "map").canvas.draw()

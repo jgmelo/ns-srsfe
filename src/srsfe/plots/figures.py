@@ -228,9 +228,9 @@ def _within(level: float, a: np.ndarray) -> bool:
 
 
 def designmap(result: Result) -> Figure:
-    """Top: SNR over log t_dwell × log P with target, iso-SNR lines, overload and shot/
-    electronic boundaries and the profile's design points. Bottom: SNR vs t_dwell slices at
-    the profile's P_min and P_max, overloaded stretches dashed."""
+    """Top: the mapped SNR (snr or snr_lia) over log t_dwell × log P with target, iso-SNR
+    lines, overload and shot/electronic boundaries and the profile's design points. Bottom:
+    SNR vs t_dwell slices at the profile's P_min and P_max, overloaded stretches dashed."""
     from matplotlib.colors import BoundaryNorm, LinearSegmentedColormap
     from matplotlib.lines import Line2D
     from matplotlib.patches import Patch
@@ -243,6 +243,8 @@ def designmap(result: Result) -> Figure:
     occ = np.array(m["grid"]["occ"], dtype=float)
     clear = _finite(np.array(m["grid"]["shot_clear"], dtype=float))
     target = float(result.scalars["target"])
+    lia = result.scalars.get("quantity", "snr") == "snr_lia"
+    name_q = "SNR_LIA" if lia else "SNR"
     T, P = np.meshgrid(t, p)
 
     fig = Figure(figsize=(9, 8.2), facecolor=SURFACE, layout="constrained")
@@ -261,7 +263,7 @@ def designmap(result: Result) -> Figure:
         cmap = LinearSegmentedColormap.from_list("snr", MAP_RAMP)
         cf = ax.contourf(T, P, snr, levels=levels, cmap=cmap,
                          norm=BoundaryNorm(levels, cmap.N))
-        fig.colorbar(cf, ax=ax, label="SNR over B_eq [dB]", pad=0.01)
+        fig.colorbar(cf, ax=ax, label=f"{name_q} over {'ENBW' if lia else 'B_eq'} [dB]", pad=0.01)
         iso = [v for v in np.arange(np.ceil(lo / 10) * 10, hi + 0.1, 10) if _within(v, snr)]
         if iso:
             lines = ax.contour(T, P, snr, levels=iso, colors=SURFACE, linewidths=0.6,
@@ -271,7 +273,7 @@ def designmap(result: Result) -> Figure:
         if _within(target, snr):
             ax.contour(T, P, snr, levels=[target], colors=INK, linewidths=2.6)
             handles.append(Line2D([], [], color=INK, lw=2.6,
-                                  label=f"SNR = {target:g} dB (target)"))
+                                  label=f"{name_q} = {target:g} dB (target)"))
         else:
             where = "everywhere" if target <= vmin else "nowhere"
             handles.append(Line2D([], [], color="none",
@@ -332,7 +334,7 @@ def designmap(result: Result) -> Figure:
     ax2.axhline(target, color=INK, lw=1.5, ls="--")
     ax2.annotate(f"target {target:g} dB", (1, target), xycoords=("axes fraction", "data"),
                  xytext=(-4, 4), textcoords="offset points", ha="right", color=INK, fontsize=9)
-    ax2.set_ylabel("SNR [dB]", color=INK)
+    ax2.set_ylabel(f"{name_q} [dB]", color=INK)
     ax2.set_xlabel("pixel dwell time t_dwell  (dashed: overloaded)", color=INK)
     ax2.xaxis.set_major_formatter(EngFormatter(unit="s"))
     ax2.legend(frameon=False, labelcolor=INK, fontsize=9, loc="lower right")
@@ -340,7 +342,9 @@ def designmap(result: Result) -> Figure:
     base = {"d": "Design", "b": "Buy"}.get(str(result.scalars.get("base")), "?")
     r_f = result.params.get("r_f")
     gain = f", R = {format_eng(r_f, 'Ω', 3)}" if r_f is not None else ""
-    _title(fig, f"Design-space map — {base}{gain}", result)
+    k = result.scalars.get("k_lia")
+    lockin = f", lock-in τ = {float(k):g}·t_dwell, n = {result.params.get('n_lia')}" if lia else ""
+    _title(fig, f"Design-space map — {base}{gain}{lockin}", result)
     return fig
 
 

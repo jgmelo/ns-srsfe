@@ -88,7 +88,7 @@ async def test_launcher_w_opens_map_with_stored_settings(pdir: Path) -> None:
     async with app.run_test(size=(120, 40)) as pilot:
         screen = await open_map(app, pilot)
         assert [r.setting for r in screen.query(SettingRow)] == [
-            "base", "t_lo", "t_hi", "p_lo", "p_hi", "n", "target"]
+            "base", "t_lo", "t_hi", "p_lo", "p_hi", "n", "target", "quantity", "k_lia"]
         assert screen.query_one("#in-t_lo", Input).value == "1µ"
         assert screen.query_one("#in-n", Input).value == "11"
         assert screen.query_one("#in-target", Input).value == "-3"
@@ -117,7 +117,7 @@ async def test_compute_fills_boundary_table_and_saves_settings(pdir: Path, tmp_p
         assert table.row_count == 5
         first = [str(c) for c in table.get_row_at(0)]
         assert first[0].startswith("P_min 100") and first[4].endswith("dB")
-        assert "5×5 map on Design" in str(screen.query_one("#status").render())
+        assert "5×5 map of snr on Design" in str(screen.query_one("#status").render())
     assert user_settings.load(cfg).map == {**SMALL, "target": 0.0}
 
 
@@ -214,3 +214,32 @@ async def test_map_help(pdir: Path) -> None:
         assert "Compute" in text and "Save PNG" in text and "t_lo — Shortest dwell" in text
         await pilot.press("escape")
         assert isinstance(app.screen, MapScreen)
+
+
+@pytest.mark.smoke
+@pytest.mark.spec("§8.1", "map-screen")
+@pytest.mark.spec("§6.5", "lockin")
+async def test_quantity_toggle_and_k_lia(pdir: Path) -> None:
+    """s toggles snr ↔ snr_lia, k edits k_lia (> 1 is refused); a snr_lia map says so."""
+    app = small_app(pdir)
+    async with app.run_test(size=(120, 40)) as pilot:
+        screen = await open_map(app, pilot)
+        await pilot.press("s")
+        assert screen.values["quantity"] == "snr_lia"
+        assert "lock-in" in str(screen.row("quantity").query(".value").first().render())
+        await pilot.press("k")
+        await type_text(pilot, "\b" * 10)
+        await type_text(pilot, "2")
+        await pilot.press("enter")
+        assert screen.row("k_lia").has_class("invalid")
+        await compute(app, pilot)
+        assert screen.result is None
+        await pilot.press("k")
+        await type_text(pilot, "\b" * 10)
+        await type_text(pilot, "0.5")
+        await pilot.press("enter")
+        await compute(app, pilot)
+        assert screen.result is not None and screen.result.scalars["k_lia"] == 0.5
+        assert "map of snr_lia (τ_LIA = 0.5·t_dwell)" in str(screen.query_one("#status").render())
+        await pilot.press("s")
+        assert screen.values["quantity"] == "snr" and screen.query_one(DataTable).has_class("stale")

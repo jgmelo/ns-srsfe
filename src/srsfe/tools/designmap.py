@@ -1,8 +1,9 @@
-"""Design-space map (SPEC §6.5): snr over t_dwell × optical power, with the limits that bound
-a usable design (SNR target, overload) and a boundary table.
+"""Design-space map (SPEC §6.5): snr or snr_lia over t_dwell × optical power, with the limits
+that bound a usable design (SNR target, overload) and a boundary table.
 
-The base tool's Budget calc (key 3) is run on the active profile at every grid point with
-t_dwell = t and p_min = p_max = P; tools are the only place Params are unpacked (SPEC §2).
+The base tool's Budget calc (key 3), or its All calc (key 0) for snr_lia, is run on the
+active profile at every grid point with t_dwell = t, p_min = p_max = P and, for snr_lia,
+tau_lia = k_lia·t; tools are the only place Params are unpacked (SPEC §2).
 """
 
 from __future__ import annotations
@@ -20,7 +21,10 @@ from srsfe.tools.base import Calc, CalcInputError, Result, Tool
 TOOL_KEY = "w"
 CALC_KEY = "1"
 BUDGET_CALC = "3"
+ALL_CALC = "0"  # Budget + Lock-in, for quantity snr_lia
 BASES = ("d", "b")
+QUANTITIES = ("snr", "snr_lia")
+CHOICES = {"base": BASES, "quantity": QUANTITIES}  # settings toggled, not typed
 N_RANGE = (5, 201)
 PLOTS = ("map",)
 
@@ -36,6 +40,8 @@ class MapSettings:
     p_hi: float = 10e-3
     n: int = 41
     target: float = 10.0
+    quantity: str = "snr"
+    k_lia: float = 0.2
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -76,6 +82,8 @@ SETTING_META: dict[str, SettingMeta] = {
     "p_hi": SettingMeta("h", "W", "Highest optical power on the map"),
     "n": SettingMeta("n", "–", f"Grid points per axis, {N_RANGE[0]}…{N_RANGE[1]}"),
     "target": SettingMeta("g", "dB", "SNR target (higher is better)"),
+    "quantity": SettingMeta("s", "–", "Mapped SNR: snr (TIA over B_eq) or snr_lia (s toggles)"),
+    "k_lia": SettingMeta("k", "–", "snr_lia only: tau_lia = k_lia·t_dwell, 0 < k_lia ≤ 1"),
 }
 
 
@@ -93,8 +101,9 @@ def parse_setting(name: str, text: str) -> float | int:
 def validate(s: MapSettings) -> dict[str, str]:
     """Errors keyed by setting name; empty = valid."""
     errors: dict[str, str] = {}
-    if s.base not in BASES:
-        errors["base"] = f"must be one of {', '.join(BASES)}"
+    for name, choices in CHOICES.items():
+        if getattr(s, name) not in choices:
+            errors[name] = f"must be one of {', '.join(choices)}"
     for name in ("t_lo", "t_hi", "p_lo", "p_hi"):
         v = getattr(s, name)
         if not (math.isfinite(v) and v > 0):
@@ -107,6 +116,8 @@ def validate(s: MapSettings) -> dict[str, str]:
         errors["n"] = f"must be an integer {N_RANGE[0]}…{N_RANGE[1]}"
     if not math.isfinite(s.target):
         errors["target"] = "must be finite"
+    if not (math.isfinite(s.k_lia) and 0 < s.k_lia <= 1):
+        errors["k_lia"] = "must be > 0 and ≤ 1"
     return errors
 
 
@@ -145,15 +156,22 @@ class _Point:
     shot_clear: float
 
 
-def _run(calc: Calc, params: Params, t: float, p: float) -> _Point:
-    r = calc.compute(params.replace(t_dwell=t, p_min=p, p_max=p))
+def _point_params(params: Params, s: MapSettings, t: float, p: float) -> Params:
+    """The profile at one map point: t_dwell = t, p_min = p_max = P (+ tau_lia for snr_lia)."""
+    if s.quantity == "snr_lia":
+        return params.replace(t_dwell=t, p_min=p, p_max=p, tau_lia=s.k_lia * t)
+    return params.replace(t_dwell=t, p_min=p, p_max=p)
+
+
+def _run(calc: Calc, params: Params, s: MapSettings, t: float, p: float) -> _Point:
+    r = calc.compute(_point_params(params, s, t, p))
     occ = max(r.get("occ_swing", "p_min"), r.get("occ_moku", "p_min"))
-    return _Point(r.get("snr", "p_min"), occ, r.get("shot_clear", "p_min"))
+    return _Point(r.get(s.quantity, "p_min"), occ, r.get("shot_clear", "p_min"))
 
 
 def _check_inputs(calc: Calc, params: Params, s: MapSettings) -> None:
     """Validate the profile once at a representative point (grid values replace the axes)."""
-    probe = params.replace(t_dwell=s.t_lo, p_min=s.p_lo, p_max=s.p_lo)
+    probe = _point_params(params, s, s.t_lo, s.p_lo)
     missing, invalid = calc.missing(probe), calc.invalid(probe)
     if missing or invalid:
         raise CalcInputError(missing, invalid)
@@ -179,7 +197,7 @@ def compute(tool: Tool, params: Params, s: MapSettings) -> Result:
     errors = validate(s)
     if errors:
         raise MapSettingsError(errors)
-    calc = tool.calc(BUDGET_CALC)
+    calc = tool.calc(ALL_CALC if s.quantity == "snr_lia" else BUDGET_CALC)
     _check_inputs(calc, params, s)
 
     t = np.geomspace(s.t_lo, s.t_hi, s.n)
@@ -189,11 +207,11 @@ def compute(tool: Tool, params: Params, s: MapSettings) -> Result:
     clear = np.empty_like(snr)
     for i, pi in enumerate(p):
         for j, tj in enumerate(t):
-            pt = _run(calc, params, float(tj), float(pi))
+            pt = _run(calc, params, s, float(tj), float(pi))
             snr[i, j], occ[i, j], clear[i, j] = pt.snr, pt.occ, pt.shot_clear
 
     def along_t(power: float) -> tuple[np.ndarray, np.ndarray]:
-        pts = [_run(calc, params, float(tj), power) for tj in t]
+        pts = [_run(calc, params, s, float(tj), power) for tj in t]
         return np.array([x.snr for x in pts]), np.array([x.occ for x in pts])
 
     slices: dict[str, dict[str, list[float]]] = {}
@@ -215,13 +233,14 @@ def compute(tool: Tool, params: Params, s: MapSettings) -> Result:
         rows["t_ovl"].append(t_ovl)
         rows["t_safe"].append(None if t_snr is None or t_ovl is None else max(t_snr, t_ovl))
         rows["snr_design"].append(
-            _run(calc, params, params.t_dwell, power).snr if params.t_dwell is not None else None)
+            _run(calc, params, s, params.t_dwell, power).snr
+            if params.t_dwell is not None else None)
 
     return Result(
         tool=TOOL_KEY,
         calc=CALC_KEY,
         params=params.to_dict(),
-        scalars={"base": s.base, **{k: v for k, v in s.to_dict().items() if k != "base"}},
+        scalars=s.to_dict(),
         tables={
             "map": {"axes": {"t_dwell": t.tolist(), "power": p.tolist()},
                     "grid": {"snr": snr.tolist(), "occ": occ.tolist(), "shot_clear": clear.tolist()}},

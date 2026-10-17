@@ -23,6 +23,7 @@ from srsfe.core.units import format_eng
 from srsfe.tools import REGISTRY
 from srsfe.tools.base import CalcInputError, Result
 from srsfe.tools.designmap import (
+    CHOICES,
     PLOTS,
     SETTING_META,
     MapSettings,
@@ -65,12 +66,18 @@ def table_rows(result: Result) -> list[tuple[str, str, str, str, str]]:
     return out
 
 
-def base_text(base: str) -> str:
-    return f"{base}  {REGISTRY[base].name}" if base in REGISTRY else base
+QUANTITY_TEXT = {"snr": "TIA output over B_eq", "snr_lia": "lock-in, over ENBW"}
+
+
+def choice_text(name: str, value: str) -> str:
+    """How a toggled setting is shown: "d  Design from t_dwell", "snr_lia  lock-in, …"."""
+    if name == "base" and value in REGISTRY:
+        return f"{value}  {REGISTRY[value].name}"
+    return f"{value}  {QUANTITY_TEXT[value]}" if value in QUANTITY_TEXT else value
 
 
 class SettingRow(Horizontal):
-    """`[key] name` · input (or base-tool text) · unit · reason."""
+    """`[key] name` · input (or the text of a toggled setting) · unit · reason."""
 
     DEFAULT_CSS = """
     SettingRow { height: 1; }
@@ -93,13 +100,13 @@ class SettingRow(Horizontal):
     def __init__(self, name: str, value: Any) -> None:
         super().__init__(id=f"row-{name}")
         self.setting = name
-        self.shown = value if name == "base" else edit_text(value)
+        self.shown = value if name in CHOICES else edit_text(value)
 
     def compose(self) -> ComposeResult:
         meta = SETTING_META[self.setting]
         yield Label(keymap.hint(meta.key, self.setting), classes="key")
-        if self.setting == "base":
-            yield Label(Content(base_text(self.shown)), classes="value")
+        if self.setting in CHOICES:
+            yield Label(Content(choice_text(self.setting, self.shown)), classes="value")
         else:
             yield Input(self.shown, id=f"in-{self.setting}", tooltip=meta.description,
                         compact=True)
@@ -110,8 +117,8 @@ class SettingRow(Horizontal):
     def input(self) -> Input:
         return self.query_one(Input)
 
-    def show_base(self, base: str) -> None:
-        self.query_one(".value", Label).update(Content(base_text(base)))
+    def show_choice(self, value: str) -> None:
+        self.query_one(".value", Label).update(Content(choice_text(self.setting, value)))
 
     def show_error(self, reason: str | None) -> None:
         self.set_class(reason is not None, "invalid")
@@ -211,7 +218,9 @@ class MapScreen(Screen[None]):
             text = "Not computed — press c."
         else:
             s = self.result.scalars
-            text = (f"{s['n']}×{s['n']} map on {REGISTRY[str(s['base'])].name}, "
+            q = str(s.get("quantity", "snr"))
+            what = f"snr_lia (τ_LIA = {s['k_lia']:g}·t_dwell)" if q == "snr_lia" else "snr"
+            text = (f"{s['n']}×{s['n']} map of {what} on {REGISTRY[str(s['base'])].name}, "
                     f"target {s['target']:g} dB, profile inputs of '{self.srsfe.profile_name}'.")
             if self.is_stale():
                 text += "  Settings or inputs changed — press c to recompute."
@@ -265,9 +274,13 @@ class MapScreen(Screen[None]):
             await self.run_action(arg)
 
     def edit_setting(self, name: str) -> None:
-        if name == "base":
-            self.values["base"] = "b" if self.values["base"] == "d" else "d"
-            self.row("base").show_base(self.values["base"])
+        if name in CHOICES:  # toggle to the next choice
+            choices = CHOICES[name]
+            current = self.values[name]
+            nxt = choices[(choices.index(current) + 1) % len(choices)] if current in choices \
+                else choices[0]
+            self.values[name] = nxt
+            self.row(name).show_choice(nxt)
             self.show_errors()
             self.refresh_stale()
             return
